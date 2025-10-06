@@ -1,8 +1,13 @@
 Tiny Tiny RSS client for Android
 ================================
 
-- https://git.tt-rss.org/fox/tt-rss-android.git
-- https://gitlab.tt-rss.org/tt-rss/tt-rss-android/-/releases
+## Some notes about this project
+
+* The original tt-rss-android project, hosted at https://tt-rss.org/ and its various subdomains, [will be gone after 2025-11-01](https://community.tt-rss.org/t/the-end-of-tt-rss-org/7164).
+  * Massive thanks to fox for creating tt-rss, and maintaining it (and absolutely everything else that went along with it) for so many years.
+* This project (https://github.com/tt-rss/tt-rss-android) is a fork of the tt-rss-android project as of 2025-10-06, and is currently not maintained. 
+
+## License
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
