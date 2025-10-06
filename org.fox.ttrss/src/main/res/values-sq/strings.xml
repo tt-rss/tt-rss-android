@@ -277,4 +277,7 @@
     <string name="confirm_catchup_above_title">T’u vihet shenjë krejt artikujve sipër “%1s” si të lexuar?</string>
     <string name="article_enable_javascript">Aktivizo JavaScript-in</string>
     <string name="article_enable_javascript_summary">Disa lojtës video të bazuar në iframe duan JavaScript, aktivizojeni me kujdes</string>
+    <string name="reading">Lexim</string>
+    <string name="place_shortcut">Vendosni shkurtore</string>
+    <string name="prefs_enable_fab">Aktivizo FAB</string>
 </resources>
