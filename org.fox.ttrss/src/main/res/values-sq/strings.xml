@@ -280,4 +280,5 @@
     <string name="reading">Lexim</string>
     <string name="place_shortcut">Vendosni shkurtore</string>
     <string name="prefs_enable_fab">Aktivizo FAB</string>
+    <string name="prefs_enable_image_downsampling_long">I kërkon pjesës së pasme të shërbejë figura me cilësi më të ulët, në qoftë jashtë Wi-Fi. Lyp një shtojcë (ttrss-api-resize)</string>
 </resources>

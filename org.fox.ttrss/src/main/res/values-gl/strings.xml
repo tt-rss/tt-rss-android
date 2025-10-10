@@ -22,4 +22,21 @@
     <string name="sort_feeds_by_unread">Orde das canles por Artigos sen ler</string>
     <string name="ssl_trust_any">Aceptar calquera certificado</string>
     <string name="category_browse_feeds">Ver as canles</string>
+    <string name="catchup">Marcar como lido</string>
+    <plurals name="article_comments">
+        <item quantity="one">%1$d comentario</item>
+        <item quantity="other">%1$d comentarios</item>
+    </plurals>
+    <plurals name="trial_mode_prompt">
+        <item quantity="one">Modo de proba, só queda un día.</item>
+        <item quantity="other">Modo de proba, quedan %1$d días.</item>
+    </plurals>
+    <plurals name="mark_num_headlines_as_read">
+        <item quantity="one">Marcar %1$d artigo como lido?</item>
+        <item quantity="other">Marcar %1$d artigos como lidos?</item>
+    </plurals>
+    <plurals name="n_unread_articles">
+        <item quantity="one">Un artigo sen ler</item>
+        <item quantity="other">%1$d artigos sen ler</item>
+    </plurals>
 </resources>
