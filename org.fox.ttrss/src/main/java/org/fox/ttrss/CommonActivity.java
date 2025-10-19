@@ -61,7 +61,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CommonActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = CommonActivity.class.getSimpleName();
 
     public final static String FRAG_HEADLINES = "headlines";
     public final static String FRAG_ARTICLE = "article";

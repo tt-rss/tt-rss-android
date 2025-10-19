@@ -33,7 +33,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = FeedsModel.class.getSimpleName();
     protected MutableLiveData<List<Feed>> m_feeds = new MutableLiveData<>(new ArrayList<>());
     protected MutableLiveData<Integer> m_loadingProgress = new MutableLiveData<>(Integer.valueOf(0));
     protected MutableLiveData<Long> m_lastUpdate = new MutableLiveData<>(Long.valueOf(0));

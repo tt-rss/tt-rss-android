@@ -22,7 +22,7 @@ import org.fox.ttrss.types.Article;
 import org.fox.ttrss.types.Feed;
 
 public class DetailActivity extends OnlineActivity implements HeadlinesEventListener {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = DetailActivity.class.getSimpleName();
     protected BottomAppBar m_bottomAppBar;
 
     protected SharedPreferences m_prefs;

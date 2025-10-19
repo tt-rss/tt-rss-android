@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class MasterActivity extends OnlineActivity implements HeadlinesEventListener {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = MasterActivity.class.getSimpleName();
 
     private static final int HEADLINES_REQUEST = 1;
 

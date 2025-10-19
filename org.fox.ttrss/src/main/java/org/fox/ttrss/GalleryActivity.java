@@ -28,7 +28,7 @@ import org.fox.ttrss.util.DiffFragmentStateAdapter;
 import me.relex.circleindicator.CircleIndicator3;
 
 public class GalleryActivity extends CommonActivity {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = GalleryActivity.class.getSimpleName();
 
     protected String m_title;
     private ArticleImagesPagerAdapter m_adapter;

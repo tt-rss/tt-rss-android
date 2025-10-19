@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 
 @SuppressLint("StaticFieldLeak")
 public class OnlineActivity extends CommonActivity {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = OnlineActivity.class.getSimpleName();
 
     protected SharedPreferences m_prefs;
     protected Menu m_menu;

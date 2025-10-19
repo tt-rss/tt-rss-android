@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class LogcatActivity extends CommonActivity {
     private static final int MAX_LOG_ENTRIES = 500;
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = LogcatActivity.class.getSimpleName();
     protected ArrayList<String> m_items = new ArrayList<>();
     ArrayAdapter<String> m_adapter;
     ListView m_list;

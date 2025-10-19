@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class GalleryModel extends AndroidViewModel {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = GalleryModel.class.getSimpleName();
 
     private MutableLiveData<List<GalleryEntry>> m_items = new MutableLiveData<>(new ArrayList<>());
     private MutableLiveData<Integer> m_checkProgress = new MutableLiveData<>(Integer.valueOf(0));

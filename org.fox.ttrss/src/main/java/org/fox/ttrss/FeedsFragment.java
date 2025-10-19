@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class FeedsFragment extends Fragment implements OnSharedPreferenceChangeListener {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = FeedsFragment.class.getSimpleName();
     protected SharedPreferences m_prefs;
     protected MasterActivity m_activity;
     protected Feed m_rootFeed;

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RootCategoriesModel extends FeedsModel {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = RootCategoriesModel.class.getSimpleName();
 
     public RootCategoriesModel(@NonNull Application application) {
         super(application);

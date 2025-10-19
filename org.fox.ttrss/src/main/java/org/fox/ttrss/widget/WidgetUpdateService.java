@@ -28,7 +28,7 @@ import org.fox.ttrss.util.SimpleLoginManager;
 import java.util.HashMap;
 
 public class WidgetUpdateService extends JobIntentService {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = WidgetUpdateService.class.getSimpleName();
     private SharedPreferences m_prefs;
 
     public static final int UPDATE_RESULT_OK = 0;

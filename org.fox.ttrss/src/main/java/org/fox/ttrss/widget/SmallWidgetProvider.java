@@ -18,7 +18,7 @@ import org.fox.ttrss.OnlineActivity;
 import org.fox.ttrss.R;
 
 public class SmallWidgetProvider extends AppWidgetProvider {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = SmallWidgetProvider.class.getSimpleName();
 
     public static final String ACTION_REQUEST_UPDATE = "org.fox.ttrss.WIDGET_FORCE_UPDATE";
 

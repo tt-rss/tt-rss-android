@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SubscribeActivity extends CommonShareActivity {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = SubscribeActivity.class.getSimpleName();
 
     private Button m_postButton;
     private Button m_catButton;

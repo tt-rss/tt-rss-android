@@ -38,7 +38,7 @@ import okio.Okio;
 import okio.Source;
 
 public class ApiCommon {
-    public static final String TAG = "ApiCommon";
+    public static final String TAG = ApiCommon.class.getName();
 
     private static final int API_STATUS_OK = 0;
     private static final int API_STATUS_ERR = 1;
