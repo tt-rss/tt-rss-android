@@ -35,7 +35,7 @@ import java.util.Date;
 
 // TODO: add ability to update already rendered contents from article somehow (to refresh note, etc)
 public class ArticleFragment extends androidx.fragment.app.Fragment {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = ArticleFragment.class.getSimpleName();
 
     private SharedPreferences m_prefs;
     protected Article m_article;

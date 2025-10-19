@@ -6,7 +6,7 @@ import android.view.Display;
 import android.widget.Toast;
 
 public class CommonActivity extends Activity {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = CommonActivity.class.getSimpleName();
 
     private boolean m_smallScreenMode = true;
 

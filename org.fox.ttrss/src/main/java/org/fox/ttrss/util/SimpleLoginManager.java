@@ -11,7 +11,7 @@ import org.fox.ttrss.ApiRequest;
 import java.util.HashMap;
 
 public abstract class SimpleLoginManager {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = SimpleLoginManager.class.getSimpleName();
 
     protected class LoginRequest extends ApiRequest {
         private final int m_requestId;

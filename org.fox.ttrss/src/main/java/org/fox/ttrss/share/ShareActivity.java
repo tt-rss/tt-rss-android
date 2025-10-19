@@ -15,7 +15,7 @@ import org.fox.ttrss.R;
 import java.util.HashMap;
 
 public class ShareActivity extends CommonShareActivity {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = ShareActivity.class.getSimpleName();
 
     private Button m_button;
 

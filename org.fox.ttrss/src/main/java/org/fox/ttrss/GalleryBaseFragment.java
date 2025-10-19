@@ -6,7 +6,7 @@ import android.view.ContextMenu;
 import android.view.View;
 
 public class GalleryBaseFragment extends androidx.fragment.app.Fragment {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = GalleryBaseFragment.class.getSimpleName();
     protected GalleryActivity m_activity;
 
     @Override

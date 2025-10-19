@@ -22,7 +22,7 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 
 public class GalleryImageFragment extends GalleryBaseFragment {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = GalleryBaseFragment.class.getSimpleName();
 
     String m_url;
 

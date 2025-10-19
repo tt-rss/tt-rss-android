@@ -24,7 +24,7 @@ public abstract class CommonShareActivity extends CommonActivity {
     protected String m_sessionId;
     protected int m_apiLevel = 0;
 
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = CommonShareActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import org.fox.ttrss.types.Article;
 
 public class ArticleDiffItemCallback extends DiffUtil.ItemCallback<Article> {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = ArticleDiffItemCallback.class.getSimpleName();
 
     public enum ChangePayload {UNREAD, MARKED, SELECTED, PUBLISHED, NOTE, ACTIVE, SCORE}
 

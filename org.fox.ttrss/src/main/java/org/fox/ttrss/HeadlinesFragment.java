@@ -99,7 +99,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
     public static final int FLAVOR_IMG_MIN_SIZE = 128;
 
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = HeadlinesFragment.class.getSimpleName();
 
     private Feed m_feed;
 

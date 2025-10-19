@@ -3,7 +3,7 @@ package org.fox.ttrss;
 import androidx.lifecycle.ViewModelProvider;
 
 public class RootCategoriesFragment extends FeedsFragment {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = RootCategoriesFragment.class.getSimpleName();
 
     @Override
     protected FeedsModel getModel() {

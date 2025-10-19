@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCaller {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = ArticleModel.class.getSimpleName();
     @NonNull
     private final MutableLiveData<List<Article>> m_articles = new MutableLiveData<>(new ArrayList<Article>());
     private SharedPreferences m_prefs;

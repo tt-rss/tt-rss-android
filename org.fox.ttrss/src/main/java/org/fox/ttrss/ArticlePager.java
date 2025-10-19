@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class ArticlePager extends androidx.fragment.app.Fragment {
 
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = ArticlePager.class.getSimpleName();
     private PagerAdapter m_adapter;
     private HeadlinesEventListener m_listener;
     private OnlineActivity m_activity;

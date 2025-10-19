@@ -20,7 +20,7 @@ import androidx.core.view.ViewCompat;
 import java.io.IOException;
 
 public class GalleryVideoFragment extends GalleryBaseFragment {
-    private final String TAG = this.getClass().getSimpleName();
+    private static final String TAG = GalleryVideoFragment.class.getSimpleName();
 
     String m_url;
     String m_coverUrl;
