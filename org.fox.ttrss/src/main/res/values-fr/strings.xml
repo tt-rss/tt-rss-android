@@ -30,7 +30,7 @@
     <string name="ssl_trust_any">Accepter n\'importe quel certificat</string>
     <string name="category_browse_feeds">Parcourir les flux</string>
     <string name="blank">" "</string>
-    <string name="transport_debugging">Journal des données envoyées et reçues</string>
+    <string name="transport_debugging">Journaliser les données envoyées et reçues</string>
     <string name="article_toggle_marked">Basculer Marqué</string>
     <string name="article_toggle_unread">Basculer Lu</string>
     <string name="article_toggle_published">Basculer Publié</string>
@@ -68,7 +68,7 @@
     <string name="error_api_unknown">Erreur : erreur inconnue d\'API (voir journal)</string>
     <string name="error_api_incorrect_usage">Erreur : utilisation incorrecte de l\'API</string>
     <string name="error_login_failed">Erreur : identifiant ou mot de passe incorrect</string>
-    <string name="error_invalid_api_url">Erreur : API URL invalide</string>
+    <string name="error_invalid_api_url">Erreur : URL de l\'API invalide</string>
     <string name="go_offline">Passer hors connexion</string>
     <string name="go_online">Quitter le mode hors connexion</string>
     <string name="offline_switch_error">Échec de la préparation en mode hors connexion (voir journal)</string>
@@ -165,8 +165,8 @@
     <string name="article_img_open">Ouvrir l\'image</string>
     <string name="article_img_share">Partager l\'image</string>
     <string name="article_img_view_caption">Montrer le sous-titre</string>
-    <string name="pref_headlines_mark_read_scroll">Automatiquement marquer les articles comme lus</string>
-    <string name="pref_headlines_mark_read_scroll_long">Cette option permet de marquer automatiquement les articles comme lus lorsque vous naviguez dans la liste d\'articles</string>
+    <string name="pref_headlines_mark_read_scroll">Marquer comme lu lors du défilement</string>
+    <string name="pref_headlines_mark_read_scroll_long">Marquer les articles comme lus après les avoir faits défiler en entier</string>
     <plurals name="mark_num_headlines_as_read">
         <item quantity="one">Marquer %1$d article comme lu ?</item>
         <item quantity="many">Marquer un grand nombre d\'articles comme lus ?</item>
@@ -235,9 +235,9 @@
     <string name="prefs_opening_links">Ouverture des liens</string>
     <string name="open_with">Ouvrir avec…</string>
     <string name="offline_switch_failed">Échec lors de la préparation du mode hors connexion</string>
-    <string name="offline_media_cache_enabled">Mettre en cache les media</string>
-    <string name="offline_media_cache_enabled_summary">Télécharger les fichiers multimédia sur la carte SD. Cela pourrait augmenter considérablement le temps pour passer hors connexion</string>
-    <string name="notify_downloading_media">Téléchargement des fichiers médias.…</string>
+    <string name="offline_media_cache_enabled">Mettre en cache les médias</string>
+    <string name="offline_media_cache_enabled_summary">Télécharger les fichiers multimédias sur la carte SD. Cela pourrait augmenter considérablement le temps pour passer hors connexion</string>
+    <string name="notify_downloading_media">Téléchargement des fichiers multimédias.…</string>
     <string name="article_media_share">Partager</string>
     <string name="cat_special">Spécial</string>
     <string name="feed_starred_articles">Articles préférés</string>
@@ -265,7 +265,7 @@
     <string name="logcat_refresh">Actualiser</string>
     <string name="logcat_copy">Copier vers le presse-papier</string>
     <string name="logcat_title">Observateur d\'évènements</string>
-    <string name="cat_labels">Etiquettes</string>
+    <string name="cat_labels">Étiquettes</string>
     <string name="cat_uncategorized">Sans catégorie</string>
     <string name="prefs_always_open_uri">Toujours ouvrir dans le navigateur</string>
     <string name="prefs_always_open_uri_summary">Ouvre les articles directement dans votre navigateur web, au lieu d\'aller dans la vue détaillée</string>
@@ -278,7 +278,7 @@
     <string name="prefs_enable_image_downsampling">Redimensionner automatiquement les images</string>
     <string name="prefs_enable_image_downsampling_long">Demande au backend de réduire l\'échantillonnage des images si elles ne sont pas sur Wi-Fi. Nécessite un plugin (ttrss-api-resize)</string>
     <string name="prefs_always_downsample_images">Toujours redimensionner les images</string>
-    <string name="prefs_always_downsample_images_long">Y compris avec Wifi</string>
+    <string name="prefs_always_downsample_images_long">Y compris en Wifi</string>
     <string name="prefs_inline_video_player_title">Lecteur de vidéo en ligne</string>
     <string name="force_phone_layout_summary">Sur tablette</string>
     <string name="catchup_dialog_all_articles">Tous les articles</string>
