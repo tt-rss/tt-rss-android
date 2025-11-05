@@ -113,7 +113,7 @@
     <string name="error_network_unavailable">Error: network unavailable</string>
     <string name="category_browse_headlines">Browse headlines</string>
     <string name="use_volume_keys">Use volume buttons</string>
-    <string name="use_volume_keys_long">Switch between articles with hardware volume buttons</string>
+    <string name="use_volume_keys_long">Navigate articles and scroll headlines with hardware volume buttons</string>
     <string name="ssl_trust_any_host">No hostname verification</string>
     <string name="error_api_unknown_method">Error: unknown API method</string>
     <string name="ssl_trust_any_long">Accepts any SSL certificate without validation</string>

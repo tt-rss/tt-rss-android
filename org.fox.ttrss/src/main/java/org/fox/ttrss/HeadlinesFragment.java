@@ -1603,4 +1603,40 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         m_adapter.submitList(tmp);
     }
 
+    /**
+     * Scrolls the headlines list down by one page height
+     * @return true if scrolling was performed, false if already at bottom
+     */
+    public boolean scrollDown() {
+        if (m_list == null) return false;
+
+        // Check if we can scroll down
+        if (!m_list.canScrollVertically(1)) {
+            return false; // Already at bottom
+        }
+
+        // Scroll down by one page (use view height as page size)
+        int pageHeight = m_list.getHeight();
+        m_list.scrollBy(0, pageHeight);
+        return true;
+    }
+
+    /**
+     * Scrolls the headlines list up by one page height
+     * @return true if scrolling was performed, false if already at top
+     */
+    public boolean scrollUp() {
+        if (m_list == null) return false;
+
+        // Check if we can scroll up
+        if (!m_list.canScrollVertically(-1)) {
+            return false; // Already at top
+        }
+
+        // Scroll up by one page (use view height as page size)
+        int pageHeight = m_list.getHeight();
+        m_list.scrollBy(0, -pageHeight);
+        return true;
+    }
+
 }
