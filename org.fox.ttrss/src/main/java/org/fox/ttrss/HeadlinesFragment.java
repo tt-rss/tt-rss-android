@@ -1639,14 +1639,16 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
     /**
      * Scrolls the headlines list down by one page height
-     * @return true if scrolling was performed, false if already at bottom
+     * @return true if scrolling was performed or refresh triggered
      */
     public boolean scrollDown() {
         if (m_list == null) return false;
 
         // Check if we can scroll down
         if (!m_list.canScrollVertically(1)) {
-            return false; // Already at bottom
+            // Already at bottom, trigger refresh instead
+            m_activity.refresh(false);
+            return true;
         }
 
         // Scroll down by one page (use view height as page size)
