@@ -886,6 +886,20 @@ public class OnlineActivity extends CommonActivity {
                         ap.switchToArticle(true);
                         return true;
                 }
+            } else if (hf != null) {
+                // Handle volume keys for headlines scrolling
+                switch (keyCode) {
+                    case KeyEvent.KEYCODE_VOLUME_UP:
+                        if (hf.scrollUp()) {
+                            return true;
+                        }
+                        break;
+                    case KeyEvent.KEYCODE_VOLUME_DOWN:
+                        if (hf.scrollDown()) {
+                            return true;
+                        }
+                        break;
+                }
             }
         }
 
