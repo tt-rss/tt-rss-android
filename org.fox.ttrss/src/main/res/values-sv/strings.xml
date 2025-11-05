@@ -1,5 +1,6 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<resources><string name="login_in_progress">Loggar in…</string>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_in_progress">Loggar in…</string>
     <string name="login_need_configure">Vänligen konfigurera applikationen först.</string>
     <string name="login_ready">Redo att logga in.</string>
     <string name="login_login">Logga in</string>
@@ -107,17 +108,14 @@
     <string name="ssl_trust_any_host_long">Verifiera inte hostname för server</string>
     <string name="ssl">SSL</string>
     <string name="error_ssl_hostname_rejected">Fel: SSL hostname inte verifierad</string>
-
     <plurals name="article_comments">
-	<item quantity="one">%1$d kommentar</item>
-	<item quantity="other">%1$d kommentarer</item>
-</plurals>
-
+        <item quantity="one">%1$d kommentar</item>
+        <item quantity="other">%1$d kommentarer</item>
+    </plurals>
     <plurals name="trial_mode_prompt">
-	<item quantity="one">Demoläge, %1$d dag kvar.</item>
-	<item quantity="other">Demoläge, %1$d dagar kvar.</item>
-</plurals>
-
+        <item quantity="one">Demoläge, %1$d dag kvar.</item>
+        <item quantity="other">Demoläge, %1$d dagar kvar.</item>
+    </plurals>
     <string name="trial_purchase">Lås upp fullversionen</string>
     <string name="trial_expired">Demotiden utgången</string>
     <string name="trial_expired_message">För att fortsätta använda Tiny Tiny RSS, vänligen lås upp fullversionen genom att köpa nyckeln.</string>
@@ -154,20 +152,16 @@
     <string name="article_img_view_caption">Visa rubrik</string>
     <string name="pref_headlines_mark_read_scroll">Markera som läst vid skrollning</string>
     <string name="pref_headlines_mark_read_scroll_long">Rubriker kommer att markeras som lästa när de skrollas förbi</string>
-
     <plurals name="mark_num_headlines_as_read">
-	<item quantity="one">Markera %1$d artikel som läst\?</item>
-	<item quantity="other">Markera %1$d artiklar som lästa\?</item>
-</plurals>
-
+        <item quantity="one">Markera %1$d artikel som läst\?</item>
+        <item quantity="other">Markera %1$d artiklar som lästa\?</item>
+    </plurals>
     <string name="prefs_confirm_headlines_catchup">Bekräfta markering som läst</string>
     <string name="author_formatted">%1$s</string>
-
     <plurals name="n_unread_articles">
-	<item quantity="one">Inga olästa artiklar</item>
-	<item quantity="other">En oläst artikel</item>
-</plurals>
-
+        <item quantity="one">Inga olästa artiklar</item>
+        <item quantity="other">En oläst artikel</item>
+    </plurals>
     <string name="pref_headline_font_size">Textstorlek i rubriker</string>
     <string name="context_confirm_catchup">Markera alla artiklar i %1$s som lästa\?</string>
     <string name="place_shortcut">Placera genväg</string>
@@ -208,7 +202,6 @@
     <string name="prefs_widget_show_fresh">Visa Färska artiklar</string>
     <string name="prefs_widget_show_fresh_summary">Visa antal Färska artiklar iställar för totalt antal olästa</string>
     <string name="title_activity_video_player">Videospelare</string>
-
     <string name="action_settings">Inställningar</string>
     <string name="video_player_share">Dela video</string>
     <string name="headlines_row_top_changed">Nya artiklar hittade, ladda om flödet för att fortsätta.</string>
@@ -225,7 +218,6 @@
     <string name="pref_headlines_swipe_to_dismiss">Svep för att avvisa</string>
     <string name="pref_headlines_swipe_to_dismiss_long">Inaktiverar kontextmeny för rubriker</string>
     <string name="pref_widget_update_interval">Uppdateringsintervall (i minuter)</string>
-
     <string name="widget_background_light">Ljus</string>
     <string name="widget_background_dark">Mörk</string>
     <string name="widget_background_transparent">Transparent</string>
