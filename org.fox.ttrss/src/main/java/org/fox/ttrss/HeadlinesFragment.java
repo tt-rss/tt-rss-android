@@ -1604,20 +1604,60 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
     }
 
     /**
+     * Marks articles as read based on current scroll position
+     */
+    private void markVisibleArticlesAsRead() {
+        if (!m_prefs.getBoolean("headlines_mark_read_scroll", false)) {
+            return;
+        }
+
+        int firstVisibleItem = m_layoutManager.findFirstVisibleItemPosition();
+
+        for (int i = 0; i < firstVisibleItem; i++) {
+            try {
+                Article article = Application.getArticles().get(i);
+
+                if (article.unread && !m_readArticles.contains(article))
+                    m_readArticles.add(new Article(article));
+
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Mark articles as read if list is not loading
+        if (!m_readArticles.isEmpty()) {
+            ArticleModel model = Application.getArticlesModel();
+            if (!m_isLazyLoading && !model.isLoading()) {
+                Log.d(TAG, "marking articles as read, count=" + m_readArticles.size());
+                m_activity.setArticlesUnread(new ArrayList<>(m_readArticles), Article.UPDATE_SET_FALSE);
+                m_readArticles.clear();
+                new Handler().postDelayed(() -> m_activity.refresh(false), 100);
+            }
+        }
+    }
+
+    /**
      * Scrolls the headlines list down by one page height
-     * @return true if scrolling was performed, false if already at bottom
+     * @return true if scrolling was performed or refresh triggered
      */
     public boolean scrollDown() {
         if (m_list == null) return false;
 
         // Check if we can scroll down
         if (!m_list.canScrollVertically(1)) {
-            return false; // Already at bottom
+            // Already at bottom, trigger refresh instead
+            m_activity.refresh(false);
+            return true;
         }
 
         // Scroll down by one page (use view height as page size)
         int pageHeight = m_list.getHeight();
         m_list.scrollBy(0, pageHeight);
+
+        // Mark visible articles as read
+        markVisibleArticlesAsRead();
+
         return true;
     }
 
@@ -1636,6 +1676,10 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         // Scroll up by one page (use view height as page size)
         int pageHeight = m_list.getHeight();
         m_list.scrollBy(0, -pageHeight);
+
+        // Mark visible articles as read
+        markVisibleArticlesAsRead();
+
         return true;
     }
 
