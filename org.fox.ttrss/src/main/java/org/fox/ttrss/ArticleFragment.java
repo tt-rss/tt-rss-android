@@ -98,6 +98,7 @@ public class ArticleFragment extends androidx.fragment.app.Fragment {
         // couldn't reinitialize state properly, might as well bail out
         if (m_article == null) {
             m_activity.finish();
+            return view;
         }
 
         m_articleFontSize = m_prefs.getInt("article_font_size_sp_int", 16);
