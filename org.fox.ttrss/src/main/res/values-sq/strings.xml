@@ -130,7 +130,7 @@
     <string name="attachment_copy">Kopjoji URL-në</string>
     <string name="category_browse_headlines">Shfletoni tituj</string>
     <string name="use_volume_keys">Përdorni butona volumi</string>
-    <string name="use_volume_keys_long">Kaloni nga një artikull në tjetrin përmes butonash fizikë volumi</string>
+    <string name="use_volume_keys_long">Kaloni nga një artikull në tjetrin dhe nëpër tituj përmes butonash fizikë volumi</string>
     <string name="ssl_trust_any_host">Pa verifikim strehëemri</string>
     <string name="error_api_unknown_method">Gabim: metodë API e panjohur</string>
     <string name="ssl_trust_any_long">Pranon çfarëdo dëshmie SSL pa vleftësim</string>
