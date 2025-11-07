@@ -422,7 +422,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
         ArticleModel model = Application.getArticlesModel();
 
-        model.getIsLoading().observe(getActivity(), isLoading -> {
+        model.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             Log.d(TAG, "observed headlines isLoading=" + isLoading + " lazyLoadEnabled=" + model.isLazyLoadEnabled());
 
             if (m_swipeLayout != null)
@@ -430,14 +430,14 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         });
 
         // this gets notified on loading %
-        model.getLoadingProgress().observe(getActivity(), progress -> {
+        model.getLoadingProgress().observe(getViewLifecycleOwner(), progress -> {
             Log.d(TAG, "observed headlines loading progress=" + progress);
 
             m_listener.onHeadlinesLoadingProgress(progress);
         });
 
         // this gets notified if active article changes
-        model.getActive().observe(getActivity(), (activeArticle) -> {
+        model.getActive().observe(getViewLifecycleOwner(), (activeArticle) -> {
             Log.d(TAG, "observed active article=" + activeArticle);
 
             if (activeArticle != null) {
@@ -464,7 +464,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         });
 
         // this gets notified on network update
-        model.getUpdatesData().observe(getActivity(), lastUpdate -> {
+        model.getUpdatesData().observe(getViewLifecycleOwner(), lastUpdate -> {
             if (lastUpdate > 0) {
                 List<Article> tmp = new ArrayList<>(model.getArticles().getValue());
 
@@ -509,7 +509,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         });
 
         // loaded articles might get modified for all sorts of reasons
-        model.getArticles().observe(getActivity(), articles -> {
+        model.getArticles().observe(getViewLifecycleOwner(), articles -> {
             Log.d(TAG, "observed headlines article list size=" + articles.size());
 
             List<Article> tmp = new ArrayList<>(articles);
