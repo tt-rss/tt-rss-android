@@ -25,7 +25,6 @@ import androidx.preference.PreferenceManager;
 
 import org.fox.ttrss.types.Article;
 import org.fox.ttrss.types.Attachment;
-import org.jsoup.helper.StringUtil;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -212,7 +211,7 @@ public class ArticleFragment extends androidx.fragment.app.Fragment {
 
                 tagv.setText(fTitle);
             } else if (m_article.tags != null) {
-                tagv.setText(StringUtil.join(m_article.tags, ", "));
+                tagv.setText(String.join(", ", m_article.tags));
             } else {
                 tagv.setVisibility(View.GONE);
             }

@@ -180,9 +180,7 @@ public class ApiCommon {
 
                 if (m_transportDebugging) Log.d(TAG, "<<< " + payloadReceived);
 
-                JsonParser parser = new JsonParser();
-
-                JsonElement result = parser.parse(payloadReceived);
+                JsonElement result = JsonParser.parseString(payloadReceived);
                 JsonObject resultObj = result.getAsJsonObject();
 
                 int statusCode = resultObj.get("status").getAsInt();
@@ -315,28 +313,24 @@ public class ApiCommon {
         @Override
         public BufferedSource source() {
             if (bufferedSource == null) {
-                bufferedSource = Okio.buffer(source(responseBody.source()));
+                bufferedSource = Okio.buffer(new ForwardingSource(responseBody.source()) {
+                    long totalBytesRead = 0L;
+
+                    @Override
+                    public long read(Buffer sink, long byteCount) throws IOException {
+                        long bytesRead = super.read(sink, byteCount);
+                        long fullLength = responseBody.contentLength();
+                        if (bytesRead == -1) { // this source is exhausted
+                            totalBytesRead = fullLength;
+                        } else {
+                            totalBytesRead += bytesRead;
+                        }
+                        progressListener.update(url, totalBytesRead, fullLength);
+                        return bytesRead;
+                    }
+                });
             }
             return bufferedSource;
-        }
-
-        private Source source(Source source) {
-            return new ForwardingSource(source) {
-                long totalBytesRead = 0L;
-
-                @Override
-                public long read(Buffer sink, long byteCount) throws IOException {
-                    long bytesRead = super.read(sink, byteCount);
-                    long fullLength = responseBody.contentLength();
-                    if (bytesRead == -1) { // this source is exhausted
-                        totalBytesRead = fullLength;
-                    } else {
-                        totalBytesRead += bytesRead;
-                    }
-                    progressListener.update(url, totalBytesRead, fullLength);
-                    return bytesRead;
-                }
-            };
         }
     }
 
