@@ -101,7 +101,7 @@
     <string name="error_network_unavailable">Fout: netwerk niet beschikbaar</string>
     <string name="category_browse_headlines">Blader door kopteksten</string>
     <string name="use_volume_keys">Gebruik volumeknoppen</string>
-    <string name="use_volume_keys_long">Wissel tussen artikelen met hardware volumeknoppen</string>
+    <string name="use_volume_keys_long">Navigeer artikelen en scroll titels met hardware volumeknoppen</string>
     <string name="ssl_trust_any_host">Geen hostnaam-controle</string>
     <string name="error_api_unknown_method">Fout: onbekende API-methode</string>
     <string name="ssl_trust_any_long">Accepteert elk SSL-certificaat zonder validering</string>
