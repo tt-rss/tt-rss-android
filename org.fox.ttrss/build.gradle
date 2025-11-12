@@ -12,7 +12,7 @@ android {
         minSdkVersion 24
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 31
-        compileSdk 36
+        compileSdkVersion = 36
         versionCode getGitVersionCode()
         versionName getVersion()
         vectorDrawables.useSupportLibrary = true
@@ -54,7 +54,7 @@ android {
             minifyEnabled  false
             versionNameSuffix "-signed"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            signingConfig signingConfigs.signed
+            signingConfig = signingConfigs.signed
             matchingFallbacks = ['release']
         }
 
@@ -62,7 +62,7 @@ android {
             minifyEnabled  false
             versionNameSuffix "-signed-branch"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            signingConfig signingConfigs.signed
+            signingConfig = signingConfigs.signed
             applicationIdSuffix ".branch"
             resValue "string", "app_name", "Tiny Tiny RSS (dev)"
             manifestPlaceholders = [
@@ -71,13 +71,13 @@ android {
             matchingFallbacks = ['release']
         }
     }
-    namespace 'org.fox.ttrss'
+    namespace = 'org.fox.ttrss'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
     lint {
-        abortOnError true
-        checkReleaseBuilds false
+        abortOnError = true
+        checkReleaseBuilds = false
         disable 'MissingTranslation', 'ExtraTranslation', 'MissingQuantity', 'ImpliedQuantity'
         enable 'SuspiciousIndentation'
     }
@@ -100,9 +100,10 @@ def getGitTimestamp() {
     // try to get version from git repo in current dir
     try {
         def stdout = new ByteArrayOutputStream()
-        exec {
+        rootProject.exec {
             commandLine 'git', '--no-pager', 'log', '--pretty=%ct', '-n1', 'HEAD'
             standardOutput = stdout
+            ignoreExitValue = true
         }
 
         return stdout.toString().trim().toLong() * 1000;
@@ -121,9 +122,10 @@ def getGitCommitHash() {
     // try to get version from git repo in current dir
     try {
         def stdout = new ByteArrayOutputStream()
-        exec {
+        rootProject.exec {
             commandLine 'git', '--no-pager', 'log', '--pretty=%h', '-n1', 'HEAD'
             standardOutput = stdout
+            ignoreExitValue = true
         }
         return stdout.toString().trim()
     }

@@ -1,8 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
-        jcenter()
         google()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.11.2'
@@ -12,9 +12,9 @@ buildscript {
 allprojects {
     repositories {
         google()
-        maven { url "https://clojars.org/repo/" }
-        maven { url "https://jzaccone.github.io/SlidingMenu-aar" }
-        maven { url "https://jitpack.io" }
-        jcenter()
+        mavenCentral()
+        maven { url = "https://clojars.org/repo/" }
+        maven { url = "https://jzaccone.github.io/SlidingMenu-aar" }
+        maven { url = "https://jitpack.io" }
     }
 }
