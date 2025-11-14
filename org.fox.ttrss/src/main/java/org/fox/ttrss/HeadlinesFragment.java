@@ -475,11 +475,13 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
                 final boolean appended = model.getAppend();
 
+                // Reset lazy loading flag immediately when we receive new data, not after UI update
+                // This prevents a race condition where the flag stays true while scrolling during UI update
+                m_isLazyLoading = false;
+
                 m_adapter.submitList(tmp, () -> {
                     if (!appended)
                         m_list.scrollToPosition(0);
-
-                    m_isLazyLoading = false;
 
                     m_listener.onHeadlinesLoaded(appended);
                 });
