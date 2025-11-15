@@ -99,12 +99,14 @@ def getGitTimestamp() {
 
     // try to get version from git repo in current dir
     try {
-        def output = providers.exec {
+        def stdout = new ByteArrayOutputStream()
+        exec {
             commandLine 'git', '--no-pager', 'log', '--pretty=%ct', '-n1', 'HEAD'
-            isIgnoreExitValue = true
-        }.standardOutput.asText.get().trim()
+            standardOutput = stdout
+            ignoreExitValue = true
+        }
 
-        return output.toLong() * 1000;
+        return stdout.toString().trim().toLong() * 1000;
     }
     catch (ignored) {
         return 0;
@@ -119,10 +121,13 @@ def getGitCommitHash() {
 
     // try to get version from git repo in current dir
     try {
-        return providers.exec {
+        def stdout = new ByteArrayOutputStream()
+        exec {
             commandLine 'git', '--no-pager', 'log', '--pretty=%h', '-n1', 'HEAD'
-            isIgnoreExitValue = true
-        }.standardOutput.asText.get().trim()
+            standardOutput = stdout
+            ignoreExitValue = true
+        }
+        return stdout.toString().trim()
     }
     catch (ignored) {
         return 'UNKNOWN';
