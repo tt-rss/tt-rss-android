@@ -484,7 +484,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                     m_listener.onHeadlinesLoaded(appended);
                 });
 
-                if (model.getFirstIdChanged())
+                if (model.getFirstIdChanged() && getView() != null)
                     Snackbar.make(getView(), R.string.headlines_row_top_changed, Snackbar.LENGTH_LONG)
                             .setAction(R.string.reload, v -> refresh(false)).show();
 
