@@ -113,6 +113,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
     private OnlineActivity m_activity;
     private SwipeRefreshLayout m_swipeLayout;
     private boolean m_compactLayoutMode = false;
+    private boolean m_splitLayoutMode = false;
     private RecyclerView m_list;
     private LinearLayoutManager m_layoutManager;
     private HeadlinesFragmentModel m_headlinesFragmentModel;
@@ -226,6 +227,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
             m_feed = savedInstanceState.getParcelable("m_feed");
             m_searchQuery = savedInstanceState.getString("m_searchQuery");
             m_compactLayoutMode = savedInstanceState.getBoolean("m_compactLayoutMode");
+            m_splitLayoutMode = savedInstanceState.getBoolean("m_splitLayoutMode");
         }
 
         setRetainInstance(true);
@@ -240,6 +242,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         out.putParcelable("m_feed", m_feed);
         out.putString("m_searchQuery", m_searchQuery);
         out.putBoolean("m_compactLayoutMode", m_compactLayoutMode);
+        out.putBoolean("m_splitLayoutMode", m_splitLayoutMode);
     }
 
     @Override
@@ -252,6 +255,9 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
         if ("HL_COMPACT".equals(headlineMode) || "HL_COMPACT_NOIMAGES".equals(headlineMode))
             m_compactLayoutMode = true;
+
+        if ("HL_SPLIT".equals(headlineMode))
+            m_splitLayoutMode = true;
 
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -720,7 +726,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
             m_screenWidth = size.x;
 
             String headlineMode = m_prefs.getString("headline_mode", "HL_DEFAULT");
-            m_flavorImageEnabled = "HL_DEFAULT".equals(headlineMode) || "HL_COMPACT".equals(headlineMode);
+            m_flavorImageEnabled = "HL_DEFAULT".equals(headlineMode) || "HL_COMPACT".equals(headlineMode) || "HL_SPLIT".equals(headlineMode);
 
             m_colorPrimary = colorFromAttr(R.attr.colorPrimary);
             m_colorSecondary = colorFromAttr(R.attr.colorSecondary);
@@ -748,7 +754,12 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         @Override
         public ArticleViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-            int layoutId = m_compactLayoutMode ? R.layout.headlines_row_compact : R.layout.headlines_row;
+            int layoutId = R.layout.headlines_row;
+            if (m_compactLayoutMode) {
+                layoutId = R.layout.headlines_row_compact;
+            } else if (m_splitLayoutMode) {
+                layoutId = R.layout.headlines_row_split;
+            }
 
             if (viewType == VIEW_AMR_FOOTER) {
                 layoutId = R.layout.headlines_footer;
@@ -1102,7 +1113,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                 holder.flavorImageHolder.setVisibility(View.GONE);
 
                 if (canShowFlavorImage() && article.flavorImageUri != null && holder.flavorImageView != null) {
-                    int maxImageHeight = (int) (m_screenHeight * 0.5f);
+                    int maxImageHeight = m_splitLayoutMode ? 150 : (int) (m_screenHeight * 0.5f);
 
                     // we also downsample below using glide to save RAM
                     holder.flavorImageView.setMaxHeight(maxImageHeight);

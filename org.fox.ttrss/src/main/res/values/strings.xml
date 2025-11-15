@@ -221,6 +221,7 @@
     <string name="headline_display_mode_no_images">No images</string>
     <string name="headline_display_mode_compact">Compact</string>
     <string name="headline_display_mode_compact_noimages">Compact (no images)</string>
+    <string name="headline_display_mode_split">Split view: image left, text right</string>
     <string name="prefs_version">%1$s (%2$d)</string>
     <string name="prefs_version_title">Version</string>
     <string name="prefs_build_timestamp">%1$s</string>
