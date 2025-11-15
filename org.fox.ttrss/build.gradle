@@ -7,14 +7,14 @@ android {
     }
 
     defaultConfig {
-        applicationId "org.fox.ttrss"
+        applicationId = "org.fox.ttrss"
         buildConfigField "long", "TIMESTAMP", System.currentTimeMillis() + "L"
-        minSdkVersion 24
+        minSdkVersion = 24
         //noinspection ExpiredTargetSdkVersion
-        targetSdkVersion 31
+        targetSdkVersion = 31
         compileSdkVersion = 36
-        versionCode getGitVersionCode()
-        versionName getVersion()
+        versionCode = getGitVersionCode()
+        versionName = getVersion()
         vectorDrawables.useSupportLibrary = true
         manifestPlaceholders = [
             appIcon: "@mipmap/ic_launcher"
@@ -35,8 +35,8 @@ android {
 
     buildTypes {
         debug {
-            minifyEnabled  false
-            versionNameSuffix "-debug"
+            minifyEnabled = false
+            versionNameSuffix = "-debug"
             applicationIdSuffix ".debug"
             resValue "string", "app_name", "Tiny Tiny RSS (debug)"
             manifestPlaceholders = [
@@ -45,25 +45,25 @@ android {
         }
 
         release {
-            minifyEnabled  false
-            versionNameSuffix "-unsigned"
+            minifyEnabled = false
+            versionNameSuffix = "-unsigned"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
 
         signed {
-            minifyEnabled  false
-            versionNameSuffix "-signed"
+            minifyEnabled = false
+            versionNameSuffix = "-signed"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             signingConfig = signingConfigs.signed
             matchingFallbacks = ['release']
         }
 
         branch {
-            minifyEnabled  false
-            versionNameSuffix "-signed-branch"
+            minifyEnabled = false
+            versionNameSuffix = "-signed-branch"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             signingConfig = signingConfigs.signed
-            applicationIdSuffix ".branch"
+            applicationIdSuffix = ".branch"
             resValue "string", "app_name", "Tiny Tiny RSS (dev)"
             manifestPlaceholders = [
                 appIcon: "@mipmap/ic_launcher_variant"
@@ -99,14 +99,12 @@ def getGitTimestamp() {
 
     // try to get version from git repo in current dir
     try {
-        def stdout = new ByteArrayOutputStream()
-        rootProject.exec {
+        def output = providers.exec {
             commandLine 'git', '--no-pager', 'log', '--pretty=%ct', '-n1', 'HEAD'
-            standardOutput = stdout
-            ignoreExitValue = true
-        }
+            isIgnoreExitValue = true
+        }.standardOutput.asText.get().trim()
 
-        return stdout.toString().trim().toLong() * 1000;
+        return output.toLong() * 1000;
     }
     catch (ignored) {
         return 0;
@@ -121,13 +119,10 @@ def getGitCommitHash() {
 
     // try to get version from git repo in current dir
     try {
-        def stdout = new ByteArrayOutputStream()
-        rootProject.exec {
+        return providers.exec {
             commandLine 'git', '--no-pager', 'log', '--pretty=%h', '-n1', 'HEAD'
-            standardOutput = stdout
-            ignoreExitValue = true
-        }
-        return stdout.toString().trim()
+            isIgnoreExitValue = true
+        }.standardOutput.asText.get().trim()
     }
     catch (ignored) {
         return 'UNKNOWN';
