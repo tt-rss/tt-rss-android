@@ -420,8 +420,15 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
                     m_isLazyLoading = true;
 
+                    // Capture current feed to prevent race condition if user switches feeds before handler fires
+                    final Feed feedToLoad = m_feed;
+
                     // this has to be dispatched delayed, consequent adapter updates are forbidden in scroll handler
-                    new Handler().postDelayed(() -> refresh(true), 250);
+                    new Handler().postDelayed(() -> {
+                        if (feedToLoad == m_feed) {
+                            refresh(true);
+                        }
+                    }, 250);
                 }
             }
         });
@@ -460,8 +467,15 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
                         m_isLazyLoading = true;
 
+                        // Capture current feed to prevent race condition if user switches feeds before handler fires
+                        final Feed feedToLoad = m_feed;
+
                         // this has to be dispatched delayed, consequent adapter updates are forbidden in scroll handler
-                        new Handler().postDelayed(() -> refresh(true), 250);
+                        new Handler().postDelayed(() -> {
+                            if (feedToLoad == m_feed) {
+                                refresh(true);
+                            }
+                        }, 250);
                     }
                 }
 
