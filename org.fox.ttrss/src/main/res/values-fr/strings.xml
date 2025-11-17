@@ -315,4 +315,5 @@
     <string name="article_enable_javascript">Activer JavaScript</string>
     <string name="article_enable_javascript_summary">Certains lecteurs vidéo basés sur Iframe ont besoin de JavaScript, activez avec prudence</string>
     <string name="confirm_catchup_above_title">Marquer tous les articles au dessus de \"%1s\" comme lus ?</string>
+    <string name="headline_display_mode_split">Afficher l’image à gauche et le texte à droite</string>
 </resources>
