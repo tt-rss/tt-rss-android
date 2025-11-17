@@ -132,7 +132,7 @@
     <string name="error_network_unavailable">Błąd: sieć jest niedostępna</string>
     <string name="category_browse_headlines">Przeglądaj nagłówki</string>
     <string name="use_volume_keys">Użyj przycisków głośności</string>
-    <string name="use_volume_keys_long">Przełączaj pomiędzy artykułami korzystając z przycisków regulacji głośności</string>
+    <string name="use_volume_keys_long">Nawiguj pomiędzy artykułami korzystając z przycisków regulacji głośności</string>
     <string name="ssl_trust_any_host">Wyłącz weryfikację zgodności nazwy serwera</string>
     <string name="error_api_unknown_method">Błąd: nieznana metoda API</string>
     <string name="ssl_trust_any_long">Akceptuj bez sprawdzania dowolny certyfikat SSL</string>
@@ -322,4 +322,20 @@
     <string name="prefs_enable_image_downsampling_long">Prosi backend o zmniejszenie rozmiaru obrazów, jeśli nie są w sieci Wi-Fi. Wymaga wtyczki (ttrss-api-resize)</string>
     <string name="headlines_display_mode">Ustaw tryb wyświetlania</string>
     <string name="catchup_dialog_title_search">Zaznaczyć wyniki wyszukiwania w %1$s jako przeczytane?</string>
+    <string name="article_edit_note">Edytuj notatkę</string>
+    <string name="headline_display_mode_split">Widok rozdzielony: obraz po lewej, tekst po prawej</string>
+    <string name="crash_dialog_text_email">Niestety Tiny Tiny RSS przestał działać. Wysłać raport błędu przez email?</string>
+    <string name="confirm_catchup_above_title">Zaznaczyć wszystkie artykuły powyżej \"%1s\" jako przeczytane?</string>
+    <string name="error_success">Operacja ukończona pomyślnie</string>
+    <string name="error_bad_request">Błąd: 400 niepoprawne zapytanie</string>
+    <string name="headlines_set_display_mode">Ustaw tryb wyświetlania</string>
+    <string name="window_secure_mode_summary">Wyłącza zrzuty ekranu i ukrywa zawartość okna na niezabezpieczonych ekranach</string>
+    <string name="window_secure_mode">Tryb bezpiecznego okna</string>
+    <string name="enable_dynamic_colors_summary">Zabarwia interfejs użytkownika zgodnie z ustawieniami koloru twojego urządzenia</string>
+    <string name="enable_dynamic_colors">Dynamiczne kolory</string>
+    <string name="enable_icon_tinting">Włącz kolorowanie ikon</string>
+    <string name="enable_icon_tinting_summary">Wyłącz jeśli masz problem z rozróżnianiem ikon po kolorze</string>
+    <string name="expand_special_cat">Rozszerz kategorię specjalną</string>
+    <string name="article_enable_javascript">Włącz JavaScript</string>
+    <string name="article_enable_javascript_summary">Niektóre odtwarzacze wideo bazujące na iframe wymagają JavaScript, włącz zachowując ostrożność</string>
 </resources>
