@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/headlines_row"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="8dp"
+    app:strokeWidth="0dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="0dp">
+
+        <!-- Header with title and metadata -->
+        <RelativeLayout
+            android:id="@+id/headline_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:paddingBottom="8dp"
+                android:singleLine="false"
+                android:textColor="?colorPrimary"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                tools:text="Sample entry title which is overwhelmingly long blah blah blah" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/feed_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:ellipsize="middle"
+                    android:fontFamily="sans-serif-light"
+                    android:singleLine="true"
+                    android:textAlignment="viewStart"
+                    android:textColor="?colorSecondary"
+                    android:textSize="12sp"
+                    tools:text="Example Feed AAA AAA AAAAAA AAAA AAAAA AA A A AA AA" />
+
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:ellipsize="none"
+                    android:fontFamily="sans-serif-light"
+                    android:singleLine="true"
+                    android:textAlignment="viewEnd"
+                    android:textColor="?colorSecondary"
+                    android:textSize="12sp"
+                    tools:text="Jan 01, 12:00, 1970" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/link_host"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_below="@+id/linearLayout2"
+                android:layout_height="wrap_content"
+                android:ellipsize="middle"
+                android:fontFamily="sans-serif-light"
+                android:singleLine="true"
+                android:textAlignment="viewStart"
+                android:textColor="?colorSecondary"
+                android:textSize="12sp"
+                tools:text="example.com" />
+
+        </RelativeLayout>
+
+        <!-- Content area: 50/50 split with image on left, text on right -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp">
+
+            <!-- Left side: Image -->
+            <FrameLayout
+                android:id="@+id/flavor_image_holder"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_marginEnd="8dp"
+                android:gravity="center">
+
+                <ProgressBar
+                    android:id="@+id/flavor_image_progressbar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/flavor_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="@null"
+                    android:cropToPadding="false"
+                    android:scaleType="centerInside"
+                    tools:src="@drawable/ic_launcher_background"
+                    android:visibility="gone" />
+
+                <TextureView
+                    android:id="@+id/flavor_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="@null"
+                    android:cropToPadding="true"
+                    android:foreground="@null"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/flavor_video_kind"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|bottom"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="4dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/baseline_play_circle_24"
+                    android:visibility="gone"
+                    app:tint="?colorTertiary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/gallery_overflow"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginEnd="-8dp"
+                    app:icon="@drawable/baseline_more_vert_24"
+                    app:iconTint="?colorTertiary"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <!-- Right side: Text content -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/excerpt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:textAlignment="viewStart"
+                    android:lineSpacingExtra="2sp"
+                    android:maxLines="4"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    tools:text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                    android:textSize="13sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Footer with action buttons -->
+        <LinearLayout
+            android:id="@+id/headline_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp">
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:focusable="false" />
+
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ellipsize="middle"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                tools:text="by Author"
+                android:textColor="?colorSecondary"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialIconButtonStyle"
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                app:icon="@drawable/baseline_trending_flat_24" />
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialIconButtonStyle"
+                android:id="@+id/attachments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                app:icon="@drawable/baseline_attachment_24" />
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialIconButtonStyle"
+                android:id="@+id/marked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                app:icon="@drawable/baseline_star_outline_24" />
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialIconButtonStyle"
+                android:id="@+id/published"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                app:icon="@drawable/rss" />
+
+            <com.google.android.material.button.MaterialButton
+                style="?attr/materialIconButtonStyle"
+                android:id="@+id/article_menu_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                app:icon="@drawable/baseline_more_vert_24" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
