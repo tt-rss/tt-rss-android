@@ -71,7 +71,7 @@
     <string name="headlines_select_all">Përzgjidhi krejt</string>
     <string name="headlines_select_unread">Të palexuar</string>
     <string name="headlines_select_none">Shpërzgjidhi krejt</string>
-    <string name="selection_toggle_marked">I vini(hiqni)yll</string>
+    <string name="selection_toggle_marked">I vini(hiqni) yll</string>
     <string name="selection_toggle_published">Botoje(Hiqi botimin)</string>
     <string name="article_mark_read_above">Vëri shenjë si të lexuar prurjes më sipër</string>
     <string name="http_login_summary">Opsionale. Plotësojeni këtë nëse instalimi juaj i tt-rss-së mbrohet me mirëfilltësim HTTP Basic</string>
