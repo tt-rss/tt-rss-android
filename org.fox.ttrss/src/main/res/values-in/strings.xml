@@ -118,7 +118,7 @@
     <string name="prefs_opening_links">Membuka tautan</string>
     <string name="open_with">Buka dengan…</string>
     <string name="confirm_catchup_above">Tandai artikel sebagai sudah dibaca?</string>
-    <string name="confirm_catchup_above_title">Tandai semua artikel di atas %1s sebagai sudah dibaca?</string>
+    <string name="confirm_catchup_above_title">Tandai semua artikel di atas \"%1s\" sebagai sudah dibaca?</string>
     <string name="dialog_ok">OK</string>
     <string name="headline_undo_row_button">BATALKAN</string>
     <string name="headline_undo_row_prompt">Ditandai sebagai sudah dibaca</string>
@@ -177,4 +177,18 @@
     <string name="window_secure_mode_summary">Menonaktifkan tangkapan layar dan menyembunyikan konten jendela pada tampilan tidak aman</string>
     <string name="window_secure_mode">Mode jendela aman</string>
     <string name="enable_dynamic_colors_summary">Memberi nuansa antarmuka pengguna sesuai dengan pengaturan warna perangkat Anda</string>
+    <string name="enable_dynamic_colors">Warna dinamis</string>
+    <string name="open_on_startup">Buka saat mulai</string>
+    <string name="ttrss_url">Tiny Tiny RSS URL</string>
+    <string name="ttrss_url_summary">https://example.com/tt-rss</string>
+    <string name="ssl">SSL</string>
+    <string name="error_ssl_hostname_rejected">Kesalahan: Nama host SSL tidak terverifikasi</string>
+    <plurals name="article_comments">
+        <item quantity="other">%1$d komentar</item>
+    </plurals>
+    <string name="trial_purchase">Buka versi lengkap</string>
+    <string name="trial_expired">Masa percobaan berakhir</string>
+    <string name="trial_expired_message">Untuk terus menggunakan Tiny Tiny RSS, silakan buka versi lengkapnya dengan membeli kunci lisensi.</string>
+    <string name="theme_amber">Amber</string>
+    <string name="reading">Membaca</string>
 </resources>
