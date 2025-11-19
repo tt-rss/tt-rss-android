@@ -191,4 +191,17 @@
     <string name="trial_expired_message">Untuk terus menggunakan Tiny Tiny RSS, silakan buka versi lengkapnya dengan membeli kunci lisensi.</string>
     <string name="theme_amber">Amber</string>
     <string name="reading">Membaca</string>
+    <string name="blank">Kosong</string>
+    <plurals name="trial_mode_prompt">
+        <item quantity="other">Mode uji coba, %1$d hari tersisa.</item>
+    </plurals>
+    <string name="offline_articles_to_download">Jumlah artikel yang akan diunduh</string>
+    <string name="offline_articles_to_download_long">Berapa banyak artikel yang akan diunduh untuk mode offline (urutan terbaru dahulu)</string>
+    <string name="pref_headlines_show_content_long">Tampilkan pratinjau konten dalam daftar judul</string>
+    <string name="pref_headlines_show_content">Tampilkan pratinjau konten</string>
+    <string name="api_too_low">Aksi ini memerlukan versi terbaru dari Tiny Tiny RSS</string>
+    <string name="share_url_hint">URL artikel</string>
+    <string name="share_content_hint">Isi Artikel</string>
+    <string name="share_title_hint">Judul Artikel</string>
+    <string name="share_share_button">Bagikan</string>
 </resources>
