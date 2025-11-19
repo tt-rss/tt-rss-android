@@ -29,7 +29,7 @@
     <string name="sort_feeds_by_unread">Trier flux par quantité de non lus</string>
     <string name="ssl_trust_any">Accepter n\'importe quel certificat</string>
     <string name="category_browse_feeds">Parcourir les flux</string>
-    <string name="blank">" "</string>
+    <string name="blank">Blanc</string>
     <string name="transport_debugging">Journaliser les données envoyées et reçues</string>
     <string name="article_toggle_marked">Basculer Marqué</string>
     <string name="article_toggle_unread">Basculer Lu</string>
