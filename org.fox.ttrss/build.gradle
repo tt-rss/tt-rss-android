@@ -9,9 +9,9 @@ android {
     defaultConfig {
         applicationId = "org.fox.ttrss"
         buildConfigField "long", "TIMESTAMP", System.currentTimeMillis() + "L"
-        minSdkVersion = 24
+        minSdkVersion 24
         //noinspection ExpiredTargetSdkVersion
-        targetSdkVersion = 31
+        targetSdkVersion 35
         compileSdkVersion = 36
         versionCode = getGitVersionCode()
         versionName = getVersion()
