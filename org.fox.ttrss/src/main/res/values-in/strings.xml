@@ -118,7 +118,7 @@
     <string name="prefs_opening_links">Membuka tautan</string>
     <string name="open_with">Buka dengan…</string>
     <string name="confirm_catchup_above">Tandai artikel sebagai sudah dibaca?</string>
-    <string name="confirm_catchup_above_title">Tandai semua artikel di atas %1s sebagai sudah dibaca?</string>
+    <string name="confirm_catchup_above_title">Tandai semua artikel di atas \"%1s\" sebagai sudah dibaca?</string>
     <string name="dialog_ok">OK</string>
     <string name="headline_undo_row_button">BATALKAN</string>
     <string name="headline_undo_row_prompt">Ditandai sebagai sudah dibaca</string>
@@ -177,4 +177,31 @@
     <string name="window_secure_mode_summary">Menonaktifkan tangkapan layar dan menyembunyikan konten jendela pada tampilan tidak aman</string>
     <string name="window_secure_mode">Mode jendela aman</string>
     <string name="enable_dynamic_colors_summary">Memberi nuansa antarmuka pengguna sesuai dengan pengaturan warna perangkat Anda</string>
+    <string name="enable_dynamic_colors">Warna dinamis</string>
+    <string name="open_on_startup">Buka saat mulai</string>
+    <string name="ttrss_url">Tiny Tiny RSS URL</string>
+    <string name="ttrss_url_summary">https://example.com/tt-rss</string>
+    <string name="ssl">SSL</string>
+    <string name="error_ssl_hostname_rejected">Kesalahan: Nama host SSL tidak terverifikasi</string>
+    <plurals name="article_comments">
+        <item quantity="other">%1$d komentar</item>
+    </plurals>
+    <string name="trial_purchase">Buka versi lengkap</string>
+    <string name="trial_expired">Masa percobaan berakhir</string>
+    <string name="trial_expired_message">Untuk terus menggunakan Tiny Tiny RSS, silakan buka versi lengkapnya dengan membeli kunci lisensi.</string>
+    <string name="theme_amber">Amber</string>
+    <string name="reading">Membaca</string>
+    <string name="blank">Kosong</string>
+    <plurals name="trial_mode_prompt">
+        <item quantity="other">Mode uji coba, %1$d hari tersisa.</item>
+    </plurals>
+    <string name="offline_articles_to_download">Jumlah artikel yang akan diunduh</string>
+    <string name="offline_articles_to_download_long">Berapa banyak artikel yang akan diunduh untuk mode offline (urutan terbaru dahulu)</string>
+    <string name="pref_headlines_show_content_long">Tampilkan pratinjau konten dalam daftar judul</string>
+    <string name="pref_headlines_show_content">Tampilkan pratinjau konten</string>
+    <string name="api_too_low">Aksi ini memerlukan versi terbaru dari Tiny Tiny RSS</string>
+    <string name="share_url_hint">URL artikel</string>
+    <string name="share_content_hint">Isi Artikel</string>
+    <string name="share_title_hint">Judul Artikel</string>
+    <string name="share_share_button">Bagikan</string>
 </resources>

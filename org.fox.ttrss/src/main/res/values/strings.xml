@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="login_in_progress">Logging in…</string>
     <string name="app_name" translatable="false">Tiny Tiny RSS</string>
     <string name="login_need_configure">Please configure the application first.</string>
@@ -30,7 +29,7 @@
     <string name="sort_feeds_by_unread">Sort feeds by unread count</string>
     <string name="ssl_trust_any">Accept any certificate</string>
     <string name="category_browse_feeds">Browse feeds</string>
-    <string name="blank"></string>
+    <string name="blank">Blank</string>
     <string name="transport_debugging">Log sent and received data</string>
     <string name="article_toggle_marked">(Un)Star</string>
     <string name="article_toggle_unread">(Un)Read</string>
@@ -120,17 +119,14 @@
     <string name="ssl_trust_any_host_long">Do not verify server hostname</string>
     <string name="ssl">SSL</string>
     <string name="error_ssl_hostname_rejected">Error: SSL hostname not verified</string>
-
     <plurals name="article_comments">
         <item quantity="one">%1$d comment</item>
         <item quantity="other">%1$d comments</item>
     </plurals>
-
     <plurals name="trial_mode_prompt">
         <item quantity="one">Trial mode, only one day left.</item>
         <item quantity="other">Trial mode, %1$d days left.</item>
     </plurals>
-
     <string name="trial_purchase">Unlock full version</string>
     <string name="trial_expired">Trial expired</string>
     <string name="trial_expired_message">To continue using Tiny Tiny RSS please unlock the full version by purchasing the key.</string>
@@ -169,21 +165,17 @@
     <string name="article_img_view_caption">View Caption</string>
     <string name="pref_headlines_mark_read_scroll">Mark read on scroll</string>
     <string name="pref_headlines_mark_read_scroll_long">Headlines will be marked read when scrolling past them</string>
-
     <plurals name="mark_num_headlines_as_read">
         <item quantity="one">Mark %1$d article as read?</item>
         <item quantity="other">Mark %1$d articles as read?</item>
     </plurals>
-
     <string name="prefs_confirm_headlines_catchup">Confirm mark as read</string>
     <string name="author_formatted">%1$s</string>
-
     <plurals name="n_unread_articles">
         <item quantity="zero">No unread articles</item>
         <item quantity="one">One unread article</item>
         <item quantity="other">%1$d unread articles</item>
     </plurals>
-
     <string name="pref_headline_font_size">Text size</string>
     <string name="context_confirm_catchup">Mark all articles in %1$s as read?</string>
     <string name="accel_webview_summary">Disable if you see flicker or visual glitches</string>
@@ -232,7 +224,6 @@
     <string name="prefs_widget_show_fresh_summary">Instead of total unread display amount of Fresh articles</string>
     <string name="prefs_widget">Widget</string>
     <string name="title_activity_video_player">Video Player</string>
-
     <!-- <string name="hello_world">Hello world!</string> -->
     <string name="action_settings">Settings</string>
     <string name="video_player_share">Share video</string>
@@ -258,7 +249,6 @@
     <string name="pref_headlines_swipe_to_dismiss">Swipe to dismiss</string>
     <string name="pref_headlines_swipe_to_dismiss_long">Disables headlines context menu</string>
     <string name="pref_widget_update_interval">Update interval (in minutes)</string>
-
     <string name="widget_background_light">Light</string>
     <string name="widget_background_dark">Dark</string>
     <string name="widget_background_transparent">Transparent</string>
@@ -288,7 +278,6 @@
     <string name="prefs_inline_video_player_title">Inline video player</string>
     <string name="force_phone_layout_summary">On tablet devices</string>
     <string name="force_phone_layout">Force phone layout</string>
-
     <string name="catchup_dialog_title">Mark %1$s as read?</string>
     <string name="catchup_dialog_title_search">Mark search results in %1$s as read?</string>
     <string name="catchup_dialog_all_articles">All articles</string>
