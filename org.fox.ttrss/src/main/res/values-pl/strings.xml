@@ -338,4 +338,5 @@
     <string name="expand_special_cat">Rozszerz kategorię specjalną</string>
     <string name="article_enable_javascript">Włącz JavaScript</string>
     <string name="article_enable_javascript_summary">Niektóre odtwarzacze wideo bazujące na iframe wymagają JavaScript, włącz zachowując ostrożność</string>
+    <string name="blank">Pusty</string>
 </resources>
