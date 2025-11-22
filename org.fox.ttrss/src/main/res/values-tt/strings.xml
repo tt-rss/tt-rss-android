@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="login_in_progress">Керү…</string>
+    <string name="login_need_configure">Зинһар, башта кушымтаны көйләгез.</string>
+    <string name="login_ready">Керү өчен әзер.</string>
+    <string name="login_login">Керү</string>
 </resources>
