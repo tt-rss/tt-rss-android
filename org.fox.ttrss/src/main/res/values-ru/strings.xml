@@ -97,7 +97,7 @@
     <string name="error_network_unavailable">Ошибка: сеть недоступна</string>
     <string name="category_browse_headlines">Просмотреть заголовки</string>
     <string name="use_volume_keys">Использовать кнопки громкости</string>
-    <string name="use_volume_keys_long">Переходить между статьями с помощью кнопок громкости</string>
+    <string name="use_volume_keys_long">Переходить по статьям и пролистывать заголовки кнопками громкости</string>
     <string name="ssl_trust_any_host">Отключить проверку имени сервера</string>
     <string name="error_api_unknown_method">Ошибка: неизвестный метод API</string>
     <string name="ssl_trust_any_long">Принимать любой сертификат SSL</string>
@@ -255,7 +255,7 @@
     <string name="prefs_headline_request_size">Сколько заголовков запрашивать</string>
     <string name="prefs_always_open_uri_summary">Открывать статьи сразу в веб-браузере, вместо того чтобы переходить в подробный вид</string>
     <string name="prefs_always_open_uri">Всегда открывать в браузере</string>
-    <string name="blank">" "</string>
+    <string name="blank">Пустой</string>
     <string name="prefs_always_downsample_images">Всегда подгонять размер изображений</string>
     <string name="prefs_always_downsample_images_long">Даже на Wi-Fi</string>
     <string name="catchup_dialog_all_articles">Все статьи</string>
@@ -294,4 +294,5 @@
     <string name="open_on_startup">Открыть при запуске</string>
     <string name="confirm_catchup_above_title">Отметить все статьи в «%1s» как прочитанные?</string>
     <string name="window_secure_mode">Режим безопасного окна</string>
+    <string name="headline_display_mode_split">Раздельный вид: картинка слева, текст справа</string>
 </resources>
