@@ -139,14 +139,14 @@ def getVersion() {
 }
 
 dependencies {
-    implementation 'com.squareup.okhttp3:okhttp:5.3.1'
+    implementation 'com.squareup.okhttp3:okhttp:5.3.2'
     implementation 'org.jsoup:jsoup:1.21.2'
     implementation 'com.bogdwellers:pinchtozoom:0.1'
     implementation 'com.github.bumptech.glide:glide:5.0.5'
     implementation 'com.github.bumptech.glide:okhttp3-integration:5.0.5'
     annotationProcessor 'com.github.bumptech.glide:compiler:5.0.5'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
-    implementation 'androidx.activity:activity:1.11.0'
+    implementation 'androidx.activity:activity:1.12.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.appcompat:appcompat-resources:1.7.1'
