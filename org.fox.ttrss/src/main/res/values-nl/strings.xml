@@ -249,7 +249,7 @@
     <string name="prefs_headline_request_size">Hoeveelheid kopteksten op te vragen</string>
     <string name="prefs_always_open_uri_summary">Open artikelen direct in de browser, ipv naar de detailweergave te gaan</string>
     <string name="prefs_always_open_uri">Altijd openen in browser</string>
-    <string name="blank">" "</string>
+    <string name="blank">Leeg</string>
     <string name="prefs_always_downsample_images">Altijd formaat afbeeldingen wijzigen</string>
     <string name="prefs_inline_video_player_title">Inline videospeler</string>
     <string name="prefs_always_downsample_images_long">Zelfs op wifi</string>
@@ -288,4 +288,5 @@
     <string name="enable_icon_tinting">Zet icoonkleuren aan</string>
     <string name="enable_icon_tinting_summary">Zet uit als je problemen hebt om icoontjes te onderscheiden door hun kleur</string>
     <string name="expand_special_cat">Klap categorie Special uit</string>
+    <string name="headline_display_mode_split">Gesplitste weergave: afbeelding links, tekst rechts</string>
 </resources>
