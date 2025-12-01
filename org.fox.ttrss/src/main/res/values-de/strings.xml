@@ -26,7 +26,7 @@
     <string name="update_feeds">Feeds neu laden</string>
     <string name="share_article">Artikel teilen</string>
     <string name="catchup">Als gelesen markieren</string>
-    <string name="sort_feeds_by_unread">Sortiere Feeds nach ungelesenen Artikeln</string>
+    <string name="sort_feeds_by_unread">Sortiere Feeds nach ungelesenen Artikel</string>
     <string name="ssl_trust_any">Jedes SSL Zertifikat akzeptieren</string>
     <string name="category_browse_feeds">Feeds anzeigen</string>
     <string name="transport_debugging">Gesendete und empfangene Daten aufzeichnen</string>
@@ -110,7 +110,7 @@
     <string name="error_network_unavailable">Fehler: Keine Netzwerkverbindung</string>
     <string name="category_browse_headlines">Überschriften anzeigen</string>
     <string name="use_volume_keys">Benutze Lautstärkeknöpfe</string>
-    <string name="use_volume_keys_long">Mit den Hardware-Lautstärketasten zwischen einzelnen Artikeln wechseln</string>
+    <string name="use_volume_keys_long">Mit den Hardware-Lautstärketasten navigieren zwischen die Artikel</string>
     <string name="ssl_trust_any_host">Keine Überprüfung des Hostnamens</string>
     <string name="error_api_unknown_method">Fehler: Unbekannte API-Methode</string>
     <string name="ssl_trust_any_long">Jedes SSL Zertifikat ohne Überprüfung aktivieren</string>
@@ -284,7 +284,7 @@
     <string name="img_share_url">URL teilen</string>
     <string name="img_share_image">Bild teilen</string>
     <string name="img_share_failed_to_load">Zu teilendes Bild konnte nicht geladen werden</string>
-    <string name="blank">" "</string>
+    <string name="blank">Leer</string>
     <string name="score_for_this_article">Bewertung für diesen Artikel</string>
     <string name="update_categories">Kategorien aktualisieren</string>
     <string name="open_on_startup">Beim Starten öffnen</string>

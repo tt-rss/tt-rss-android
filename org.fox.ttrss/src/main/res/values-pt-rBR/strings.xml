@@ -268,4 +268,5 @@
     <string name="prefs_headline_request_size">Quantos artigos solicitar</string>
     <string name="prefs_always_open_uri_summary">Abrir artigos diretamente no seu navegador web, ao invés de ir para a visualização detalhada</string>
     <string name="prefs_always_open_uri">Sempre abrir no navegador</string>
+    <string name="blank">Vazio</string>
 </resources>
