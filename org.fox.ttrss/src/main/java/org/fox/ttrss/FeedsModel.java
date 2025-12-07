@@ -183,9 +183,11 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
                     return -1;
                 else if (b.is_cat)
                     return 1;
-                else if (a.order_id != 0 && b.order_id != 0)
+                else if (a.order_id != 0 || b.order_id != 0)
+                    // feed with a zero order_id appears first
                     return a.order_id - b.order_id;
                 else
+                    // title used as tie breaker when both feeds have a zero order_id
                     return a.title.toUpperCase().compareTo(b.title.toUpperCase());
             else if (a.id < CommonActivity.LABEL_BASE_INDEX && b.id < CommonActivity.LABEL_BASE_INDEX)
                 return a.title.toUpperCase().compareTo(b.title.toUpperCase());
