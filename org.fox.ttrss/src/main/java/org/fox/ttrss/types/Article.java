@@ -102,10 +102,10 @@ public class Article {
             mediaList = articleDoc.select("img,video,iframe[src*=youtube.com/embed/]");
 
             for (Element e : mediaList) {
-                if ("iframe".equals(e.tagName().toLowerCase())) {
+                if ("iframe".equalsIgnoreCase(e.tagName())) {
                     flavorImage = e;
                     break;
-                } /*else if ("video".equals(e.tagName().toLowerCase())) {
+                } /*else if ("video".equalsIgnoreCase(e.tagName())) {
 					flavorImage = e;
 					break;
 				}*/
@@ -121,14 +121,14 @@ public class Article {
             if (flavorImage != null) {
                 try {
 
-                    if ("video".equals(flavorImage.tagName().toLowerCase())) {
+                    if ("video".equalsIgnoreCase(flavorImage.tagName())) {
                         Element source = flavorImage.select("source").first();
 
                         if (source != null) {
                             flavorStreamUri = source.attr("src");
                             flavorImageUri = flavorImage.attr("poster");
                         }
-                    } else if ("iframe".equals(flavorImage.tagName().toLowerCase())) {
+                    } else if ("iframe".equalsIgnoreCase(flavorImage.tagName())) {
 
                         String srcEmbed = flavorImage.attr("src");
 
