@@ -151,7 +151,6 @@ public class RootCategoriesModel extends FeedsModel {
         });
     }
 
-    @SuppressLint("DefaultLocale")
     static class CatOrderComparator implements Comparator<Feed> {
 
         @Override
@@ -160,7 +159,7 @@ public class RootCategoriesModel extends FeedsModel {
                 if (a.order_id != 0 && b.order_id != 0)
                     return a.order_id - b.order_id;
                 else
-                    return a.title.toUpperCase().compareTo(b.title.toUpperCase());
+                    return a.title.compareToIgnoreCase(b.title);
             else
                 return a.id - b.id;
         }

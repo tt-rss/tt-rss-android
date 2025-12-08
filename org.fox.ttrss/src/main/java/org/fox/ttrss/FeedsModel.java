@@ -168,7 +168,6 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
         return m_lastErrorMessage;
     }
 
-    @SuppressLint("DefaultLocale")
     static class FeedOrderComparator implements Comparator<Feed> {
 
         @Override
@@ -178,7 +177,7 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
                     if (a.order_id != 0 && b.order_id != 0)
                         return a.order_id - b.order_id;
                     else
-                        return a.title.toUpperCase().compareTo(b.title.toUpperCase());
+                        return a.title.compareToIgnoreCase(b.title);
                 else if (a.is_cat)
                     return -1;
                 else if (b.is_cat)
@@ -188,16 +187,15 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
                     return a.order_id - b.order_id;
                 else
                     // title used as tie breaker when both feeds have a zero order_id
-                    return a.title.toUpperCase().compareTo(b.title.toUpperCase());
+                    return a.title.compareToIgnoreCase(b.title);
             else if (a.id < CommonActivity.LABEL_BASE_INDEX && b.id < CommonActivity.LABEL_BASE_INDEX)
-                return a.title.toUpperCase().compareTo(b.title.toUpperCase());
+                return a.title.compareToIgnoreCase(b.title);
             else
                 return a.id - b.id;
         }
 
     }
 
-    @SuppressLint("DefaultLocale")
     static class FeedUnreadComparator implements Comparator<Feed> {
 
         @Override
@@ -205,31 +203,29 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
             if (a.unread != b.unread)
                 return b.unread - a.unread;
             else
-                return a.title.toUpperCase().compareTo(b.title.toUpperCase());
+                return a.title.compareToIgnoreCase(b.title);
         }
 
     }
 
-    @SuppressLint("DefaultLocale")
     static class FeedTitleComparator implements Comparator<Feed> {
 
         @Override
         public int compare(Feed a, Feed b) {
             if (a.is_cat && b.is_cat)
-                return a.title.toUpperCase().compareTo(b.title.toUpperCase());
+                return a.title.compareToIgnoreCase(b.title);
             else if (a.is_cat && !b.is_cat)
                 return -1;
             else if (!a.is_cat && b.is_cat)
                 return 1;
             else if (a.id >= 0 && b.id >= 0)
-                return a.title.toUpperCase().compareTo(b.title.toUpperCase());
+                return a.title.compareToIgnoreCase(b.title);
             else
                 return a.id - b.id;
         }
 
     }
 
-    @SuppressLint("DefaultLocale")
     static class SpecialOrderComparator implements Comparator<Feed> {
         static List<Integer> order = Arrays.asList(Feed.ALL_ARTICLES, Feed.FRESH, Feed.MARKED,
                 Feed.PUBLISHED, Feed.ARCHIVED, Feed.RECENTLY_READ);
