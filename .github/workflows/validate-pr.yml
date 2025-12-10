@@ -38,3 +38,7 @@ jobs:
 
     - name: Run checks and build debug APK
       run: ./gradlew --no-daemon check assembleDebug
+
+    - name: Generate lint summary
+      if: always()
+      run: bash .github/scripts/generate-lint-summary.sh
