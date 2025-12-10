@@ -46,7 +46,7 @@ jobs:
     - name: Upload debug APK
       uses: actions/upload-artifact@v5
       with:
-        name: org.fox.ttrss-debug-${{ github.run_number }}-${{ github.sha }}.apk
+        name: org.fox.ttrss-debug-${{ github.run_number }}-${{ github.sha }}
         path: org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug.apk
 
     - name: Upload full reports
