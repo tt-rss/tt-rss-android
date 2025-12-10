@@ -3,6 +3,11 @@ name: Validate PR
 on:
   pull_request:
     branches: [master]
+    paths-ignore:
+    - '.github/**'
+    - 'utils/**'
+    - '.*'
+    - '*.md'
 
 
 permissions:
