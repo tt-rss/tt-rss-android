@@ -15,6 +15,11 @@ permissions:
   contents: read
 
 
+concurrency:
+  group: build-debug-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
