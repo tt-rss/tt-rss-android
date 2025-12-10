@@ -1,0 +1,36 @@
+name: Build Debug APK
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+
+permissions:
+  contents: read
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Set up Java
+      uses: actions/setup-java@v5
+      with:
+        java-version: 17
+        distribution: temurin
+
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@v5
+
+    - name: Run checks and build debug APK
+      run: ./gradlew --no-daemon check assembleDebug
+
+    - name: Upload debug APK
+      uses: actions/upload-artifact@v5
+      with:
+        name: org.fox.ttrss-debug-${{ github.sha }}-${{ github.run_number }}.apk
+        path: org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug.apk
