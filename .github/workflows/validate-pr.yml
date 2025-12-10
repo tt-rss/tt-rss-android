@@ -22,7 +22,6 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
     - uses: actions/checkout@v6
