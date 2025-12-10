@@ -278,4 +278,10 @@
     <string name="crash_dialog_text">Maaf, Tiny Tiny RSS telah berhenti. Kirim laporan kerusakan ke tt-rss.org?</string>
     <string name="crash_dialog_text_email">Maaf, Tiny Tiny RSS telah berhenti. Kirim laporan kerusakan via email?</string>
     <string name="prefs_widget_show_fresh">Tampilkan artikel segar</string>
+    <string name="pref_headline_font_size">Ukuran teks</string>
+    <string name="enable_icon_tinting">Aktifkan pewarnaan ikon</string>
+    <string name="enable_icon_tinting_summary">Nonaktifkan jika Anda kesulitan membedakan ikon karena warnanya</string>
+    <string name="expand_special_cat">Perluas Kategori Khusus</string>
+    <string name="article_enable_javascript">Aktifkan JavaScript</string>
+    <string name="article_enable_javascript_summary">Beberapa pemutar video berbasis iframe memerlukan JavaScript, aktifkan dengan hati-hati</string>
 </resources>
