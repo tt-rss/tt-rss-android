@@ -146,7 +146,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:okhttp3-integration:5.0.5'
     annotationProcessor 'com.github.bumptech.glide:compiler:5.0.5'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
-    implementation 'androidx.activity:activity:1.12.0'
+    implementation 'androidx.activity:activity:1.12.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.appcompat:appcompat-resources:1.7.1'
