@@ -44,14 +44,14 @@ jobs:
       run: bash .github/scripts/generate-lint-summary.sh
 
     - name: Upload debug APK
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: org.fox.ttrss-debug-${{ github.run_number }}-${{ github.sha }}
         path: org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug.apk
 
     - name: Upload full reports
       if: always()
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: build-reports-${{ github.run_number }}
         path: |
