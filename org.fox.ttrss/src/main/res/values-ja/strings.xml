@@ -301,4 +301,5 @@
     <string name="article_enable_javascript">JavaScriptの有効化</string>
     <string name="article_enable_javascript_summary">iframeベースのビデオプレーヤーにはJavaScriptを必要とするものがあります、注意して有効化</string>
     <string name="confirm_catchup_above_title">\"%1s\"より上の記事をすべて既読にしますか？</string>
+    <string name="headline_display_mode_split">分割ビュー: 画像 左, テキスト 右</string>
 </resources>
