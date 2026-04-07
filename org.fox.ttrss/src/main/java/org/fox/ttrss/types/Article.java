@@ -261,6 +261,11 @@ public class Article {
         return article.id == this.id;
     }
 
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(this.id);
+    }
+
     @NonNull
     @Override
     public String toString() {
