@@ -242,6 +242,7 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
         }
     }
 
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
@@ -397,6 +398,7 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
         invalidateOptionsMenu();
     }
 
+    @Override
     public void onArticleSelected(Article article) {
         Article articleClone = new Article(article);
 

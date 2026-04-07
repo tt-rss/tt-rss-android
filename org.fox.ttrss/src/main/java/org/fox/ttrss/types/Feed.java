@@ -183,10 +183,12 @@ public class Feed implements Comparable<Feed>, Parcelable {
     @SuppressWarnings("rawtypes")
     public static final Parcelable.Creator CREATOR =
             new Parcelable.Creator() {
+                @Override
                 public Feed createFromParcel(Parcel in) {
                     return new Feed(in);
                 }
 
+                @Override
                 public Feed[] newArray(int size) {
                     return new Feed[size];
                 }

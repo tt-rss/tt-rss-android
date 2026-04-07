@@ -78,6 +78,7 @@ public class GalleryActivity extends CommonActivity {
         }
     }
 
+    @Override
     public void onSaveInstanceState(Bundle out) {
         super.onSaveInstanceState(out);
 

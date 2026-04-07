@@ -100,6 +100,7 @@ public abstract class CommonShareActivity extends CommonActivity {
         }
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.preferences) {
             Intent intent = new Intent(CommonShareActivity.this,

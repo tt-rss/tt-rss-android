@@ -173,6 +173,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
     }
 
     // all onContextItemSelected are invoked in sequence so we might get a context menu for headlines, etc
+    @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
                 .getMenuInfo();

@@ -14,10 +14,12 @@ public class GalleryEntry implements Serializable, Parcelable {
     @SuppressWarnings("rawtypes")
     public static final Parcelable.Creator CREATOR =
             new Parcelable.Creator() {
+                @Override
                 public GalleryEntry createFromParcel(Parcel in) {
                     return new GalleryEntry(in);
                 }
 
+                @Override
                 public GalleryEntry[] newArray(int size) {
                     return new GalleryEntry[size];
                 }

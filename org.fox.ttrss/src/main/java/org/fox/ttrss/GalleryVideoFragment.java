@@ -26,6 +26,7 @@ public class GalleryVideoFragment extends GalleryBaseFragment {
     String m_coverUrl;
     MediaPlayer m_mediaPlayer;
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

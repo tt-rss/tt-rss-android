@@ -38,6 +38,7 @@ public class Attachment implements Parcelable {
         out.writeInt(post_id);
     }
 
+    @Override
     public String toString() {
         if (title != null && !title.isEmpty()) {
             return title;
@@ -63,10 +64,12 @@ public class Attachment implements Parcelable {
     @SuppressWarnings("rawtypes")
     public static final Parcelable.Creator CREATOR =
             new Parcelable.Creator() {
+                @Override
                 public Attachment createFromParcel(Parcel in) {
                     return new Attachment(in);
                 }
 
+                @Override
                 public Attachment[] newArray(int size) {
                     return new Attachment[size];
                 }
