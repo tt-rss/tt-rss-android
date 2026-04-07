@@ -56,11 +56,19 @@ public class GalleryEntry implements Serializable, Parcelable {
         this.coverUrl = coverUrl;
     }
 
-    public boolean equals(GalleryEntry obj) {
-        if (obj.url != null && url != null) {
-            return obj.url.equals(url);
-        } else {
-            return super.equals(obj);
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof GalleryEntry)) return false;
+        GalleryEntry other = (GalleryEntry) obj;
+        if (url != null && other.url != null) {
+            return url.equals(other.url);
         }
+        return url == other.url;
+    }
+
+    @Override
+    public int hashCode() {
+        return url != null ? url.hashCode() : 0;
     }
 }
