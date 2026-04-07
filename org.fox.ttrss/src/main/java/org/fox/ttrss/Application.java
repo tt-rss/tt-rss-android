@@ -1,9 +1,12 @@
 package org.fox.ttrss;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.color.DynamicColors;
 
@@ -20,6 +23,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Application extends android.app.Application {
+
+    private static final String PREF_SESSION_ID = "gs:sessionId";
+    private static final String PREF_API_LEVEL = "gs:apiLevel";
 
     private static Application m_singleton;
 
@@ -50,6 +56,12 @@ public class Application extends android.app.Application {
         m_singleton = this;
         m_cmgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         m_articleModel = new ArticleModel(this);
+
+        // Rehydrate session state that survives process death so that activities
+        // restored from savedInstanceState can resume without forcing a re-login.
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        m_sessionId = prefs.getString(PREF_SESSION_ID, null);
+        m_apiLevel = prefs.getInt(PREF_API_LEVEL, 0);
     }
 
     public String getSessionId() {
@@ -58,6 +70,10 @@ public class Application extends android.app.Application {
 
     public void setSessionId(String sessionId) {
         m_sessionId = sessionId;
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .edit()
+                .putString(PREF_SESSION_ID, sessionId)
+                .apply();
     }
 
     public int getApiLevel() {
@@ -66,6 +82,10 @@ public class Application extends android.app.Application {
 
     public void setApiLevel(int apiLevel) {
         m_apiLevel = apiLevel;
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .edit()
+                .putInt(PREF_API_LEVEL, apiLevel)
+                .apply();
     }
 
     public void save(Bundle out) {

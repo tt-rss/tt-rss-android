@@ -282,7 +282,12 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         m_adapter = new ArticleListAdapter();
         m_list.setAdapter(m_adapter);
 
-        if (savedInstanceState == null && Application.getArticles().isEmpty()) {
+        // Refresh whenever the in-memory article list is empty. Previously this
+        // was gated on `savedInstanceState == null` to avoid double-fetching on
+        // rotation, but that also suppressed the refresh after process death,
+        // when Android restores the activity with a saved Bundle even though
+        // ArticleModel has been reconstructed empty.
+        if (Application.getArticles().isEmpty()) {
             refresh(false);
         }
 
