@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'net.ltgt.errorprone'
 
 android {
     compileOptions {
@@ -157,6 +158,29 @@ dependencies {
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'ch.acra:acra-mail:5.13.1'
     implementation 'ch.acra:acra-dialog:5.13.1'
+
+    errorprone 'com.google.errorprone:error_prone_core:2.36.0'
+    annotationProcessor 'com.google.errorprone:error_prone_core:2.36.0'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.errorprone {
+        enabled = true
+        disableWarningsInGeneratedCode = true
+        excludedPaths = '.*/build/generated/.*'
+        disable(
+            'CatchAndPrintStackTrace',
+            'EmptyBlockTag',
+            'HidingField',
+            'InvalidBlockTag',
+            'JavaUtilDate',
+            'MissingSummary',
+            'NonApiType',
+            'NonCanonicalType',
+            'ObjectToString',
+            'StringCaseLocaleUsage',
+            'UnnecessaryParentheses')
+    }
 }
 java {
     toolchain {

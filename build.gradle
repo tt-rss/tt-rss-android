@@ -3,9 +3,11 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:9.1.0'
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:4.3.0'
     }
 }
 
