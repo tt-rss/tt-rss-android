@@ -331,7 +331,7 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
             int selectedIndex = 0;
 
             for (CharSequence tmp : sortNames) {
-                if (tmp.equals(currentMode)) {
+                if (currentMode.contentEquals(tmp)) {
                     selectedIndex = i;
                     break;
                 }
