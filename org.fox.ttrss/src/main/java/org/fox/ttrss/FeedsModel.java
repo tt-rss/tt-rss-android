@@ -37,9 +37,9 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
     private static final Gson GSON = new Gson();
     private static final Type FEED_LIST_TYPE = new TypeToken<List<Feed>>() {}.getType();
     protected MutableLiveData<List<Feed>> m_feeds = new MutableLiveData<>(new ArrayList<>());
-    protected MutableLiveData<Integer> m_loadingProgress = new MutableLiveData<>(Integer.valueOf(0));
-    protected MutableLiveData<Long> m_lastUpdate = new MutableLiveData<>(Long.valueOf(0));
-    protected MutableLiveData<Boolean> m_isLoading = new MutableLiveData<>(Boolean.valueOf(false));
+    protected MutableLiveData<Integer> m_loadingProgress = new MutableLiveData<>(0);
+    protected MutableLiveData<Long> m_lastUpdate = new MutableLiveData<>(0L);
+    protected MutableLiveData<Boolean> m_isLoading = new MutableLiveData<>(false);
 
     protected Feed m_feed;
 
@@ -243,7 +243,7 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
 
         @Override
         public int compare(Feed a, Feed b) {
-            return Integer.valueOf(order.indexOf(a.id)).compareTo(order.indexOf(b.id));
+            return Integer.compare(order.indexOf(a.id), order.indexOf(b.id));
         }
     }
 

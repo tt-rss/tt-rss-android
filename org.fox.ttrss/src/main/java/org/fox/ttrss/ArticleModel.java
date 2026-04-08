@@ -50,11 +50,11 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
     private int m_resizeWidth;
     private boolean m_append;
     private boolean m_lazyLoadEnabled = true;
-    private MutableLiveData<Boolean> m_isLoading = new MutableLiveData<>(Boolean.valueOf(false));
+    private MutableLiveData<Boolean> m_isLoading = new MutableLiveData<>(false);
     private ExecutorService m_executor;
     private Handler m_mainHandler = new Handler(Looper.getMainLooper());
-    private MutableLiveData<Long> m_lastUpdate = new MutableLiveData<>(Long.valueOf(0));
-    private MutableLiveData<Integer> m_loadingProgress = new MutableLiveData<>(Integer.valueOf(0));
+    private MutableLiveData<Long> m_lastUpdate = new MutableLiveData<>(0L);
+    private MutableLiveData<Integer> m_loadingProgress = new MutableLiveData<>(0);
     private MutableLiveData<Article> m_activeArticle = new MutableLiveData<>(null);
 
     public ArticleModel(@NonNull Application application) {
