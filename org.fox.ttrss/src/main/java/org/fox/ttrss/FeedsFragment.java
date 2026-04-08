@@ -302,7 +302,7 @@ public class FeedsFragment extends Fragment implements OnSharedPreferenceChangeL
         getModel().startLoading(m_rootFeed);
     }
 
-    private class FeedViewHolder extends RecyclerView.ViewHolder {
+    private static class FeedViewHolder extends RecyclerView.ViewHolder {
 
         private View view;
         private ImageView icon;
@@ -321,7 +321,7 @@ public class FeedsFragment extends Fragment implements OnSharedPreferenceChangeL
         }
     }
 
-    private class FeedDiffUtilItemCallback extends DiffUtil.ItemCallback<Feed> {
+    private static class FeedDiffUtilItemCallback extends DiffUtil.ItemCallback<Feed> {
 
         @Override
         public boolean areItemsTheSame(@NonNull Feed oldItem, @NonNull Feed newItem) {
