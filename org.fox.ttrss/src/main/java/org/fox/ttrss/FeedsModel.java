@@ -44,7 +44,6 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
     protected ExecutorService m_executor = Executors.newSingleThreadExecutor();
     protected Handler m_mainHandler = new Handler(Looper.getMainLooper());
 
-    private final int m_responseCode = 0;
     protected String m_responseMessage;
     private int m_apiStatusCode = 0;
     private String m_lastErrorMessage;
@@ -63,6 +62,10 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
     @Override
     public void setStatusCode(int statusCode) {
         m_apiStatusCode = statusCode;
+    }
+
+    public int getStatusCode() {
+        return m_apiStatusCode;
     }
 
     @Override

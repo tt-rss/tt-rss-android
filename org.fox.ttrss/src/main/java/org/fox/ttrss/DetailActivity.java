@@ -139,8 +139,6 @@ public class DetailActivity extends OnlineActivity implements HeadlinesEventList
 
                 final Feed activeFeed = tmpFeed;
                 final int openedArticleId = i.getIntExtra("openedArticleId", 0);
-                final String searchQuery = i.getStringExtra("searchQuery");
-
                 setActiveFeed(activeFeed);
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

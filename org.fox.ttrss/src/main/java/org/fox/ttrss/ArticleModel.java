@@ -34,7 +34,6 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
     @NonNull
     private final MutableLiveData<List<Article>> m_articles = new MutableLiveData<>(new ArrayList<Article>());
     private SharedPreferences m_prefs;
-    private final int m_responseCode = 0;
     protected String m_responseMessage;
     private int m_apiStatusCode = 0;
 
@@ -347,6 +346,10 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
     @Override
     public void setStatusCode(int statusCode) {
         m_apiStatusCode = statusCode;
+    }
+
+    public int getStatusCode() {
+        return m_apiStatusCode;
     }
 
     @Override

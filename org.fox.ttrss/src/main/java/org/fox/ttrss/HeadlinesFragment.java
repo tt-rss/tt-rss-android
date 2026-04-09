@@ -830,7 +830,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
                     if (position != -1) {
                         Article article = m_adapter.getItem(position);
-                        openGalleryForType(article, holder, holder.flavorImageView);
+                        openGalleryForType(article);
                     }
                 });
             }
@@ -963,7 +963,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                     if (position != -1) {
                         Article article = getItem(position);
 
-                        openGalleryForType(article, holder, holder.textImage);
+                        openGalleryForType(article);
                     }
 
                     return true;
@@ -1160,7 +1160,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
 					holder.flavorVideoView.setOnLongClickListener(v -> {
                         releaseSurface();
-                        openGalleryForType(article, holder, holder.flavorImageView);
+                        openGalleryForType(article);
                         return true;
                     });
 
@@ -1251,7 +1251,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                     });
 
 				} else {
-					holder.flavorImageView.setOnClickListener(view -> openGalleryForType(article, holder, holder.flavorImageView));
+					holder.flavorImageView.setOnClickListener(view -> openGalleryForType(article));
 				} */
             }
         }
@@ -1525,7 +1525,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
             }
         }
 
-        private void openGalleryForType(final Article article, final ArticleViewHolder holder, final View transitionView) {
+        private void openGalleryForType(final Article article) {
             //Log.d(TAG, "openGalleryForType: " + article + " " + holder + " " + transitionView);
 
             if (article.flavorImage != null) {

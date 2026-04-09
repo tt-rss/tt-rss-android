@@ -3,8 +3,6 @@ package org.fox.ttrss;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -43,7 +41,6 @@ public class GalleryModel extends AndroidViewModel {
     }
 
     private ExecutorService m_executor = Executors.newSingleThreadExecutor();
-    private Handler m_mainHandler = new Handler(Looper.getMainLooper());
 
     public LiveData<Integer> getItemsToCheck() {
         return m_itemsToCheck;
