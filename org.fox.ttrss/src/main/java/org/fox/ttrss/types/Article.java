@@ -247,16 +247,11 @@ public class Article {
      */
     @Override
     public boolean equals(Object other) {
-        if (other == null)
-            return false;
-
         if (other == this)
             return true;
 
-        if (this.getClass() != other.getClass())
+        if (!(other instanceof Article article))
             return false;
-
-        Article article = (Article) other;
 
         return article.id == this.id;
     }
