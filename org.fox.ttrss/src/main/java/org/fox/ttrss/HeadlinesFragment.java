@@ -431,7 +431,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
                     // this has to be dispatched delayed, consequent adapter updates are forbidden in scroll handler
                     new Handler().postDelayed(() -> {
-                        if (feedToLoad == m_feed) {
+                        if (feedToLoad.equals(m_feed)) {
                             refresh(true);
                         }
                     }, 250);
@@ -478,7 +478,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
                         // this has to be dispatched delayed, consequent adapter updates are forbidden in scroll handler
                         new Handler().postDelayed(() -> {
-                            if (feedToLoad == m_feed) {
+                            if (feedToLoad.equals(m_feed)) {
                                 refresh(true);
                             }
                         }, 250);

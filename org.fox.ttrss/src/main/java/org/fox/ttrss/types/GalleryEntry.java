@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class GalleryEntry implements Serializable, Parcelable {
     @Override
@@ -63,10 +64,7 @@ public class GalleryEntry implements Serializable, Parcelable {
         if (this == obj) return true;
         if (!(obj instanceof GalleryEntry)) return false;
         GalleryEntry other = (GalleryEntry) obj;
-        if (url != null && other.url != null) {
-            return url.equals(other.url);
-        }
-        return url == other.url;
+        return Objects.equals(url, other.url);
     }
 
     @Override
