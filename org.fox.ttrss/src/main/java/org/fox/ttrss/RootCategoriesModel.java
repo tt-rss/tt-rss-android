@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 
 public class RootCategoriesModel extends FeedsModel {
     private static final String TAG = RootCategoriesModel.class.getSimpleName();
+    private static final Gson GSON = new Gson();
+    private static final Type FEED_LIST_TYPE = new TypeToken<List<Feed>>() {}.getType();
 
     public RootCategoriesModel(@NonNull Application application) {
         super(application);
@@ -57,10 +59,7 @@ public class RootCategoriesModel extends FeedsModel {
                     JsonArray content = result.getAsJsonArray();
                     if (content != null) {
 
-                        Type listType = new TypeToken<List<Feed>>() {
-                        }.getType();
-
-                        List<Feed> feedsJson = new Gson().fromJson(content, listType);
+                        List<Feed> feedsJson = GSON.fromJson(content, FEED_LIST_TYPE);
 
                         // seems to be necessary evil because of deserialization
                         feedsJson = feedsJson.stream().peek(Feed::fixNullFields).collect(Collectors.toList());
@@ -106,10 +105,7 @@ public class RootCategoriesModel extends FeedsModel {
                 JsonArray content = result.getAsJsonArray();
                 if (content != null) {
 
-                    Type listType = new TypeToken<List<Feed>>() {
-                    }.getType();
-
-                    List<Feed> feedsJson = new Gson().fromJson(content, listType);
+                    List<Feed> feedsJson = GSON.fromJson(content, FEED_LIST_TYPE);
 
                     // seems to be necessary evil because of deserialization
                     feedsJson = feedsJson.stream().peek(Feed::fixNullFields).collect(Collectors.toList());

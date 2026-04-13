@@ -54,6 +54,9 @@ import java.util.stream.Collectors;
 @SuppressLint("StaticFieldLeak")
 public class OnlineActivity extends CommonActivity {
     private static final String TAG = OnlineActivity.class.getSimpleName();
+    private static final Gson GSON = new Gson();
+    private static final Type LABEL_LIST_TYPE = new TypeToken<List<Label>>() {}.getType();
+    private static final Type STRING_MAP_TYPE = new TypeToken<Map<String, String>>() {}.getType();
 
     protected SharedPreferences m_prefs;
     protected Menu m_menu;
@@ -684,9 +687,7 @@ public class OnlineActivity extends CommonActivity {
             @Override
             protected void onPostExecute(JsonElement result) {
                 if (result != null) {
-                    Type listType = new TypeToken<List<Label>>() {
-                    }.getType();
-                    final List<Label> labels = new Gson().fromJson(result, listType);
+                    final List<Label> labels = GSON.fromJson(result, LABEL_LIST_TYPE);
 
                     CharSequence[] items = new CharSequence[labels.size()];
                     final int[] itemIds = new int[labels.size()];
@@ -1199,9 +1200,7 @@ public class OnlineActivity extends CommonActivity {
                                 // daemon_is_running, icons_dir, etc...
                                 JsonObject config = content.get("config").getAsJsonObject();
 
-                                Type hashType = new TypeToken<Map<String, String>>() {
-                                }.getType();
-                                Map<String, String> customSortTypes = new Gson().fromJson(config.get("custom_sort_types"), hashType);
+                                Map<String, String> customSortTypes = GSON.fromJson(config.get("custom_sort_types"), STRING_MAP_TYPE);
 
                                 setCustomSortModes(customSortTypes);
                             }

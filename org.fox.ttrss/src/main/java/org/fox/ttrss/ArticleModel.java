@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 
 public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCaller {
     private static final String TAG = ArticleModel.class.getSimpleName();
+    private static final Gson GSON = new Gson();
+    private static final Type ARTICLE_LIST_TYPE = new TypeToken<List<Article>>() {}.getType();
     @NonNull
     private final MutableLiveData<List<Article>> m_articles = new MutableLiveData<>(new ArrayList<Article>());
     private SharedPreferences m_prefs;
@@ -260,13 +262,9 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
 
                             Log.d(TAG, this + " firstID=" + m_firstId + " firstIdChanged=" + m_firstIdChanged);
 
-                            Type listType = new TypeToken<List<Article>>() {
-                            }.getType();
-                            articlesJson = new Gson().fromJson(content.get(1), listType);
+                            articlesJson = GSON.fromJson(content.get(1), ARTICLE_LIST_TYPE);
                         } else {
-                            Type listType = new TypeToken<List<Article>>() {
-                            }.getType();
-                            articlesJson = new Gson().fromJson(content, listType);
+                            articlesJson = GSON.fromJson(content, ARTICLE_LIST_TYPE);
                         }
 
                         if (!m_append)

@@ -43,6 +43,7 @@ public class ApiCommon {
     private static final int API_STATUS_OK = 0;
     private static final int API_STATUS_ERR = 1;
 
+    private static final Gson GSON = new Gson();
     private static final MediaType TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
 
     public interface ApiCaller {
@@ -131,9 +132,7 @@ public class ApiCommon {
 
             boolean m_transportDebugging = m_prefs.getBoolean("transport_debugging", false);
 
-            Gson gson = new Gson();
-
-            String payload = gson.toJson(new HashMap<>(m_params));
+            String payload = GSON.toJson(new HashMap<>(m_params));
             String apiUrl = m_prefs.getString("ttrss_url", "").trim() + "/api/";
 
             if (m_transportDebugging) Log.d(TAG, ">>> " + payload + " -> " + apiUrl);

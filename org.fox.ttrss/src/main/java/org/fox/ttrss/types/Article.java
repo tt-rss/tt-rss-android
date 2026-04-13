@@ -29,6 +29,8 @@ public class Article {
     public static final int UPDATE_FIELD_NOTE = 3;
     public static final int UPDATE_FIELD_SCORE = 4;
 
+    private static final Pattern YOUTUBE_EMBED_PATTERN = Pattern.compile("/embed/([\\w-]+)");
+
     public static final int UPDATE_SET_FALSE = 0;
     public static final int UPDATE_SET_TRUE = 1;
     public static final int UPDATE_TOGGLE = 2;
@@ -133,8 +135,7 @@ public class Article {
                         String srcEmbed = flavorImage.attr("src");
 
                         if (!srcEmbed.isEmpty()) {
-                            Pattern pattern = Pattern.compile("/embed/([\\w-]+)");
-                            Matcher matcher = pattern.matcher(srcEmbed);
+                            Matcher matcher = YOUTUBE_EMBED_PATTERN.matcher(srcEmbed);
 
                             if (matcher.find()) {
                                 youtubeVid = matcher.group(1);

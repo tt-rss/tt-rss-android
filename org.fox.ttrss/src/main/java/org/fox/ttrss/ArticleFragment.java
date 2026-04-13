@@ -31,10 +31,12 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Pattern;
 
 // TODO: add ability to update already rendered contents from article somehow (to refresh note, etc)
 public class ArticleFragment extends androidx.fragment.app.Fragment {
     private static final String TAG = ArticleFragment.class.getSimpleName();
+    private static final Pattern IMAGE_TAG_PATTERN = Pattern.compile(".*?<img[^>+].*?");
 
     private SharedPreferences m_prefs;
     protected Article m_article;
@@ -312,7 +314,7 @@ public class ArticleFragment extends androidx.fragment.app.Fragment {
 
         if (m_article.attachments != null && !m_article.attachments.isEmpty()) {
             String flatContent = articleContent.replaceAll("[\r\n]", "");
-            boolean hasImages = flatContent.matches(".*?<img[^>+].*?");
+            boolean hasImages = IMAGE_TAG_PATTERN.matcher(flatContent).matches();
 
             for (Attachment a : m_article.attachments) {
                 if (a.content_type != null && a.content_url != null) {

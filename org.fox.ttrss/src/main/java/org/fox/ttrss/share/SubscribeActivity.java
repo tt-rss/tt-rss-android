@@ -43,6 +43,8 @@ public class SubscribeActivity extends CommonShareActivity {
     private final ArrayList<Map.Entry<String, JsonElement>> m_feeds = new ArrayList<>();
     private ProgressBar m_progressBar;
 
+    private static final Gson GSON = new Gson();
+    private static final Type FEED_LIST_TYPE = new TypeToken<List<Feed>>() {}.getType();
     private static final int REQ_CATS = 1;
     private static final int REQ_POST = 2;
 
@@ -255,9 +257,7 @@ public class SubscribeActivity extends CommonShareActivity {
                     JsonArray content = result.getAsJsonArray();
 
                     if (content != null) {
-                        Type listType = new TypeToken<List<Feed>>() {
-                        }.getType();
-                        final List<Feed> catsJson = new Gson().fromJson(content, listType);
+                        final List<Feed> catsJson = GSON.fromJson(content, FEED_LIST_TYPE);
 
                         m_cats.clear();
                         m_cats.addAll(catsJson.stream().filter(f -> f.id > 0).collect(Collectors.toList()));

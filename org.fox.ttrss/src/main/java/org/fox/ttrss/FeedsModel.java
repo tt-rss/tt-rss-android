@@ -34,6 +34,8 @@ import java.util.stream.Collectors;
 
 public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller {
     private static final String TAG = FeedsModel.class.getSimpleName();
+    private static final Gson GSON = new Gson();
+    private static final Type FEED_LIST_TYPE = new TypeToken<List<Feed>>() {}.getType();
     protected MutableLiveData<List<Feed>> m_feeds = new MutableLiveData<>(new ArrayList<>());
     protected MutableLiveData<Integer> m_loadingProgress = new MutableLiveData<>(Integer.valueOf(0));
     protected MutableLiveData<Long> m_lastUpdate = new MutableLiveData<>(Long.valueOf(0));
@@ -115,10 +117,7 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
                 JsonArray content = result.getAsJsonArray();
                 if (content != null) {
 
-                    Type listType = new TypeToken<List<Feed>>() {
-                    }.getType();
-
-                    List<Feed> feedsJson = new Gson().fromJson(content, listType);
+                    List<Feed> feedsJson = GSON.fromJson(content, FEED_LIST_TYPE);
 
                     // seems to be necessary evil because of deserialization
                     feedsJson = feedsJson.stream().peek(Feed::fixNullFields).collect(Collectors.toList());
@@ -239,7 +238,7 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
     }
 
     static class SpecialOrderComparator implements Comparator<Feed> {
-        static List<Integer> order = Arrays.asList(Feed.ALL_ARTICLES, Feed.FRESH, Feed.MARKED,
+        private static final List<Integer> order = Arrays.asList(Feed.ALL_ARTICLES, Feed.FRESH, Feed.MARKED,
                 Feed.PUBLISHED, Feed.ARCHIVED, Feed.RECENTLY_READ);
 
         @Override
