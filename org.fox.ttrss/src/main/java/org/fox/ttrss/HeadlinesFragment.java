@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -254,7 +255,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
         String headlineMode = m_prefs.getString("headline_mode", "HL_DEFAULT");
 
-        if ("HL_COMPACT".equals(headlineMode) || "HL_COMPACT_NOIMAGES".equals(headlineMode))
+        if ("HL_COMPACT".equals(headlineMode) || "HL_COMPACT_NOIMAGES".equals(headlineMode) || "HL_COMPACT_FEED_IMAGES".equals(headlineMode))
             m_compactLayoutMode = true;
 
         if ("HL_SPLIT".equals(headlineMode))
@@ -1507,11 +1508,30 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
             } else {
                 final Drawable textDrawable = m_drawableBuilder.build(tmp, m_colorGenerator.getColor(article.title));
 
-                holder.textImage.setImageDrawable(textDrawable);
+                String headlineMode = m_prefs.getString("headline_mode", "HL_DEFAULT");
 
-                if (!canShowFlavorImage() || article.flavorImage == null) {
+                if ("HL_COMPACT_FEED_IMAGES".equals(headlineMode) && article.feed_id > 0) {
+                    String faviconUrl = m_prefs.getString("ttrss_url", "").trim()
+                            + "/public.php?op=feed_icon&id=" + article.feed_id;
+
+                    // use a solid background so transparent parts of the favicon
+                    // don't reveal the underlying letter drawable
+                    final Drawable faviconBackground = new ColorDrawable(m_colorSurface);
+
+                    holder.textImage.setImageDrawable(faviconBackground);
+
+                    Glide.with(HeadlinesFragment.this)
+                            .load(faviconUrl)
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .placeholder(faviconBackground)
+                            .error(textDrawable)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .skipMemoryCache(false)
+                            .into(holder.textImage);
+                } else if (!canShowFlavorImage() || article.flavorImage == null) {
                     holder.textImage.setImageDrawable(textDrawable);
                 } else {
+                    holder.textImage.setImageDrawable(textDrawable);
                     Glide.with(HeadlinesFragment.this)
                             .load(article.flavorImageUri)
                             .transition(DrawableTransitionOptions.withCrossFade())
