@@ -65,6 +65,15 @@ public class RootCategoriesModel extends FeedsModel {
                         // seems to be necessary evil because of deserialization
                         feedsJson = feedsJson.stream().peek(Feed::fixNullFields).collect(Collectors.toList());
 
+                        // replace server-provided titles with localized strings for special feeds
+                        for (Feed f : feedsJson) {
+                            try {
+                                f.title = getApplication().getString(Feed.getSpecialFeedTitleId(f.id, f.is_cat));
+                            } catch (IllegalArgumentException ignored) {
+                                // not a special feed, keep server-provided title
+                            }
+                        }
+
                         sortFeeds(feedsJson, m_feed, new SpecialOrderComparator());
 
                         feedsCombined.addAll(feedsJson);

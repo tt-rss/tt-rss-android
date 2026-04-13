@@ -120,6 +120,15 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
                     // seems to be necessary evil because of deserialization
                     feedsJson = feedsJson.stream().peek(Feed::fixNullFields).collect(Collectors.toList());
 
+                    // replace server-provided titles with localized strings for special feeds
+                    for (Feed f : feedsJson) {
+                        try {
+                            f.title = getApplication().getString(Feed.getSpecialFeedTitleId(f.id, f.is_cat));
+                        } catch (IllegalArgumentException ignored) {
+                            // not a special feed, keep server-provided title
+                        }
+                    }
+
                     if (unreadOnly && m_feed.id != Feed.CAT_SPECIAL)
                         feedsJson = feedsJson.stream()
                                 .filter(f -> f.unread > 0)
