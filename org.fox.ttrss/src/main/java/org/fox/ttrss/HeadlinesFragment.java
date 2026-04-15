@@ -1048,6 +1048,8 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                         case SCORE:
                             updateScoreView(article, holder);
                             break;
+                        case NOTE:
+                            break;
                     }
                 }
             } else {
