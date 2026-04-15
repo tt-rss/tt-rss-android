@@ -170,7 +170,7 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
         for (int i = 0; i < articles.size(); i++) {
             Article articleClone = new Article(articles.get(i));
 
-            if (select == ArticlesSelection.ALL || select == ArticlesSelection.UNREAD && articleClone.unread) {
+            if (select == ArticlesSelection.ALL || (select == ArticlesSelection.UNREAD && articleClone.unread)) {
                 articleClone.selected = true;
             } else {
                 articleClone.selected = false;
