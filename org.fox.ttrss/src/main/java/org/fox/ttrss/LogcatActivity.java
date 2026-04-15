@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class LogcatActivity extends CommonActivity {
@@ -68,7 +69,7 @@ public class LogcatActivity extends CommonActivity {
         try {
             Process process = Runtime.getRuntime().exec("logcat -d -t " + MAX_LOG_ENTRIES);
             BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
+                    new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
 
             String line;
 
