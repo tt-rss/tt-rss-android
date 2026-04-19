@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -58,7 +59,7 @@ public class WidgetUpdateService extends JobIntentService {
                 Log.d(TAG, "service update requested but network is not available, try: " + retryCount);
 
                 if (retryCount < 10) {
-                    new Handler().postDelayed(() -> {
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         Intent serviceIntent = new Intent(getApplicationContext(), WidgetUpdateService.class);
                         serviceIntent.putExtra("retryCount", retryCount + 1);
 

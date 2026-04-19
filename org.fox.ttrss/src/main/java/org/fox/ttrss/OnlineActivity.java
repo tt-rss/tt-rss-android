@@ -926,6 +926,7 @@ public class OnlineActivity extends CommonActivity {
         Log.d(TAG, "catchupFeed=" + feed + "; mode=" + mode + "; search=" + searchQuery);
 
         ApiRequest req = new ApiRequest(getApplicationContext()) {
+            @Override
             protected void onPostExecute(JsonElement result) {
                 if (refreshAfter)
                     refresh();
@@ -994,6 +995,7 @@ public class OnlineActivity extends CommonActivity {
 
     public void setArticlesField(final List<Article> articles, int field, int mode) {
         ApiRequest req = new ApiRequest(getApplicationContext()) {
+            @Override
             protected void onPostExecute(JsonElement result) {
                 if (m_lastError == ApiCommon.ApiError.SUCCESS) {
 
@@ -1177,6 +1179,7 @@ public class OnlineActivity extends CommonActivity {
             m_listener = listener;
         }
 
+        @Override
         @SuppressLint("StaticFieldLeak")
         protected void onPostExecute(JsonElement result) {
             if (result != null) {
@@ -1214,6 +1217,7 @@ public class OnlineActivity extends CommonActivity {
                         } else {
 
                             ApiRequest req = new ApiRequest(OnlineActivity.this) {
+                                @Override
                                 protected void onPostExecute(JsonElement result) {
                                     setApiLevel(0);
 

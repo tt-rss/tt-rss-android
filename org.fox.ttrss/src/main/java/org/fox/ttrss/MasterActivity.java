@@ -467,6 +467,7 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
 
     public void unsubscribeFeed(final Feed feed) {
         ApiRequest req = new ApiRequest(getApplicationContext()) {
+            @Override
             protected void onPostExecute(JsonElement result) {
                 refresh();
             }

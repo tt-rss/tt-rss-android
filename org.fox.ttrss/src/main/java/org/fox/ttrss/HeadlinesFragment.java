@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
 import android.transition.Fade;
 import android.transition.Transition;
@@ -388,7 +389,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
                         m_readArticles.clear();
 
-                        new Handler().postDelayed(() -> m_activity.refresh(false), 100);
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> m_activity.refresh(false), 100);
                     }
                 }
             }
@@ -431,7 +432,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                     final Feed feedToLoad = m_feed;
 
                     // this has to be dispatched delayed, consequent adapter updates are forbidden in scroll handler
-                    new Handler().postDelayed(() -> {
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
                         if (feedToLoad.equals(m_feed)) {
                             refresh(true);
                         }
@@ -478,7 +479,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                         final Feed feedToLoad = m_feed;
 
                         // this has to be dispatched delayed, consequent adapter updates are forbidden in scroll handler
-                        new Handler().postDelayed(() -> {
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
                             if (feedToLoad.equals(m_feed)) {
                                 refresh(true);
                             }
@@ -1688,7 +1689,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                 Log.d(TAG, "marking articles as read, count=" + m_readArticles.size());
                 m_activity.setArticlesUnread(new ArrayList<>(m_readArticles), Article.UPDATE_SET_FALSE);
                 m_readArticles.clear();
-                new Handler().postDelayed(() -> m_activity.refresh(false), 100);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> m_activity.refresh(false), 100);
             }
         }
     }

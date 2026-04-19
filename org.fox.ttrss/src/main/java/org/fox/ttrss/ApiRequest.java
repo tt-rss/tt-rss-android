@@ -2,19 +2,24 @@ package org.fox.ttrss;
 
 import static org.fox.ttrss.ApiCommon.ApiError;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.google.gson.JsonElement;
 
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class ApiRequest extends AsyncTask<HashMap<String, String>, Integer, JsonElement> implements ApiCommon.ApiCaller {
+public class ApiRequest implements ApiCommon.ApiCaller {
+
+    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
 
     protected int m_apiStatusCode = 0;
 
     private final Context m_context;
+    private final Handler m_mainHandler = new Handler(Looper.getMainLooper());
     protected String m_lastErrorMessage;
 
     protected ApiError m_lastError;
@@ -24,19 +29,18 @@ public class ApiRequest extends AsyncTask<HashMap<String, String>, Integer, Json
         m_lastError = ApiError.UNKNOWN_ERROR;
     }
 
-    @SuppressLint("NewApi")
-    @SuppressWarnings("unchecked")
     public void execute(HashMap<String, String> map) {
-        super.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, map);
+        EXECUTOR.submit(() -> {
+            final JsonElement result = ApiCommon.performRequest(m_context, map, this);
+            m_mainHandler.post(() -> onPostExecute(result));
+        });
+    }
+
+    protected void onPostExecute(JsonElement result) {
     }
 
     public int getErrorMessage() {
         return ApiCommon.getErrorMessage(m_lastError);
-    }
-
-    @Override
-    protected JsonElement doInBackground(HashMap<String, String>... params) {
-        return ApiCommon.performRequest(m_context, params[0], this);
     }
 
     @Override
@@ -56,6 +60,5 @@ public class ApiRequest extends AsyncTask<HashMap<String, String>, Integer, Json
 
     @Override
     public void notifyProgress(int progress) {
-        publishProgress(progress);
     }
 }
