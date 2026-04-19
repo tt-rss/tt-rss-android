@@ -1,0 +1,18 @@
+An Android client for Tiny Tiny RSS, a self-hosted news feed (RSS/Atom)
+reader and aggregator. Connects to your own Tiny Tiny RSS server to read,
+organise, and share articles across devices.
+
+Features:
+
+* Browse feeds, categories, and tags from your Tiny Tiny RSS server
+* Read articles offline after syncing
+* Mark articles as read/unread, starred, or published
+* Share articles to other apps
+* Light and dark themes
+* Support for self-signed certificates and HTTP authentication
+
+A running Tiny Tiny RSS server (https://tt-rss.org/) is required.
+
+This build is a community-maintained fork of the original tt-rss-android
+project; see https://github.com/tt-rss/tt-rss-android for source and
+issues.
