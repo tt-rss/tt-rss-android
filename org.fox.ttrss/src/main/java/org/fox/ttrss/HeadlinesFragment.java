@@ -1524,7 +1524,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                             .load(faviconUrl)
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .placeholder(faviconBackground)
-                            .error(textDrawable)
+                            .error(R.drawable.baseline_rss_feed_24)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .skipMemoryCache(false)
                             .into(holder.textImage);
@@ -1536,6 +1536,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                             .load(article.flavorImageUri)
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .placeholder(textDrawable)
+                            .error(R.drawable.baseline_rss_feed_24)
                             .thumbnail(0.5f)
                             .apply(RequestOptions.circleCropTransform())
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
