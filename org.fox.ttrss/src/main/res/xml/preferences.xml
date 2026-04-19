@@ -187,6 +187,11 @@
             android:title="@string/use_volume_keys" />
         <SwitchPreferenceCompat
             android:defaultValue="true"
+            android:key="move_between_articles"
+            android:summary="@string/move_between_articles_long"
+            android:title="@string/move_between_articles" />
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
             android:key="enable_article_fab"
             android:summary="@string/prefs_enable_fab_long"
             android:title="@string/prefs_enable_fab" />

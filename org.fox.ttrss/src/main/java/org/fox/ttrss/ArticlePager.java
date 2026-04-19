@@ -2,6 +2,7 @@ package org.fox.ttrss;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import org.fox.ttrss.types.Article;
@@ -102,6 +104,9 @@ public class ArticlePager extends androidx.fragment.app.Fragment {
 
         m_pager.setAdapter(m_adapter);
         m_pager.setOffscreenPageLimit(3);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        m_pager.setUserInputEnabled(prefs.getBoolean("move_between_articles", true));
 
         m_pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
