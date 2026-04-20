@@ -25,6 +25,7 @@ public class GalleryVideoFragment extends GalleryBaseFragment {
     String m_url;
     String m_coverUrl;
     MediaPlayer m_mediaPlayer;
+    Surface m_surface;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,7 +90,7 @@ public class GalleryVideoFragment extends GalleryBaseFragment {
         textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                Surface s = new Surface(surface);
+                m_surface = new Surface(surface);
 
                 m_mediaPlayer = new MediaPlayer();
 
@@ -150,7 +151,7 @@ public class GalleryVideoFragment extends GalleryBaseFragment {
                     }
                 });
 
-                m_mediaPlayer.setSurface(s);
+                m_mediaPlayer.setSurface(m_surface);
 
                 try {
                     m_mediaPlayer.setDataSource(m_url);
@@ -186,6 +187,10 @@ public class GalleryVideoFragment extends GalleryBaseFragment {
                     m_mediaPlayer.release();
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+                if (m_surface != null) {
+                    m_surface.release();
+                    m_surface = null;
                 }
                 return false;
             }

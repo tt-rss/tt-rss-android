@@ -374,10 +374,10 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
 
                                 File file = new File(shareFolder, "shared.png");
 
-                                FileOutputStream stream = new FileOutputStream(file);
-                                resource.compress(Bitmap.CompressFormat.PNG, 90, stream);
-                                stream.flush();
-                                stream.close();
+                                try (FileOutputStream stream = new FileOutputStream(file)) {
+                                    resource.compress(Bitmap.CompressFormat.PNG, 90, stream);
+                                    stream.flush();
+                                }
 
                                 Uri shareUri = FileProvider.getUriForFile(CommonActivity.this,
                                         "org.fox.ttrss.SharedFileProvider", file);

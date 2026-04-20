@@ -66,19 +66,23 @@ public class LogcatActivity extends CommonActivity {
     private void refresh() {
         m_items.clear();
 
+        Process process = null;
         try {
-            Process process = Runtime.getRuntime().exec("logcat -d -t " + MAX_LOG_ENTRIES);
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
+            process = Runtime.getRuntime().exec("logcat -d -t " + MAX_LOG_ENTRIES);
 
-            String line;
+            try (BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
 
-            while ((line = bufferedReader.readLine()) != null) {
-                m_items.add(0, line);
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    m_items.add(0, line);
+                }
             }
-
         } catch (Exception e) {
             m_items.add(e.toString());
+        } finally {
+            if (process != null) process.destroy();
         }
 
         if (m_adapter != null) m_adapter.notifyDataSetChanged();

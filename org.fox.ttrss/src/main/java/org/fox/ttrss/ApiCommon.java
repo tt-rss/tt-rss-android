@@ -172,77 +172,78 @@ public class ApiCommon {
                     .addNetworkInterceptor(createInterceptor(listener))
                     .build();
 
-            Response response = client.newCall(request).execute();
+            try (Response response = client.newCall(request).execute()) {
 
-            if (response.isSuccessful()) {
-                String payloadReceived = response.body().string();
+                if (response.isSuccessful()) {
+                    String payloadReceived = response.body().string();
 
-                if (m_transportDebugging) Log.d(TAG, "<<< " + payloadReceived);
+                    if (m_transportDebugging) Log.d(TAG, "<<< " + payloadReceived);
 
-                JsonElement result = JsonParser.parseString(payloadReceived);
-                JsonObject resultObj = result.getAsJsonObject();
+                    JsonElement result = JsonParser.parseString(payloadReceived);
+                    JsonObject resultObj = result.getAsJsonObject();
 
-                int statusCode = resultObj.get("status").getAsInt();
+                    int statusCode = resultObj.get("status").getAsInt();
 
-                caller.setStatusCode(statusCode);
+                    caller.setStatusCode(statusCode);
 
-                switch (statusCode) {
-                    case API_STATUS_OK:
-                        caller.setLastError(ApiError.SUCCESS);
-                        return result.getAsJsonObject().get("content");
-                    case API_STATUS_ERR:
-                        JsonObject contentObj = resultObj.get("content").getAsJsonObject();
-                        String error = contentObj.get("error").getAsString();
+                    switch (statusCode) {
+                        case API_STATUS_OK:
+                            caller.setLastError(ApiError.SUCCESS);
+                            return result.getAsJsonObject().get("content");
+                        case API_STATUS_ERR:
+                            JsonObject contentObj = resultObj.get("content").getAsJsonObject();
+                            String error = contentObj.get("error").getAsString();
 
-                        switch (error) {
-                            case "LOGIN_ERROR":
-                            case "NOT_LOGGED_IN":
-                                caller.setLastError(ApiError.LOGIN_FAILED);
-                                break;
-                            case "API_DISABLED":
-                                caller.setLastError(ApiError.API_DISABLED);
-                                break;
-                            case "INCORRECT_USAGE":
-                                caller.setLastError(ApiError.API_INCORRECT_USAGE);
-                                break;
-                            case "UNKNOWN_METHOD":
-                                caller.setLastError(ApiError.API_UNKNOWN_METHOD);
-                                break;
-                            default:
-                                Log.d(TAG, "Unknown API error: " + error);
-                                caller.setLastErrorMessage(error);
-                                caller.setLastError(ApiError.API_UNKNOWN);
-                                break;
-                        }
+                            switch (error) {
+                                case "LOGIN_ERROR":
+                                case "NOT_LOGGED_IN":
+                                    caller.setLastError(ApiError.LOGIN_FAILED);
+                                    break;
+                                case "API_DISABLED":
+                                    caller.setLastError(ApiError.API_DISABLED);
+                                    break;
+                                case "INCORRECT_USAGE":
+                                    caller.setLastError(ApiError.API_INCORRECT_USAGE);
+                                    break;
+                                case "UNKNOWN_METHOD":
+                                    caller.setLastError(ApiError.API_UNKNOWN_METHOD);
+                                    break;
+                                default:
+                                    Log.d(TAG, "Unknown API error: " + error);
+                                    caller.setLastErrorMessage(error);
+                                    caller.setLastError(ApiError.API_UNKNOWN);
+                                    break;
+                            }
+                    }
+
+                } else {
+                    switch (response.code()) {
+                        case 400:
+                            caller.setLastError(ApiError.HTTP_BAD_REQUEST);
+                            break;
+                        case 401:
+                            caller.setLastError(ApiError.HTTP_UNAUTHORIZED);
+                            break;
+                        case 403:
+                            caller.setLastError(ApiError.HTTP_FORBIDDEN);
+                            break;
+                        case 404:
+                            caller.setLastError(ApiError.HTTP_NOT_FOUND);
+                            break;
+                        case 500:
+                        case 501:
+                            caller.setLastError(ApiError.HTTP_SERVER_ERROR);
+                            break;
+                        default:
+                            Log.d(TAG, "HTTP response code: " + response.code());
+                            caller.setLastErrorMessage("HTTP response code: " + response.code());
+                            caller.setLastError(ApiError.HTTP_OTHER_ERROR);
+                            break;
+                    }
                 }
 
-            } else {
-                switch (response.code()) {
-                    case 400:
-                        caller.setLastError(ApiError.HTTP_BAD_REQUEST);
-                        break;
-                    case 401:
-                        caller.setLastError(ApiError.HTTP_UNAUTHORIZED);
-                        break;
-                    case 403:
-                        caller.setLastError(ApiError.HTTP_FORBIDDEN);
-                        break;
-                    case 404:
-                        caller.setLastError(ApiError.HTTP_NOT_FOUND);
-                        break;
-                    case 500:
-                    case 501:
-                        caller.setLastError(ApiError.HTTP_SERVER_ERROR);
-                        break;
-                    default:
-                        Log.d(TAG, "HTTP response code: " + response.code());
-                        caller.setLastErrorMessage("HTTP response code: " + response.code());
-                        caller.setLastError(ApiError.HTTP_OTHER_ERROR);
-                        break;
-                }
+                return null;
             }
-
-            return null;
         } catch (javax.net.ssl.SSLPeerUnverifiedException e) {
             caller.setLastError(ApiError.SSL_REJECTED);
             caller.setLastErrorMessage(e.getMessage());
