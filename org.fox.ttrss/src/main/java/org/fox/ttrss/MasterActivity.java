@@ -20,7 +20,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.preference.PreferenceManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,7 +37,6 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
 
     private static final int HEADLINES_REQUEST = 1;
 
-    protected SharedPreferences m_prefs;
     protected long m_lastRefresh = 0;
     protected long m_lastWidgetRefresh = 0;
 
@@ -48,11 +46,6 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        m_prefs = PreferenceManager
-                .getDefaultSharedPreferences(getApplicationContext());
-
-        setAppTheme(m_prefs);
-
         super.onCreate(savedInstanceState);
 
         if (m_prefs.getBoolean("force_phone_layout", false)) {

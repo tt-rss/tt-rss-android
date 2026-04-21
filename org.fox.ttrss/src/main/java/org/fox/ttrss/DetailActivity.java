@@ -3,7 +3,6 @@ package org.fox.ttrss;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.preference.PreferenceManager;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -25,16 +23,9 @@ public class DetailActivity extends OnlineActivity implements HeadlinesEventList
     private static final String TAG = DetailActivity.class.getSimpleName();
     protected BottomAppBar m_bottomAppBar;
 
-    protected SharedPreferences m_prefs;
-
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        m_prefs = PreferenceManager
-                .getDefaultSharedPreferences(getApplicationContext());
-
-        setAppTheme(m_prefs);
-
         super.onCreate(savedInstanceState);
 
         if (m_prefs.getBoolean("force_phone_layout", false)) {
