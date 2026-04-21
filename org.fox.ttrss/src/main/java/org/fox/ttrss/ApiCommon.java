@@ -46,6 +46,13 @@ public class ApiCommon {
     private static final Gson GSON = new Gson();
     private static final MediaType TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
 
+    private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .addNetworkInterceptor(createInterceptor())
+            .build();
+
     public interface ApiCaller {
         void setStatusCode(int statusCode);
 
@@ -140,6 +147,7 @@ public class ApiCommon {
             Request.Builder requestBuilder = new Request.Builder()
                     .url(apiUrl)
                     .header("User-Agent", getUserAgent(context))
+                    .tag(ApiCaller.class, caller)
                     .post(RequestBody.create(TYPE_JSON, payload));
 
             String httpLogin = m_prefs.getString("http_login", "").trim();
@@ -153,26 +161,7 @@ public class ApiCommon {
 
             Request request = requestBuilder.build();
 
-            ResponseProgressListener listener = new ResponseProgressListener() {
-                @Override
-                public void update(HttpUrl url, long bytesRead, long contentLength) {
-                    // Log.d(TAG, "[progress] " + url + " " + bytesRead + " of " + contentLength);
-
-                    if (contentLength > 0)
-                        caller.notifyProgress((int) (bytesRead * 100f / contentLength));
-                }
-            };
-
-            /* lets shamelessly hijack OkHttpProgressGlideModule */
-
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS)
-                    .addNetworkInterceptor(createInterceptor(listener))
-                    .build();
-
-            try (Response response = client.newCall(request).execute()) {
+            try (Response response = CLIENT.newCall(request).execute()) {
 
                 if (response.isSuccessful()) {
                     String payloadReceived = response.body().string();
@@ -276,10 +265,18 @@ public class ApiCommon {
         void update(HttpUrl url, long bytesRead, long contentLength);
     }
 
-    private static Interceptor createInterceptor(final ResponseProgressListener listener) {
+    private static Interceptor createInterceptor() {
         return chain -> {
             Request request = chain.request();
             Response response = chain.proceed(request);
+            ApiCaller caller = request.tag(ApiCaller.class);
+            if (caller == null) return response;
+            ResponseProgressListener listener = (url, bytesRead, contentLength) -> {
+                // Log.d(TAG, "[progress] " + url + " " + bytesRead + " of " + contentLength);
+
+                if (contentLength > 0)
+                    caller.notifyProgress((int) (bytesRead * 100f / contentLength));
+            };
             return response.newBuilder()
                     .body(new ProgressResponseBody(request.url(), response.body(), listener))
                     .build();
