@@ -50,6 +50,7 @@ public class ApiCommon {
             .connectTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(new RetryInterceptor())
             .addNetworkInterceptor(createInterceptor())
             .build();
 
@@ -276,6 +277,37 @@ public class ApiCommon {
                     .body(new ProgressResponseBody(request.url(), response.body(), listener))
                     .build();
         };
+    }
+
+    private static class RetryInterceptor implements Interceptor {
+        private static final int MAX_ATTEMPTS = 3;
+        private static final long INITIAL_BACKOFF_MS = 500;
+
+        @NonNull
+        @Override
+        public Response intercept(@NonNull Interceptor.Chain chain) throws IOException {
+            Request request = chain.request();
+            IOException lastException = null;
+
+            for (int attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+                try {
+                    return chain.proceed(request);
+                } catch (IOException e) {
+                    lastException = e;
+                    if (attempt == MAX_ATTEMPTS - 1) break;
+
+                    long backoff = INITIAL_BACKOFF_MS * (1L << attempt);
+                    long jitter = (long) (backoff * 0.3 * Math.random());
+                    try {
+                        Thread.sleep(backoff + jitter);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        throw new IOException("Interrupted during retry backoff", ie);
+                    }
+                }
+            }
+            throw lastException;
+        }
     }
 
     private static class ProgressResponseBody extends ResponseBody {
