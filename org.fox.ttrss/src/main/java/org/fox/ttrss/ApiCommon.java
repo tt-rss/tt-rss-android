@@ -123,11 +123,6 @@ public class ApiCommon {
     static JsonElement performRequest(Context context, @NonNull HashMap<String, String> m_params,
                                       @NonNull ApiCommon.ApiCaller caller) {
         try {
-            if (!ApiCommon.isNetworkAvailable(context)) {
-                caller.setLastError(ApiError.NETWORK_UNAVAILABLE);
-                return null;
-            }
-
             SharedPreferences m_prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
             boolean m_transportDebugging = m_prefs.getBoolean("transport_debugging", false);
