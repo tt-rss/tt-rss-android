@@ -25,6 +25,7 @@ public abstract class SimpleLoginManager {
             m_requestId = requestId;
         }
 
+        @Override
         protected void onPostExecute(JsonElement result) {
             Log.d(TAG, "onPostExecute");
 
@@ -37,6 +38,7 @@ public abstract class SimpleLoginManager {
                         Log.d(TAG, "[SLM] Authenticated!");
 
                         ApiRequest req = new ApiRequest(m_context) {
+                            @Override
                             protected void onPostExecute(JsonElement result) {
                                 m_apiLevel = 0;
 

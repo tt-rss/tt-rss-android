@@ -147,6 +147,7 @@ public class SubscribeActivity extends CommonShareActivity {
         m_postButton.setEnabled(false);
 
         @SuppressLint("StaticFieldLeak") ApiRequest req = new ApiRequest(getApplicationContext()) {
+            @Override
             protected void onPostExecute(JsonElement result) {
                 m_progressBar.setVisibility(View.INVISIBLE);
 
@@ -248,6 +249,7 @@ public class SubscribeActivity extends CommonShareActivity {
 
     private void updateCats() {
         @SuppressLint("StaticFieldLeak") ApiRequest req = new ApiRequest(getApplicationContext()) {
+            @Override
             protected void onPostExecute(JsonElement result) {
                 m_progressBar.setVisibility(View.INVISIBLE);
 

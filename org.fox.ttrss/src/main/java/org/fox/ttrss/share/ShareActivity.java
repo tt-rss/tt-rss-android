@@ -83,6 +83,7 @@ public class ShareActivity extends CommonShareActivity {
         m_button.setEnabled(false);
 
         ApiRequest req = new ApiRequest(getApplicationContext()) {
+            @Override
             protected void onPostExecute(JsonElement result) {
                 setProgressBarIndeterminateVisibility(false);
 
