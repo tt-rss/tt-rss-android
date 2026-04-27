@@ -30,7 +30,7 @@ public class ApiRequest implements ApiCommon.ApiCaller {
     }
 
     public void execute(HashMap<String, String> map) {
-        EXECUTOR.submit(() -> {
+        EXECUTOR.execute(() -> {
             final JsonElement result = ApiCommon.performRequest(m_context, map, this);
             m_mainHandler.post(() -> onPostExecute(result));
         });
