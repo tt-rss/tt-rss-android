@@ -171,8 +171,8 @@ dependencies {
     implementation 'ch.acra:acra-mail:5.13.1'
     implementation 'ch.acra:acra-dialog:5.13.1'
 
-    errorprone 'com.google.errorprone:error_prone_core:2.36.0'
-    annotationProcessor 'com.google.errorprone:error_prone_core:2.36.0'
+    errorprone 'com.google.errorprone:error_prone_core:2.49.0'
+    annotationProcessor 'com.google.errorprone:error_prone_core:2.49.0'
 }
 
 tasks.withType(JavaCompile).configureEach {
