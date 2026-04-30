@@ -2,7 +2,6 @@ package org.fox.ttrss.share;
 
 import android.app.Activity;
 import android.util.Log;
-import android.view.Display;
 import android.widget.Toast;
 
 public class CommonActivity extends Activity {
@@ -28,15 +27,4 @@ public class CommonActivity extends Activity {
     public boolean isSmallScreen() {
         return m_smallScreenMode;
     }
-
-    public boolean isPortrait() {
-        Display display = getWindowManager().getDefaultDisplay();
-
-        int width = display.getWidth();
-        int height = display.getHeight();
-
-        return width < height;
-    }
-
-
 }

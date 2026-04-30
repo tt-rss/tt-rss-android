@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -22,7 +23,6 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -269,14 +269,8 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
         return m_smallScreenMode;
     }
 
-    @SuppressWarnings("deprecation")
     public boolean isPortrait() {
-        Display display = getWindowManager().getDefaultDisplay();
-
-        int width = display.getWidth();
-        int height = display.getHeight();
-
-        return width < height;
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 
     @SuppressLint({"NewApi", "ServiceCast"})
