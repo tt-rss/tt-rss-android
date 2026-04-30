@@ -18,7 +18,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.Html;
 import android.transition.Fade;
 import android.transition.Transition;
 import android.util.DisplayMetrics;
@@ -48,6 +47,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
@@ -1262,7 +1262,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
         private void updateTitleView(final Article article, final ArticleViewHolder holder) {
             if (holder.titleView != null) {
-                holder.titleView.setText(Html.fromHtml(article.title));
+                holder.titleView.setText(HtmlCompat.fromHtml(article.title, HtmlCompat.FROM_HTML_MODE_LEGACY));
                 holder.titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, Math.min(21, m_headlineFontSize + 3));
             }
 
