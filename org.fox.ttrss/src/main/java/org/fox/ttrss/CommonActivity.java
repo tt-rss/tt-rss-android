@@ -7,6 +7,8 @@ import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -279,11 +281,9 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
         return width < height;
     }
 
-    @SuppressLint({"NewApi", "ServiceCast"})
-    @SuppressWarnings("deprecation")
     public void copyToClipboard(String str) {
-        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        clipboard.setText(str);
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        clipboard.setPrimaryClip(ClipData.newPlainText("ttrss", str));
 
         Snackbar.make(findViewById(android.R.id.content), R.string.text_copied_to_clipboard, Snackbar.LENGTH_SHORT)
                 .setAction(R.string.dialog_close, v -> {
