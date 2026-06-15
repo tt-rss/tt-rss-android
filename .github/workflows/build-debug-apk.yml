@@ -57,11 +57,16 @@ jobs:
       if: always()
       run: bash .github/scripts/generate-lint-summary.sh
 
+    - name: Rename debug APK
+      run: |
+        mv org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug.apk \
+          "org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug-${{ github.run_number }}-${{ github.sha }}.apk"
+
     - name: Upload debug APK
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
-        name: org.fox.ttrss-debug-${{ github.run_number }}-${{ github.sha }}
-        path: org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug.apk
+        path: org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug-${{ github.run_number }}-${{ github.sha }}.apk
+        archive: false
 
     - name: Upload full reports
       if: always()
