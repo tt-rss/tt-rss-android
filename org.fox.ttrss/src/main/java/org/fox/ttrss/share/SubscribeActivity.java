@@ -255,7 +255,7 @@ public class SubscribeActivity extends CommonShareActivity {
 
                 if (m_lastError != null && m_lastError != ApiCommon.ApiError.SUCCESS) {
                     toast(getErrorMessage());
-                } else {
+                } else if (result != null) {
                     JsonArray content = result.getAsJsonArray();
 
                     if (content != null) {
