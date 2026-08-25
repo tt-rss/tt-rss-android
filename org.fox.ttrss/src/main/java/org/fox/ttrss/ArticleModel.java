@@ -282,7 +282,7 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
                                 Log.d(TAG, "duplicate:" + article);
                             }
 
-                        if (m_firstIdChanged) {
+                        if (m_firstIdChanged && !m_append) {
                             Log.d(TAG, "first id changed, disabling lazy load");
                             m_lazyLoadEnabled = false;
                         }
@@ -323,19 +323,15 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
             int numUnread = Math.toIntExact(getUnread(articles).size());
             int numAll = Math.toIntExact(articles.size());
 
-            if ("marked".equals(viewMode)) {
-                skip = numAll;
-            } else if ("published".equals(viewMode)) {
-                skip = numAll;
-            } else if ("unread".equals(viewMode)) {
-                skip = numUnread;
-            } else if (m_searchQuery != null && !m_searchQuery.isEmpty()) {
-                skip = numAll;
-            } else if ("adaptive".equals(viewMode)) {
-                skip = numUnread > 0 ? numUnread : numAll;
-            } else {
-                skip = numAll;
-            }
+            // unread-only feeds (explicit unread view mode, and the Fresh
+            // virtual feed) shrink as articles are marked read, so paginate
+            // by numUnread there; adaptive mode does the same as long as
+            // unread articles remain, falling back to numAll once exhausted
+            boolean unreadOnlyPagination = "unread".equals(viewMode)
+                    || m_feed.id == Feed.FRESH
+                    || ("adaptive".equals(viewMode) && numUnread > 0);
+
+            skip = unreadOnlyPagination ? numUnread : numAll;
         }
 
         return skip;
