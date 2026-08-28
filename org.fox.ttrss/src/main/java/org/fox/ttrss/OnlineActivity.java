@@ -745,6 +745,7 @@ public class OnlineActivity extends CommonActivity {
 
     protected void logout() {
         setSessionId(null);
+        Application.getInstance().setSessionValid(false); // invalidated with the server
 
         setLoadingStatus(R.string.login_ready);
 
@@ -753,6 +754,7 @@ public class OnlineActivity extends CommonActivity {
 
     protected void loginFailure() {
         setSessionId(null);
+        Application.getInstance().setSessionValid(false); // login attempt failed
         initMenu();
     }
 
@@ -760,7 +762,14 @@ public class OnlineActivity extends CommonActivity {
     public void onResume() {
         super.onResume();
 
-        if (getSessionId() == null) {
+        // Don't trust a sessionId merely because it's non-null. Since 5e5d64e4
+        // the sessionId is persisted and rehydrated after process death, so
+        // getSessionId() != null no longer implies "we are authenticated this
+        // session". Require a login verified in *this* process, otherwise
+        // call login() which sends the stored user/password. Reusing a stale
+        // sid caused every subsequent API call to fail with NOT_LOGGED_IN,
+        // leaving the app stuck on a blank list after a force-close/reopen.
+        if (getSessionId() == null || !Application.getInstance().isSessionValid()) {
             login();
         } else {
             loginSuccess(false);
@@ -1188,6 +1197,11 @@ public class OnlineActivity extends CommonActivity {
 
                     if (content != null) {
                         setSessionId(content.get("session_id").getAsString());
+                        // We just authenticated with the server in this process, so the
+                        // sessionId is known-good. This lets onResume() skip re-login
+                        // while the process stays alive (e.g. rotation, returning
+                        // from background).
+                        Application.getInstance().setSessionValid(true);
 
                         JsonElement apiLevel = content.get("api_level");
 
