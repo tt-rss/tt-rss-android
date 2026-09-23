@@ -208,16 +208,9 @@ public class FeedsFragment extends Fragment implements OnSharedPreferenceChangeL
 
                 if (m_loadingProgress != null && !isLoading)
                     m_loadingProgress.setVisibility(View.GONE);
-            }
-        });
 
-        model.getFeeds().observe(getActivity(), feeds -> {
-            Log.d(TAG, "observed feeds size=" + feeds.size());
-
-            if (isAdded()) {
-                onFeedsLoaded(feeds);
-
-                if (model.getLastError() != null && model.getLastError() != ApiCommon.ApiError.SUCCESS) {
+                // Failed requests do not publish a new feed list.
+                if (!isLoading && model.getLastError() != null && model.getLastError() != ApiCommon.ApiError.SUCCESS) {
                     if (model.getLastError() == ApiCommon.ApiError.LOGIN_FAILED) {
                         m_activity.login(true);
                     } else {
@@ -228,6 +221,14 @@ public class FeedsFragment extends Fragment implements OnSharedPreferenceChangeL
                         }
                     }
                 }
+            }
+        });
+
+        model.getFeeds().observe(getActivity(), feeds -> {
+            Log.d(TAG, "observed feeds size=" + feeds.size());
+
+            if (isAdded()) {
+                onFeedsLoaded(feeds);
             }
         });
 

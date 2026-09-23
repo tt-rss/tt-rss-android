@@ -52,6 +52,12 @@ public class RootCategoriesModel extends FeedsModel {
 
                 final JsonElement result = ApiCommon.performRequest(getApplication(), params, this);
 
+                if (result == null) {
+                    // Do not overwrite the error with another request or a parsing failure.
+                    m_isLoading.postValue(false);
+                    return;
+                }
+
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "got result=" + result);
 
@@ -82,6 +88,8 @@ public class RootCategoriesModel extends FeedsModel {
                     setLastErrorMessage(e.getMessage());
 
                     e.printStackTrace();
+                    m_isLoading.postValue(false);
+                    return;
                 }
             }
 
@@ -95,6 +103,11 @@ public class RootCategoriesModel extends FeedsModel {
             params.put("enable_nested", "true");
 
             final JsonElement result = ApiCommon.performRequest(getApplication(), params, this);
+
+            if (result == null) {
+                m_isLoading.postValue(false);
+                return;
+            }
 
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "got result=" + result);

@@ -108,6 +108,12 @@ public class FeedsModel extends AndroidViewModel implements ApiCommon.ApiCaller 
 
             final JsonElement result = ApiCommon.performRequest(getApplication(), params, this);
 
+            if (result == null) {
+                // Keep the API error so the UI can recover an expired session.
+                m_isLoading.postValue(false);
+                return;
+            }
+
             if (BuildConfig.DEBUG)
                 Log.d(TAG, "got result=" + result);
 
