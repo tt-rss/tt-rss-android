@@ -21,6 +21,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 
+import java.util.Locale;
+
 public class GalleryImageFragment extends GalleryBaseFragment {
     private static final String TAG = GalleryBaseFragment.class.getSimpleName();
 
@@ -49,7 +51,7 @@ public class GalleryImageFragment extends GalleryBaseFragment {
         imgView.setOnTouchListener(touchHandler);
 
         // shared element transitions stop GIFs from playing
-        if (!m_url.toLowerCase().contains(".gif")) {
+        if (!m_url.toLowerCase(Locale.ROOT).contains(".gif")) {
             ViewCompat.setTransitionName(imgView, "gallery:" + m_url);
         }
 

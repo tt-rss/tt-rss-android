@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class PreferencesFragment extends PreferenceFragmentCompat {
@@ -70,7 +71,7 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
 
             findPreference("version").setSummary(getString(R.string.prefs_version, version, versionCode));
 
-            buildTimestamp = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date(BuildConfig.TIMESTAMP));
+            buildTimestamp = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.US).format(new Date(BuildConfig.TIMESTAMP));
 
             findPreference("build_timestamp").setSummary(getString(R.string.prefs_build_timestamp, buildTimestamp));
 
