@@ -21,7 +21,6 @@
         </FrameLayout>
 
         <com.google.android.material.navigation.NavigationView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/navigation_view"
             android:layout_width="300dp"
             app:shapeAppearance="@style/ShapeAppearanceFeedsTablet"
@@ -46,8 +45,6 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.appbar.MaterialToolbar
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/toolbar"
                     app:layout_scrollFlags="scroll|enterAlways"
                     app:titleTextAppearance="?attr/textAppearanceTitleMedium"

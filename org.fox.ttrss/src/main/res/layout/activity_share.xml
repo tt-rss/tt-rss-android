@@ -13,11 +13,14 @@
         android:layout_alignParentTop="true"
         android:ems="10"
         android:hint="@string/share_title_hint"
+        android:inputType="text"
+        android:importantForAutofill="no"
         android:singleLine="true" />
 
     <EditText
         android:id="@+id/url"
         android:inputType="textUri"
+        android:importantForAutofill="no"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/title"
@@ -38,6 +41,7 @@
         android:ems="10"
         android:hint="@string/share_content_hint"
         android:inputType="textMultiLine"
+        android:importantForAutofill="no"
         android:maxLines="3" >
 
         <requestFocus />

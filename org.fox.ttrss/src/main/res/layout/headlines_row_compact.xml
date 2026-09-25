@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:baselineAligned="false"
     android:id="@+id/headlines_row"
     android:paddingTop="16dp"
     android:paddingBottom="16dp"

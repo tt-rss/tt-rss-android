@@ -14,6 +14,7 @@
         android:ems="10"
         android:hint="@string/feed_url"
         android:inputType="textUri"
+        android:importantForAutofill="no"
         android:maxLines="1" >
 
         <requestFocus />
