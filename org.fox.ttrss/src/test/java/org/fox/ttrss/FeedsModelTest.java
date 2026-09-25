@@ -145,7 +145,6 @@ public class FeedsModelTest {
     }
 
     private void useImmediateExecutor(FeedsModel model) {
-        model.m_executor.shutdownNow();
         model.m_executor = mock(ExecutorService.class);
         doAnswer(invocation -> {
             invocation.getArgument(0, Runnable.class).run();

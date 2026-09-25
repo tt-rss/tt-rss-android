@@ -303,7 +303,7 @@ public class FeedsFragment extends Fragment implements OnSharedPreferenceChangeL
         getModel().startLoading(m_rootFeed);
     }
 
-    private static class FeedViewHolder extends RecyclerView.ViewHolder {
+    static class FeedViewHolder extends RecyclerView.ViewHolder {
 
         private View view;
         private ImageView icon;
