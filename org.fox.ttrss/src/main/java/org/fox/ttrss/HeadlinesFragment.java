@@ -1311,11 +1311,11 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                 DateFormat df;
 
                 if (now.getYear() == d.getYear() && now.getMonth() == d.getMonth() && now.getDay() == d.getDay()) {
-                    df = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                    df = new SimpleDateFormat("HH:mm", Locale.getDefault(Locale.Category.FORMAT));
                 } else if (article.updated > half_a_year_ago) {
-                    df = new SimpleDateFormat("MMM dd", Locale.getDefault());
+                    df = new SimpleDateFormat("MMM dd", Locale.getDefault(Locale.Category.FORMAT));
                 } else {
-                    df = new SimpleDateFormat("MMM yyyy", Locale.getDefault());
+                    df = new SimpleDateFormat("MMM yyyy", Locale.getDefault(Locale.Category.FORMAT));
                 }
 
                 df.setTimeZone(TimeZone.getDefault());
