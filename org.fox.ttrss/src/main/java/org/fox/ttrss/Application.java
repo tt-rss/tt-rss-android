@@ -36,7 +36,8 @@ public class Application extends android.app.Application {
     // rehydrated from SharedPreferences in onCreate() is left unverified
     // (false), because the server may have expired it while the process
     // was dead. onResume() uses this to decide whether to skip login.
-    private boolean m_sessionValid = false;
+    // volatile: read/written from background ApiRequest threads.
+    private volatile boolean m_sessionValid = false;
 
     public LinkedHashMap<String, String> m_customSortModes = new LinkedHashMap<>();
     ConnectivityManager m_cmgr;
@@ -85,6 +86,10 @@ public class Application extends android.app.Application {
                 .edit()
                 .putString(PREF_SESSION_ID, sessionId)
                 .apply();
+        // Any change to the session id invalidates the "authenticated this
+        // process" flag. Only the successful-login path re-sets it to true,
+        // so callers that just clear the id no longer need to touch it.
+        m_sessionValid = false;
     }
 
     public int getApiLevel() {

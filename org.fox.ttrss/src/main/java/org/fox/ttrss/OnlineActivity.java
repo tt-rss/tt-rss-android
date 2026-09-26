@@ -744,8 +744,7 @@ public class OnlineActivity extends CommonActivity {
     }
 
     protected void logout() {
-        setSessionId(null);
-        Application.getInstance().setSessionValid(false); // invalidated with the server
+        setSessionId(null); // also clears m_sessionValid via setSessionId()
 
         setLoadingStatus(R.string.login_ready);
 
@@ -753,8 +752,7 @@ public class OnlineActivity extends CommonActivity {
     }
 
     protected void loginFailure() {
-        setSessionId(null);
-        Application.getInstance().setSessionValid(false); // login attempt failed
+        setSessionId(null); // also clears m_sessionValid via setSessionId()
         initMenu();
     }
 
@@ -1105,7 +1103,7 @@ public class OnlineActivity extends CommonActivity {
     // this may be called after activity has been destroyed (i.e. long asynctask)
     protected void initMenu() {
         if (m_menu != null) {
-            if (getSessionId() != null) {
+            if (Application.getInstance().isSessionValid()) {
                 m_menu.setGroupVisible(R.id.menu_group_feeds, true);
                 m_menu.setGroupVisible(R.id.menu_group_headlines, true);
                 m_menu.setGroupVisible(R.id.menu_group_article, true);
@@ -1284,7 +1282,7 @@ public class OnlineActivity extends CommonActivity {
                 }
             }
 
-            setSessionId(null);
+            setSessionId(null); // also clears m_sessionValid via setSessionId()
 
             if (m_lastErrorMessage != null) {
                 setLoadingStatus(getString(getErrorMessage()) + "\n\n" + m_lastErrorMessage);
