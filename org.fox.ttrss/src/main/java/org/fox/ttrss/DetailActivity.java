@@ -30,6 +30,9 @@ public class DetailActivity extends OnlineActivity implements HeadlinesEventList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setOpenActivityTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        setCloseActivityTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
         if (m_prefs.getBoolean("force_phone_layout", false)) {
             setContentView(R.layout.activity_detail_phone);
         } else {
@@ -277,7 +280,7 @@ public class DetailActivity extends OnlineActivity implements HeadlinesEventList
         super.onPause();
 
         if (isFinishing()) {
-            overrideCloseTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            overridePendingTransitionCompat(R.anim.slide_in_left, R.anim.slide_out_right);
         }
 
     }

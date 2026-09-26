@@ -270,7 +270,7 @@ public class OnlineActivity extends CommonActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
         startActivity(intent);
-        overrideOpenTransition(0, 0);
+        overridePendingTransitionCompat(0, 0);
 
         finish();
     }

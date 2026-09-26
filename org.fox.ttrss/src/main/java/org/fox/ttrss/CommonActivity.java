@@ -613,23 +613,28 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
         WidgetUpdateWorker.enqueue(context);
     }
 
+    // On API 34+ activity transitions are configured on the activity being opened/closed (in its
+    // onCreate) via overrideActivityTransition; the deprecated overridePendingTransition only
+    // applies below API 34.
     @SuppressWarnings("deprecation")
-    private void overrideActivityTransitionCompat(int overrideType, int enterAnim, int exitAnim) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            overrideActivityTransition(overrideType, enterAnim, exitAnim);
-        } else {
+    protected void overridePendingTransitionCompat(int enterAnim, int exitAnim) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             overridePendingTransition(enterAnim, exitAnim);
         }
     }
 
     @SuppressLint("InlinedApi")
-    protected void overrideOpenTransition(int enterAnim, int exitAnim) {
-        overrideActivityTransitionCompat(OVERRIDE_TRANSITION_OPEN, enterAnim, exitAnim);
+    protected void setOpenActivityTransition(int enterAnim, int exitAnim) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, enterAnim, exitAnim);
+        }
     }
 
     @SuppressLint("InlinedApi")
-    protected void overrideCloseTransition(int enterAnim, int exitAnim) {
-        overrideActivityTransitionCompat(OVERRIDE_TRANSITION_CLOSE, enterAnim, exitAnim);
+    protected void setCloseActivityTransition(int enterAnim, int exitAnim) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, enterAnim, exitAnim);
+        }
     }
 
     static public int dpToPx(Context context, int dp) {

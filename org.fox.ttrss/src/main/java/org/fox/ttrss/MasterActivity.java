@@ -63,6 +63,8 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setOpenActivityTransition(0, 0);
+
         if (m_prefs.getBoolean("force_phone_layout", false)) {
             setContentView(R.layout.activity_master_phone);
         } else {
@@ -422,7 +424,7 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
             intent.putExtra("feed", getActiveFeed());
 
             m_headlinesLauncher.launch(intent);
-            overrideOpenTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            overridePendingTransitionCompat(R.anim.slide_in_right, R.anim.slide_out_left);
         }
     }
 
