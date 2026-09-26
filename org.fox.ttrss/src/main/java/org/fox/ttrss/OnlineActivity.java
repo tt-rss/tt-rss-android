@@ -744,7 +744,7 @@ public class OnlineActivity extends CommonActivity {
     }
 
     protected void logout() {
-        setSessionId(null);
+        setSessionId(null); // also clears m_sessionValid via setSessionId()
 
         setLoadingStatus(R.string.login_ready);
 
@@ -752,7 +752,7 @@ public class OnlineActivity extends CommonActivity {
     }
 
     protected void loginFailure() {
-        setSessionId(null);
+        setSessionId(null); // also clears m_sessionValid via setSessionId()
         initMenu();
     }
 
@@ -760,7 +760,14 @@ public class OnlineActivity extends CommonActivity {
     public void onResume() {
         super.onResume();
 
-        if (getSessionId() == null) {
+        // Don't trust a sessionId merely because it's non-null. Since 5e5d64e4
+        // the sessionId is persisted and rehydrated after process death, so
+        // getSessionId() != null no longer implies "we are authenticated this
+        // session". Require a login verified in *this* process, otherwise
+        // call login() which sends the stored user/password. Reusing a stale
+        // sid caused every subsequent API call to fail with NOT_LOGGED_IN,
+        // leaving the app stuck on a blank list after a force-close/reopen.
+        if (getSessionId() == null || !Application.getInstance().isSessionValid()) {
             login();
         } else {
             loginSuccess(false);
@@ -1096,7 +1103,7 @@ public class OnlineActivity extends CommonActivity {
     // this may be called after activity has been destroyed (i.e. long asynctask)
     protected void initMenu() {
         if (m_menu != null) {
-            if (getSessionId() != null) {
+            if (Application.getInstance().isSessionValid()) {
                 m_menu.setGroupVisible(R.id.menu_group_feeds, true);
                 m_menu.setGroupVisible(R.id.menu_group_headlines, true);
                 m_menu.setGroupVisible(R.id.menu_group_article, true);
@@ -1188,6 +1195,11 @@ public class OnlineActivity extends CommonActivity {
 
                     if (content != null) {
                         setSessionId(content.get("session_id").getAsString());
+                        // We just authenticated with the server in this process, so the
+                        // sessionId is known-good. This lets onResume() skip re-login
+                        // while the process stays alive (e.g. rotation, returning
+                        // from background).
+                        Application.getInstance().setSessionValid(true);
 
                         JsonElement apiLevel = content.get("api_level");
 
@@ -1270,7 +1282,7 @@ public class OnlineActivity extends CommonActivity {
                 }
             }
 
-            setSessionId(null);
+            setSessionId(null); // also clears m_sessionValid via setSessionId()
 
             if (m_lastErrorMessage != null) {
                 setLoadingStatus(getString(getErrorMessage()) + "\n\n" + m_lastErrorMessage);

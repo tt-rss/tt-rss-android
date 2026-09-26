@@ -31,6 +31,14 @@ public class Application extends android.app.Application {
 
     private String m_sessionId;
     private int m_apiLevel;
+
+    // True only after a successful op:login in *this* process. A sessionId
+    // rehydrated from SharedPreferences in onCreate() is left unverified
+    // (false), because the server may have expired it while the process
+    // was dead. onResume() uses this to decide whether to skip login.
+    // volatile: read/written from background ApiRequest threads.
+    private volatile boolean m_sessionValid = false;
+
     public LinkedHashMap<String, String> m_customSortModes = new LinkedHashMap<>();
     ConnectivityManager m_cmgr;
     ArticleModel m_articleModel;
@@ -57,11 +65,15 @@ public class Application extends android.app.Application {
         m_cmgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         m_articleModel = new ArticleModel(this);
 
-        // Rehydrate session state that survives process death so that activities
-        // restored from savedInstanceState can resume without forcing a re-login.
+        // Rehydrate the persisted sessionId so a restored activity *could* reuse
+        // it without a forced re-login — but do NOT mark the session valid.
+        // The server may have expired it while the process was dead, so
+        // onResume() must re-validate (login) before trusting it. See
+        // 5e5d64e4 which added persistence and caused the stale-session bug.
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         m_sessionId = prefs.getString(PREF_SESSION_ID, null);
         m_apiLevel = prefs.getInt(PREF_API_LEVEL, 0);
+        // m_sessionValid intentionally stays false here.
     }
 
     public String getSessionId() {
@@ -74,6 +86,10 @@ public class Application extends android.app.Application {
                 .edit()
                 .putString(PREF_SESSION_ID, sessionId)
                 .apply();
+        // Any change to the session id invalidates the "authenticated this
+        // process" flag. Only the successful-login path re-sets it to true,
+        // so callers that just clear the id no longer need to touch it.
+        m_sessionValid = false;
     }
 
     public int getApiLevel() {
@@ -86,6 +102,14 @@ public class Application extends android.app.Application {
                 .edit()
                 .putInt(PREF_API_LEVEL, apiLevel)
                 .apply();
+    }
+
+    public boolean isSessionValid() {
+        return m_sessionValid;
+    }
+
+    public void setSessionValid(boolean valid) {
+        m_sessionValid = valid;
     }
 
     public void save(Bundle out) {
