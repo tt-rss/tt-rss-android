@@ -101,7 +101,7 @@ public class LogcatActivity extends CommonActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         } else if (id == R.id.logcat_copy) {
             shareLogcat();

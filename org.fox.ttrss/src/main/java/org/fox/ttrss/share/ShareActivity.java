@@ -85,8 +85,6 @@ public class ShareActivity extends CommonShareActivity {
         ApiRequest req = new ApiRequest(getApplicationContext()) {
             @Override
             protected void onPostExecute(JsonElement result) {
-                setProgressBarIndeterminateVisibility(false);
-
                 if (m_lastError != ApiCommon.ApiError.UNKNOWN_ERROR) {
                     toast(getErrorMessage());
                 } else {
@@ -109,8 +107,6 @@ public class ShareActivity extends CommonShareActivity {
             map.put("title", title.getText().toString());
             map.put("url", url.getText().toString());
             map.put("content", content.getText().toString());
-
-            setProgressBarIndeterminateVisibility(true);
 
             req.execute(map);
         }

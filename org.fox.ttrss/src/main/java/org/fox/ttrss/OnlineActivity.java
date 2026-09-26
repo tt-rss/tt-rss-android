@@ -6,13 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.os.BundleCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 
@@ -205,7 +205,7 @@ public class OnlineActivity extends CommonActivity {
         setSupportActionBar(toolbar);
 
         if (savedInstanceState != null) {
-            m_activeFeed = savedInstanceState.getParcelable("m_activeFeed");
+            m_activeFeed = BundleCompat.getParcelable(savedInstanceState, "m_activeFeed", Feed.class);
         }
 
         m_headlinesActionModeCallback = new HeadlinesActionModeCallback();
@@ -1342,11 +1342,10 @@ public class OnlineActivity extends CommonActivity {
     }
 
     public int getResizeWidth() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
 
-        return size.x > size.y ? (int) (size.y * 0.75) : (int) (size.x * 0.75);
+        return metrics.widthPixels > metrics.heightPixels
+                ? (int) (metrics.heightPixels * 0.75) : (int) (metrics.widthPixels * 0.75);
     }
 
 

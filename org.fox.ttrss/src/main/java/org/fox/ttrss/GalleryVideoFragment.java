@@ -5,8 +5,8 @@ import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.TextureView;
@@ -218,9 +218,9 @@ public class GalleryVideoFragment extends GalleryBaseFragment {
 
         int actionBarHeight = m_activity.isPortrait() ? m_activity.getSupportActionBar().getHeight() : 0;
 
-        Display display = m_activity.getWindowManager().getDefaultDisplay();
-        float containerWidth = display.getWidth();
-        float containerHeight = display.getHeight() - rectangle.top - actionBarHeight;
+        DisplayMetrics metrics = m_activity.getResources().getDisplayMetrics();
+        float containerWidth = metrics.widthPixels;
+        float containerHeight = metrics.heightPixels - rectangle.top - actionBarHeight;
 
         // set dimensions to surfaceView's layout params (maintaining aspect ratio)
         android.view.ViewGroup.LayoutParams lp = surfaceView.getLayoutParams();

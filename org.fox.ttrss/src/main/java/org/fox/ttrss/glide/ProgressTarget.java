@@ -109,13 +109,10 @@ public abstract class ProgressTarget<T, Z> extends WrappingTarget<Z> implements 
         start();
     }
 
-    /**
-     * @noinspection unchecked
-     */
     @Override
     public void onResourceReady(@NonNull Z resource, @Nullable Transition<? super Z> transition) {
         cleanup();
-        super.onResourceReady(resource, (Transition) transition);
+        super.onResourceReady(resource, transition);
     }
 
     @Override

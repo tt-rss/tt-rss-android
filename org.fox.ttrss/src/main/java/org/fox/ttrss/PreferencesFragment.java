@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.pm.PackageInfoCompat;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
@@ -60,14 +61,14 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
 
         try {
             String version;
-            int versionCode;
+            long versionCode;
             String buildTimestamp;
 
             PackageInfo packageInfo = activity.getPackageManager().
                     getPackageInfo(activity.getPackageName(), 0);
 
             version = packageInfo.versionName;
-            versionCode = packageInfo.versionCode;
+            versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
 
             findPreference("version").setSummary(getString(R.string.prefs_version, version, versionCode));
 

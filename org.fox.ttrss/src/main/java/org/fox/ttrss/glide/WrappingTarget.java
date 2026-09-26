@@ -11,13 +11,13 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 
 public class WrappingTarget<Z> implements Target<Z> {
-    protected final @NonNull Target<? super Z> target;
+    protected final @NonNull Target<Z> target;
 
-    public WrappingTarget(@NonNull Target<? super Z> target) {
+    public WrappingTarget(@NonNull Target<Z> target) {
         this.target = target;
     }
 
-    public @NonNull Target<? super Z> getWrappedTarget() {
+    public @NonNull Target<Z> getWrappedTarget() {
         return target;
     }
 
@@ -41,12 +41,9 @@ public class WrappingTarget<Z> implements Target<Z> {
         target.onLoadFailed(errorDrawable);
     }
 
-    /**
-     * @noinspection unchecked
-     */
     @Override
     public void onResourceReady(@NonNull Z resource, @Nullable Transition<? super Z> transition) {
-        target.onResourceReady(resource, (Transition) transition);
+        target.onResourceReady(resource, transition);
     }
 
     @Override

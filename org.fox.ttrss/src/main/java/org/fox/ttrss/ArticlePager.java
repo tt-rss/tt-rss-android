@@ -1,7 +1,7 @@
 package org.fox.ttrss;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.os.BundleCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -68,7 +69,7 @@ public class ArticlePager extends androidx.fragment.app.Fragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            m_feed = savedInstanceState.getParcelable("m_feed");
+            m_feed = BundleCompat.getParcelable(savedInstanceState, "m_feed", Feed.class);
         }
 
         setRetainInstance(true);
@@ -126,11 +127,11 @@ public class ArticlePager extends androidx.fragment.app.Fragment {
     }
 
     @Override
-    public void onAttach(@NonNull Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
 
-        m_listener = (HeadlinesEventListener) activity;
-        m_activity = (OnlineActivity) activity;
+        m_listener = (HeadlinesEventListener) context;
+        m_activity = (OnlineActivity) context;
     }
 
     @SuppressLint("NewApi")

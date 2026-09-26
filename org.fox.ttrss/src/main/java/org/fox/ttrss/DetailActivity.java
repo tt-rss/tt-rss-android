@@ -12,6 +12,7 @@ import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.IntentCompat;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -138,7 +139,7 @@ public class DetailActivity extends OnlineActivity implements HeadlinesEventList
 
                     tmpFeed = new Feed(feedId, feedTitle, isCat);
                 } else {
-                    tmpFeed = i.getParcelableExtra("feed");
+                    tmpFeed = IntentCompat.getParcelableExtra(i, "feed", Feed.class);
                 }
 
                 final Feed activeFeed = tmpFeed;
@@ -215,7 +216,7 @@ public class DetailActivity extends OnlineActivity implements HeadlinesEventList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
+            getOnBackPressedDispatcher().onBackPressed();
             return true;
         }
         Log.d(TAG, "onOptionsItemSelected, unhandled id=" + item.getItemId());

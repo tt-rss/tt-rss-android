@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import androidx.core.os.BundleCompat;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.color.DynamicColors;
@@ -21,6 +22,7 @@ import org.fox.ttrss.types.Article;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Application extends android.app.Application {
 
@@ -120,18 +122,22 @@ public class Application extends android.app.Application {
         out.putSerializable("gs:customSortTypes", m_customSortModes);
     }
 
-    /**
-     * @noinspection unchecked
-     */
     public void load(Bundle in) {
         if (in != null) {
             m_sessionId = in.getString("gs:sessionId");
             m_apiLevel = in.getInt("gs:apiLevel");
 
-            HashMap<String, String> tmp = (HashMap<String, String>) in.getSerializable("gs:customSortTypes");
+            HashMap<?, ?> tmp = BundleCompat.getSerializable(in, "gs:customSortTypes", HashMap.class);
 
             m_customSortModes.clear();
-            m_customSortModes.putAll(tmp);
+
+            if (tmp != null) {
+                for (Map.Entry<?, ?> entry : tmp.entrySet()) {
+                    if (entry.getKey() instanceof String && entry.getValue() instanceof String) {
+                        m_customSortModes.put((String) entry.getKey(), (String) entry.getValue());
+                    }
+                }
+            }
         }
     }
 

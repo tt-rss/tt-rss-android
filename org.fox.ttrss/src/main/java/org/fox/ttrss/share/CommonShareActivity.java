@@ -84,7 +84,6 @@ public abstract class CommonShareActivity extends CommonActivity {
                 @Override
                 protected void onLoginFailed(int requestId, ApiRequest ar) {
                     toast(ar.getErrorMessage());
-                    setProgressBarIndeterminateVisibility(false);
                 }
 
                 @Override
