@@ -395,6 +395,25 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
                 });
     }
 
+    private void openUriWithPackage(Uri uri, String packageName) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setPackage(packageName);
+
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            // fall back to the system default handler
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+            } catch (Exception fallbackException) {
+                fallbackException.printStackTrace();
+                toast(fallbackException.getMessage());
+            }
+        }
+    }
+
     private void openUriWithCustomTab(Uri uri) {
         if (m_customTabClient != null) {
             CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder(getCustomTabSession());
@@ -439,6 +458,13 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
         final Uri finalUri = uri;
 
         Log.d(TAG, "openUri=" + uri + "; enableCustomTabs=" + enableCustomTabs + "; customTabClient=" + m_customTabClient);
+
+        String preferredBrowser = m_prefs.getString("preferred_browser", "");
+
+        if (!TextUtils.isEmpty(preferredBrowser)) {
+            openUriWithPackage(finalUri, preferredBrowser);
+            return;
+        }
 
         if (enableCustomTabs && m_customTabClient != null) {
 

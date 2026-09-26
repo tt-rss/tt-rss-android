@@ -202,6 +202,11 @@
             android:title="@string/article_enable_javascript" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/prefs_opening_links" >
+        <ListPreference
+            android:defaultValue=""
+            android:key="preferred_browser"
+            android:summary="@string/prefs_preferred_browser_summary"
+            android:title="@string/prefs_preferred_browser" />
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="enable_custom_tabs"

@@ -236,6 +236,9 @@
     <string name="headlines_row_top_changed">New articles found, reload feed to continue.</string>
     <string name="prefs_custom_tabs_summary">Open external links with browser custom tabs (faster, used if available)</string>
     <string name="prefs_use_custom_tabs">Use quick preview</string>
+    <string name="prefs_preferred_browser">Preferred browser</string>
+    <string name="prefs_preferred_browser_summary">Pick which browser opens external links. Selecting a specific browser disables quick preview (custom tabs).</string>
+    <string name="prefs_preferred_browser_default">System default</string>
     <string name="prefs_always_open_uri">Always open in browser</string>
     <string name="prefs_always_open_uri_summary">Open articles directly in your web browser, instead of going to the detail view</string>
     <string name="ask_me_every_time">Ask me every time</string>
