@@ -614,12 +614,22 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
     }
 
     @SuppressWarnings("deprecation")
-    protected void overrideActivityTransitionCompat(int overrideType, int enterAnim, int exitAnim) {
+    private void overrideActivityTransitionCompat(int overrideType, int enterAnim, int exitAnim) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             overrideActivityTransition(overrideType, enterAnim, exitAnim);
         } else {
             overridePendingTransition(enterAnim, exitAnim);
         }
+    }
+
+    @SuppressLint("InlinedApi")
+    protected void overrideOpenTransition(int enterAnim, int exitAnim) {
+        overrideActivityTransitionCompat(OVERRIDE_TRANSITION_OPEN, enterAnim, exitAnim);
+    }
+
+    @SuppressLint("InlinedApi")
+    protected void overrideCloseTransition(int enterAnim, int exitAnim) {
+        overrideActivityTransitionCompat(OVERRIDE_TRANSITION_CLOSE, enterAnim, exitAnim);
     }
 
     static public int dpToPx(Context context, int dp) {
