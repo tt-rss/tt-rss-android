@@ -613,6 +613,15 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
         WidgetUpdateWorker.enqueue(context);
     }
 
+    @SuppressWarnings("deprecation")
+    protected void overrideActivityTransitionCompat(int overrideType, int enterAnim, int exitAnim) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(overrideType, enterAnim, exitAnim);
+        } else {
+            overridePendingTransition(enterAnim, exitAnim);
+        }
+    }
+
     static public int dpToPx(Context context, int dp) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));

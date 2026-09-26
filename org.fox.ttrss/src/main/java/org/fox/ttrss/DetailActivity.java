@@ -277,7 +277,7 @@ public class DetailActivity extends OnlineActivity implements HeadlinesEventList
         super.onPause();
 
         if (isFinishing()) {
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            overrideActivityTransitionCompat(OVERRIDE_TRANSITION_CLOSE, R.anim.slide_in_left, R.anim.slide_out_right);
         }
 
     }

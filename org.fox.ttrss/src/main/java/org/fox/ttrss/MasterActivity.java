@@ -422,7 +422,7 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
             intent.putExtra("feed", getActiveFeed());
 
             m_headlinesLauncher.launch(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            overrideActivityTransitionCompat(OVERRIDE_TRANSITION_OPEN, R.anim.slide_in_right, R.anim.slide_out_left);
         }
     }
 
