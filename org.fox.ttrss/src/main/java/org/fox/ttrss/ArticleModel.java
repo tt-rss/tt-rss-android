@@ -13,9 +13,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import org.fox.ttrss.types.Article;
@@ -46,13 +44,15 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
     private String m_searchQuery = "";
     private boolean m_firstIdChanged;
     private int m_offset;
-    private int m_amountLoaded;
+    private String m_paginationViewMode = "adaptive";
+    private volatile int m_loadGeneration;
     private int m_resizeWidth;
     private boolean m_append;
     private boolean m_lazyLoadEnabled = true;
     private MutableLiveData<Boolean> m_isLoading = new MutableLiveData<>(false);
     private ExecutorService m_executor;
     private Handler m_mainHandler = new Handler(Looper.getMainLooper());
+    private final Runnable m_notifyArticles = () -> m_articles.setValue(m_articles.getValue());
     private MutableLiveData<Long> m_lastUpdate = new MutableLiveData<>(0L);
     private MutableLiveData<Integer> m_loadingProgress = new MutableLiveData<>(0);
     private MutableLiveData<Article> m_activeArticle = new MutableLiveData<>(null);
@@ -83,11 +83,18 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
 
     public void update(int position, @NonNull Article article) {
         m_articles.getValue().set(position, article);
-        m_articles.postValue(m_articles.getValue());
+        notifyArticlesChanged();
     }
 
     public void update(@NonNull List<Article> articles) {
-        m_articles.postValue(articles);
+        m_articles.setValue(articles);
+    }
+
+    private void notifyArticlesChanged() {
+        // Coalesce UI updates without queueing an old list reference which could
+        // overwrite a newly appended page when the notification is delivered.
+        m_mainHandler.removeCallbacks(m_notifyArticles);
+        m_mainHandler.post(m_notifyArticles);
     }
 
     public LiveData<Article> getActive() {
@@ -146,6 +153,10 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
                 m_searchQuery = "";
 
             m_append = false;
+            m_firstId = 0;
+            m_firstIdChanged = false;
+            m_offset = 0;
+            m_paginationViewMode = m_prefs.getString("view_mode", "adaptive");
             m_lazyLoadEnabled = true;
             m_feed = feed;
 
@@ -158,7 +169,7 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
 
             loadInBackground();
         } else {
-            m_articles.postValue(m_articles.getValue());
+            notifyArticlesChanged();
         }
     }
 
@@ -184,8 +195,13 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
         Log.d(TAG, this + " loadInBackground append=" + m_append + " offset=" + m_offset + " lazyLoadEnabled=" + m_lazyLoadEnabled);
 
         final List<Article> articlesWork = new ArrayList<>(m_articles.getValue());
+        final boolean append = m_append;
+        final int generation = ++m_loadGeneration;
+        final Feed feed = new Feed(m_feed);
+        final String viewMode = m_paginationViewMode;
+        final boolean search = m_searchQuery != null && !m_searchQuery.isEmpty();
 
-        m_isLoading.postValue(true);
+        m_isLoading.setValue(true);
 
         final int skip = getSkip(m_append, articlesWork);
         final boolean allowForceUpdate = org.fox.ttrss.Application.getInstance().getApiLevel() >= 9 &&
@@ -200,7 +216,7 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
         params.put("excerpt_length", String.valueOf(CommonActivity.EXCERPT_MAX_LENGTH));
         params.put("show_content", "true");
         params.put("include_attachments", "true");
-        params.put("view_mode", m_prefs.getString("view_mode", "adaptive"));
+        params.put("view_mode", viewMode);
         params.put("limit", m_prefs.getString("headlines_request_size", "15"));
         params.put("skip", String.valueOf(skip));
         params.put("include_nested", "true");
@@ -236,109 +252,101 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
         Log.d(TAG, "firstId=" + m_firstId + " append=" + m_append + " skip=" + skip + " localSize=" + articlesWork.size());
 
         m_executor.execute(() -> {
-            final JsonElement result = ApiCommon.performRequest(getApplication(), params, this);
-
-            if (BuildConfig.DEBUG)
-                Log.d(TAG, "got result=" + result);
-
-            if (result != null) {
-                try {
-                    final JsonArray content = result.getAsJsonArray();
-
-                    if (content != null) {
-                        final List<Article> articlesJson;
-                        final JsonObject header;
-
-                        if (org.fox.ttrss.Application.getInstance().getApiLevel() >= 12) {
-                            header = content.get(0).getAsJsonObject();
-
-                            m_firstIdChanged = header.get("first_id_changed") != null;
-
-                            try {
-                                m_firstId = header.get("first_id").getAsInt();
-                            } catch (NumberFormatException e) {
-                                m_firstId = 0;
-                            }
-
-                            Log.d(TAG, this + " firstID=" + m_firstId + " firstIdChanged=" + m_firstIdChanged);
-
-                            articlesJson = GSON.fromJson(content.get(1), ARTICLE_LIST_TYPE);
-                        } else {
-                            articlesJson = GSON.fromJson(content, ARTICLE_LIST_TYPE);
-                        }
-
-                        if (!m_append)
-                            articlesWork.clear();
-
-                        m_amountLoaded = articlesJson.size();
-
-                        for (Article article : articlesJson)
-                            if (!articlesWork.contains(article)) {
-                                article.collectMediaInfo();
-                                article.cleanupExcerpt();
-                                article.fixNullFields();
-                                articlesWork.add(article);
-                            } else {
-                                Log.d(TAG, "duplicate:" + article);
-                            }
-
-                        if (m_firstIdChanged) {
-                            Log.d(TAG, "first id changed, disabling lazy load");
-                            m_lazyLoadEnabled = false;
-                        }
-
-                        if (m_amountLoaded < Integer.parseInt(m_prefs.getString("headlines_request_size", "15"))) {
-                            Log.d(TAG, this + " amount loaded " + m_amountLoaded + " < request size, disabling lazy load");
-                            m_lazyLoadEnabled = false;
-                        }
-
-                        m_offset += m_amountLoaded;
-
-                        Log.d(TAG, this + " loaded headlines=" + m_amountLoaded + " resultingLocalSize=" + articlesWork.size());
+            // Each request owns its error state; superseded requests cannot change
+            // the new feed's loading result while their network call completes.
+            LoadStatus status = new LoadStatus();
+            HeadlinesPageLoader.Result page = null;
+            List<Article> loaded = null;
+            try {
+                page = HeadlinesPageLoader.load(params,
+                        append ? articlesWork.stream().map(a -> a.id).collect(Collectors.toSet())
+                                : java.util.Collections.emptySet(),
+                        requestParams -> {
+                            if (generation != m_loadGeneration)
+                                return null;
+                            Log.d(TAG, "loading headlines feed=" + feed.id +
+                                    " skip=" + requestParams.get("skip") +
+                                    " checkFirstId=" + requestParams.get("check_first_id"));
+                            return ApiCommon.performRequest(getApplication(), requestParams, status);
+                        });
+                if (page != null) {
+                    loaded = GSON.fromJson(page.articles, ARTICLE_LIST_TYPE);
+                    for (Article article : loaded) {
+                        article.collectMediaInfo();
+                        article.cleanupExcerpt();
+                        article.fixNullFields();
                     }
-                } catch (Exception e) {
-                    setLastError(ApiCommon.ApiError.OTHER_ERROR);
-                    setLastErrorMessage(e.getMessage());
-
-                    e.printStackTrace();
                 }
-
+            } catch (Exception e) {
+                status.setLastError(ApiCommon.ApiError.OTHER_ERROR);
+                status.setLastErrorMessage(e.getMessage());
+                Log.w(TAG, "Could not load headlines", e);
             }
 
+            final HeadlinesPageLoader.Result completedPage = page;
+            final List<Article> completedArticles = loaded;
             m_mainHandler.post(() -> {
-                m_articles.setValue(articlesWork);
+                if (generation != m_loadGeneration)
+                    return;
+
+                m_lastError = status.error;
+                m_lastErrorMessage = status.message;
+                m_apiStatusCode = status.statusCode;
+                if (completedPage != null && completedArticles != null
+                        && status.error == ApiCommon.ApiError.SUCCESS) {
+                    // Merge into the live list, not the pre-request snapshot: read,
+                    // selection and active-article updates may have completed meanwhile.
+                    List<Article> merged = append ? new ArrayList<>(m_articles.getValue())
+                            : new ArrayList<>();
+                    for (Article article : completedArticles) {
+                        if (!merged.contains(article))
+                            merged.add(article);
+                    }
+                    m_firstId = completedPage.firstId;
+                    m_firstIdChanged = false; // Invalidation was recovered within the load.
+                    m_lazyLoadEnabled = !completedPage.exhausted;
+                    m_offset = merged.size();
+                    if (!append) {
+                        m_paginationViewMode = HeadlinesPageLoader.resolveViewMode(viewMode,
+                                search, feed.id, !getUnread(completedArticles).isEmpty());
+                    }
+                    Log.d(TAG, "loaded headlines=" + completedArticles.size() +
+                            " resultingLocalSize=" + merged.size() +
+                            " lazyLoadEnabled=" + m_lazyLoadEnabled);
+                    m_articles.setValue(merged);
+                }
                 m_lastUpdate.setValue(System.currentTimeMillis());
                 m_isLoading.setValue(false);
             });
         });
     }
 
+    private final class LoadStatus implements ApiCommon.ApiCaller {
+        private ApiCommon.ApiError error = ApiCommon.ApiError.SUCCESS;
+        private String message;
+        private int statusCode;
+
+        @Override
+        public void setStatusCode(int code) { statusCode = code; }
+
+        @Override
+        public void setLastError(ApiCommon.ApiError value) { error = value; }
+
+        @Override
+        public void setLastErrorMessage(String value) { message = value; }
+
+        @Override
+        public void notifyProgress(int progress) { m_loadingProgress.postValue(progress); }
+    }
+
     private int getSkip(boolean append, @NonNull List<Article> articles) {
-        int skip = 0;
+        if (!append)
+            return 0;
 
-        if (append) {
-            // adaptive, all_articles, marked, published, unread
-            String viewMode = m_prefs.getString("view_mode", "adaptive");
-
-            int numUnread = Math.toIntExact(getUnread(articles).size());
-            int numAll = Math.toIntExact(articles.size());
-
-            if ("marked".equals(viewMode)) {
-                skip = numAll;
-            } else if ("published".equals(viewMode)) {
-                skip = numAll;
-            } else if ("unread".equals(viewMode)) {
-                skip = numUnread;
-            } else if (m_searchQuery != null && !m_searchQuery.isEmpty()) {
-                skip = numAll;
-            } else if ("adaptive".equals(viewMode)) {
-                skip = numUnread > 0 ? numUnread : numAll;
-            } else {
-                skip = numAll;
-            }
-        }
-
-        return skip;
+        return HeadlinesPageLoader.getSkip(m_paginationViewMode,
+                !m_feed.is_cat && m_feed.id == Feed.FRESH,
+                !m_feed.is_cat && m_feed.id == Feed.RECENTLY_READ,
+                getUnread(articles).size(), articles.size());
     }
 
     @Override
