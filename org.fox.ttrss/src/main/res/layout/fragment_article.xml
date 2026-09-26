@@ -33,7 +33,7 @@
 
                 <TextView
                     android:id="@+id/title"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="?colorPrimary"
@@ -127,7 +127,7 @@
                             android:id="@+id/note"
                             tools:text="Article note (if any...)"
                             android:layout_gravity="center_vertical"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
                             android:textColor="?colorOnTertiaryContainer"

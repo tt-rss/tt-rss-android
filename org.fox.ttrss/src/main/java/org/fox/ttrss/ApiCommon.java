@@ -6,10 +6,11 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.NetworkCapabilities;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.pm.PackageInfoCompat;
 import androidx.preference.PreferenceManager;
 
 import com.google.gson.Gson;
@@ -121,11 +122,12 @@ public class ApiCommon {
     static boolean isNetworkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager)
                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
 
-        // if no network is available networkInfo will be null
-        // otherwise check if we are connected
-        return networkInfo != null && networkInfo.isConnected();
+        // if no network is available capabilities will be null
+        // otherwise check if it can reach the internet
+        return capabilities != null
+                && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
     }
 
     static JsonElement performRequest(Context context, @NonNull HashMap<String, String> m_params,
@@ -144,7 +146,7 @@ public class ApiCommon {
                     .url(apiUrl)
                     .header("User-Agent", getUserAgent(context))
                     .tag(ApiCaller.class, caller)
-                    .post(RequestBody.create(TYPE_JSON, payload));
+                    .post(RequestBody.create(payload, TYPE_JSON));
 
             String httpLogin = m_prefs.getString("http_login", "").trim();
             String httpPassword = m_prefs.getString("http_password", "").trim();
@@ -366,7 +368,7 @@ public class ApiCommon {
             return String.format(Locale.ENGLISH,
                     "Tiny Tiny RSS (Android) %1$s (%2$d) %3$s",
                     packageInfo.versionName,
-                    packageInfo.versionCode,
+                    PackageInfoCompat.getLongVersionCode(packageInfo),
                     System.getProperty("http.agent"));
 
         } catch (PackageManager.NameNotFoundException e) {

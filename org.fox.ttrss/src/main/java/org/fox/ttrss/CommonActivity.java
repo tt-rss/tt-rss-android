@@ -18,6 +18,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,19 +40,18 @@ import androidx.browser.customtabs.CustomTabsClient;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.browser.customtabs.CustomTabsServiceConnection;
 import androidx.browser.customtabs.CustomTabsSession;
-import androidx.core.app.JobIntentService;
 import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.fox.ttrss.widget.SmallWidgetProvider;
-import org.fox.ttrss.widget.WidgetUpdateService;
+import org.fox.ttrss.widget.WidgetUpdateWorker;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -355,7 +355,7 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
                 .load(url)
                 .skipMemoryCache(false)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<Bitmap>() {
+                .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         Log.d(TAG, "image resource ready: " + resource);
@@ -391,6 +391,10 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
                         } else {
                             toast(getString(R.string.img_share_failed_to_load));
                         }
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
                     }
                 });
     }
@@ -606,7 +610,31 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
     }
 
     public static void requestWidgetUpdate(Context context) {
-        JobIntentService.enqueueWork(context.getApplicationContext(), WidgetUpdateService.class, 0, new Intent());
+        WidgetUpdateWorker.enqueue(context);
+    }
+
+    // On API 34+ activity transitions are configured on the activity being opened/closed (in its
+    // onCreate) via overrideActivityTransition; the deprecated overridePendingTransition only
+    // applies below API 34.
+    @SuppressWarnings("deprecation")
+    protected void overridePendingTransitionCompat(int enterAnim, int exitAnim) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overridePendingTransition(enterAnim, exitAnim);
+        }
+    }
+
+    @SuppressLint("InlinedApi")
+    protected void setOpenActivityTransition(int enterAnim, int exitAnim) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, enterAnim, exitAnim);
+        }
+    }
+
+    @SuppressLint("InlinedApi")
+    protected void setCloseActivityTransition(int enterAnim, int exitAnim) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, enterAnim, exitAnim);
+        }
     }
 
     static public int dpToPx(Context context, int dp) {

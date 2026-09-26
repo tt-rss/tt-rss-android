@@ -143,7 +143,7 @@ public class GalleryModel extends AndroidViewModel {
                                         .load(src)
                                         .skipMemoryCache(false)
                                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                        .into(HeadlinesFragment.FLAVOR_IMG_MIN_SIZE, HeadlinesFragment.FLAVOR_IMG_MIN_SIZE)
+                                        .submit(HeadlinesFragment.FLAVOR_IMG_MIN_SIZE, HeadlinesFragment.FLAVOR_IMG_MIN_SIZE)
                                         .get();
 
                                 if (bmp != null && bmp.getWidth() >= HeadlinesFragment.FLAVOR_IMG_MIN_SIZE && bmp.getHeight() >= HeadlinesFragment.FLAVOR_IMG_MIN_SIZE) {

@@ -5,13 +5,13 @@
     android:background="@drawable/widget_border"
     android:padding="@dimen/widget_margin" >
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:id="@+id/widget_light"
         android:background="@color/cardview_light_background"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
         android:id="@+id/widget_dark"
         android:visibility="invisible"
         android:background="@color/cardview_dark_background"

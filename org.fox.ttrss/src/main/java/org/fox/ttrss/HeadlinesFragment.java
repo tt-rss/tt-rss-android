@@ -1,18 +1,16 @@
 package org.fox.ttrss;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.NetworkCapabilities;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,14 +24,12 @@ import android.util.Size;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.CheckBox;
@@ -47,6 +43,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.os.BundleCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -61,6 +58,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -68,8 +66,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -87,8 +85,10 @@ import org.jsoup.nodes.Element;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class HeadlinesFragment extends androidx.fragment.app.Fragment {
@@ -228,13 +228,11 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            m_feed = savedInstanceState.getParcelable("m_feed");
+            m_feed = BundleCompat.getParcelable(savedInstanceState, "m_feed", Feed.class);
             m_searchQuery = savedInstanceState.getString("m_searchQuery");
             m_compactLayoutMode = savedInstanceState.getBoolean("m_compactLayoutMode");
             m_splitLayoutMode = savedInstanceState.getBoolean("m_splitLayoutMode");
         }
-
-        setRetainInstance(true);
 
         Glide.get(getContext()).clearMemory();
     }
@@ -262,9 +260,6 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
         if ("HL_SPLIT".equals(headlineMode))
             m_splitLayoutMode = true;
-
-        DisplayMetrics metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
         View view = inflater.inflate(R.layout.fragment_headlines, container, false);
 
@@ -373,7 +368,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
         }
 
-        m_list.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        m_list.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -566,11 +561,11 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         m_prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        m_activity = (OnlineActivity) activity;
-        m_listener = (HeadlinesEventListener) activity;
+        m_activity = (OnlineActivity) context;
+        m_listener = (HeadlinesEventListener) context;
     }
 
     public void refresh(final boolean append) {
@@ -742,10 +737,10 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
             if (m_flavorImageEnabled) {
                 if (m_prefs.getBoolean("headline_images_wifi_only", false)) {
                     // why do i have to get this service every time instead of using a member variable :(
-                    NetworkInfo wifi = m_cmgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                    NetworkCapabilities capabilities = m_cmgr.getNetworkCapabilities(m_cmgr.getActiveNetwork());
 
-                    if (wifi != null)
-                        return wifi.isConnected();
+                    if (capabilities != null)
+                        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
 
                 } else {
                     return true;
@@ -764,11 +759,9 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         public ArticleListAdapter() {
             super(new ArticleDiffItemCallback());
 
-            Display display = m_activity.getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            m_screenHeight = size.y;
-            m_screenWidth = size.x;
+            DisplayMetrics metrics = m_activity.getResources().getDisplayMetrics();
+            m_screenHeight = metrics.heightPixels;
+            m_screenWidth = metrics.widthPixels;
 
             String headlineMode = m_prefs.getString("headline_mode", "HL_DEFAULT");
             m_flavorImageEnabled = "HL_DEFAULT".equals(headlineMode) || "HL_COMPACT".equals(headlineMode) || "HL_SPLIT".equals(headlineMode);
@@ -1124,9 +1117,8 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
             Article article = getItem(position);
 
             if (article.id == Article.TYPE_AMR_FOOTER && m_prefs.getBoolean("headlines_mark_read_scroll", false)) {
-                WindowManager wm = (WindowManager) m_activity.getSystemService(Context.WINDOW_SERVICE);
-                Display display = wm.getDefaultDisplay();
-                int screenHeight = (int) (display.getHeight() * 1.5);
+                DisplayMetrics metrics = m_activity.getResources().getDisplayMetrics();
+                int screenHeight = (int) (metrics.heightPixels * 1.5);
 
                 holder.view.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, screenHeight));
             }
@@ -1309,12 +1301,18 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
                 DateFormat df;
 
-                if (now.getYear() == d.getYear() && now.getMonth() == d.getMonth() && now.getDay() == d.getDay()) {
-                    df = new SimpleDateFormat("HH:mm");
+                Calendar nowCal = Calendar.getInstance();
+                Calendar dCal = Calendar.getInstance();
+                dCal.setTime(d);
+
+                if (nowCal.get(Calendar.YEAR) == dCal.get(Calendar.YEAR)
+                        && nowCal.get(Calendar.MONTH) == dCal.get(Calendar.MONTH)
+                        && nowCal.get(Calendar.DAY_OF_MONTH) == dCal.get(Calendar.DAY_OF_MONTH)) {
+                    df = new SimpleDateFormat("HH:mm", Locale.getDefault(Locale.Category.FORMAT));
                 } else if (article.updated > half_a_year_ago) {
-                    df = new SimpleDateFormat("MMM dd");
+                    df = new SimpleDateFormat("MMM dd", Locale.getDefault(Locale.Category.FORMAT));
                 } else {
-                    df = new SimpleDateFormat("MMM yyyy");
+                    df = new SimpleDateFormat("MMM yyyy", Locale.getDefault(Locale.Category.FORMAT));
                 }
 
                 df.setTimeZone(TimeZone.getDefault());
@@ -1485,7 +1483,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
 
         private void checkImageAndLoad(final Article article, final ArticleViewHolder holder, final int maxImageHeight) {
             final long imageGeneration = holder.imageGeneration;
-            FlavorProgressTarget<Size> flavorProgressTarget = new FlavorProgressTarget<>(new SimpleTarget<Size>() {
+            FlavorProgressTarget<Size> flavorProgressTarget = new FlavorProgressTarget<>(new CustomTarget<Size>() {
                 @Override
                 public void onResourceReady(@NonNull Size resource, @Nullable com.bumptech.glide.request.transition.Transition<? super Size> transition) {
                     // The size request is independent of the ImageView request.
@@ -1508,6 +1506,10 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                         holder.flavorImageView.setVisibility(View.VISIBLE);
                         holder.flavorImageOverflow.setVisibility(View.VISIBLE);
                     }
+                }
+
+                @Override
+                public void onLoadCleared(@Nullable Drawable placeholder) {
                 }
             }, article.flavorImageUri, holder);
 
@@ -1532,7 +1534,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         }
 
         private void updateTextCheckedState(final Article article, final ArticleViewHolder holder) {
-            String tmp = !article.title.isEmpty() ? article.title.substring(0, 1).toUpperCase() : "?";
+            String tmp = !article.title.isEmpty() ? article.title.substring(0, 1).toUpperCase(Locale.getDefault()) : "?";
 
             if (article.selected) {
                 Glide.with(HeadlinesFragment.this).clear(holder.textImage);
@@ -1566,15 +1568,18 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                     holder.textImage.setImageDrawable(textDrawable);
                 } else {
                     holder.textImage.setImageDrawable(textDrawable);
-                    Glide.with(HeadlinesFragment.this)
+
+                    RequestBuilder<Drawable> flavorImageRequest = Glide.with(HeadlinesFragment.this)
                             .load(article.flavorImageUri)
                             .transition(DrawableTransitionOptions.withCrossFade())
                             .placeholder(textDrawable)
                             .error(R.drawable.baseline_rss_feed_24)
-                            .thumbnail(0.5f)
                             .apply(RequestOptions.circleCropTransform())
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .skipMemoryCache(false)
+                            .skipMemoryCache(false);
+
+                    flavorImageRequest
+                            .thumbnail(flavorImageRequest.clone().sizeMultiplier(0.5f))
                             .into(holder.textImage);
                 }
 

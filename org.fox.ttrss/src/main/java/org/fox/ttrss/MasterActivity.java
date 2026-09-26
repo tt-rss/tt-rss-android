@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
@@ -36,7 +38,19 @@ import java.util.LinkedHashMap;
 public class MasterActivity extends OnlineActivity implements HeadlinesEventListener {
     private static final String TAG = MasterActivity.class.getSimpleName();
 
-    private static final int HEADLINES_REQUEST = 1;
+    private final ActivityResultLauncher<Intent> m_headlinesLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                HeadlinesFragment hf = (HeadlinesFragment) getSupportFragmentManager().findFragmentByTag(FRAG_HEADLINES);
+
+                if (hf != null) {
+                    Article activeArticle = Application.getArticlesModel().getActiveArticle();
+
+                    if (activeArticle != null) {
+                        Log.d(TAG, "got back from detail activity, scrolling to active article=" + activeArticle);
+                        hf.scrollToArticle(activeArticle);
+                    }
+                }
+            });
 
     protected long m_lastRefresh = 0;
     protected long m_lastWidgetRefresh = 0;
@@ -48,6 +62,8 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setOpenActivityTransition(0, 0);
 
         if (m_prefs.getBoolean("force_phone_layout", false)) {
             setContentView(R.layout.activity_master_phone);
@@ -407,8 +423,8 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
             Intent intent = new Intent(MasterActivity.this, DetailActivity.class);
             intent.putExtra("feed", getActiveFeed());
 
-            startActivityForResult(intent, HEADLINES_REQUEST);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            m_headlinesLauncher.launch(intent);
+            overridePendingTransitionCompat(R.anim.slide_in_right, R.anim.slide_out_left);
         }
     }
 
@@ -435,26 +451,6 @@ public class MasterActivity extends OnlineActivity implements HeadlinesEventList
     public void onHeadlinesLoadingProgress(int progress) {
         setLoadingVisible(progress < 100);
         setLoadingProgress(progress);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.d(TAG, "onActivityResult:" + requestCode + " " + resultCode + " " + data);
-
-        if (requestCode == HEADLINES_REQUEST) {
-            HeadlinesFragment hf = (HeadlinesFragment) getSupportFragmentManager().findFragmentByTag(FRAG_HEADLINES);
-
-            if (hf != null) {
-                Article activeArticle = Application.getArticlesModel().getActiveArticle();
-
-                if (activeArticle != null) {
-                    Log.d(TAG, "got back from detail activity, scrolling to active article=" + activeArticle);
-                    hf.scrollToArticle(activeArticle);
-                }
-            }
-        }
     }
 
     public void unsubscribeFeed(final Feed feed) {

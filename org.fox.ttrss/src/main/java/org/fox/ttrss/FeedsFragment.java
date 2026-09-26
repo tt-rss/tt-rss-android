@@ -1,7 +1,7 @@
 package org.fox.ttrss;
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.os.BundleCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
@@ -148,8 +149,8 @@ public class FeedsFragment extends Fragment implements OnSharedPreferenceChangeL
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            m_rootFeed = savedInstanceState.getParcelable("m_feed");
-            m_selectedFeed = savedInstanceState.getParcelable("m_selectedFeed");
+            m_rootFeed = BundleCompat.getParcelable(savedInstanceState, "m_feed", Feed.class);
+            m_selectedFeed = BundleCompat.getParcelable(savedInstanceState, "m_selectedFeed", Feed.class);
             m_enableParentBtn = savedInstanceState.getBoolean("m_enableParentBtn");
         }
     }
@@ -276,13 +277,13 @@ public class FeedsFragment extends Fragment implements OnSharedPreferenceChangeL
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         m_prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         m_prefs.registerOnSharedPreferenceChangeListener(this);
 
-        m_activity = (MasterActivity) activity;
+        m_activity = (MasterActivity) context;
     }
 
     @Override
@@ -303,7 +304,7 @@ public class FeedsFragment extends Fragment implements OnSharedPreferenceChangeL
         getModel().startLoading(m_rootFeed);
     }
 
-    private static class FeedViewHolder extends RecyclerView.ViewHolder {
+    static class FeedViewHolder extends RecyclerView.ViewHolder {
 
         private View view;
         private ImageView icon;
@@ -426,7 +427,7 @@ public class FeedsFragment extends Fragment implements OnSharedPreferenceChangeL
                     m_activity.getSupportFragmentManager().popBackStack();
                 } else if (feed.id == Feed.TYPE_SETTINGS) {
                     Intent intent = new Intent(getActivity(), PreferencesActivity.class);
-                    startActivityForResult(intent, 0);
+                    startActivity(intent);
                 } else if (feed.id == Feed.TYPE_TOGGLE_UNREAD || feed.id == Feed.TYPE_DIVIDER) {
                     //
                 } else {

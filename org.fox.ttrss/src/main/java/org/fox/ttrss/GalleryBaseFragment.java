@@ -1,7 +1,6 @@
 package org.fox.ttrss;
 
-import android.app.Activity;
-import android.os.Bundle;
+import android.content.Context;
 import android.view.ContextMenu;
 import android.view.View;
 
@@ -10,18 +9,11 @@ public class GalleryBaseFragment extends androidx.fragment.app.Fragment {
     protected GalleryActivity m_activity;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setRetainInstance(true);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         //m_prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        m_activity = (GalleryActivity) activity;
+        m_activity = (GalleryActivity) context;
 
     }
 

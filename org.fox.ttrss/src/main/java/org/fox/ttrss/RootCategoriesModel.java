@@ -61,37 +61,35 @@ public class RootCategoriesModel extends FeedsModel {
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "got result=" + result);
 
-                if (result != null) {
-                    try {
-                        JsonArray content = result.getAsJsonArray();
-                        if (content != null) {
+                try {
+                    JsonArray content = result.getAsJsonArray();
+                    if (content != null) {
 
-                            List<Feed> feedsJson = GSON.fromJson(content, FEED_LIST_TYPE);
+                        List<Feed> feedsJson = GSON.fromJson(content, FEED_LIST_TYPE);
 
-                            // seems to be necessary evil because of deserialization
-                            feedsJson = feedsJson.stream().peek(Feed::fixNullFields).collect(Collectors.toList());
+                        // seems to be necessary evil because of deserialization
+                        feedsJson = feedsJson.stream().peek(Feed::fixNullFields).collect(Collectors.toList());
 
-                            // replace server-provided titles with localized strings for special feeds
-                            for (Feed f : feedsJson) {
-                                try {
-                                    f.title = getApplication().getString(Feed.getSpecialFeedTitleId(f.id, f.is_cat));
-                                } catch (IllegalArgumentException ignored) {
-                                    // not a special feed, keep server-provided title
-                                }
+                        // replace server-provided titles with localized strings for special feeds
+                        for (Feed f : feedsJson) {
+                            try {
+                                f.title = getApplication().getString(Feed.getSpecialFeedTitleId(f.id, f.is_cat));
+                            } catch (IllegalArgumentException ignored) {
+                                // not a special feed, keep server-provided title
                             }
-
-                            sortFeeds(feedsJson, m_feed, new SpecialOrderComparator());
-
-                            feedsCombined.addAll(feedsJson);
                         }
-                    } catch (Exception e) {
-                        setLastError(ApiCommon.ApiError.OTHER_ERROR);
-                        setLastErrorMessage(e.getMessage());
 
-                        e.printStackTrace();
-                        m_isLoading.postValue(false);
-                        return;
+                        sortFeeds(feedsJson, m_feed, new SpecialOrderComparator());
+
+                        feedsCombined.addAll(feedsJson);
                     }
+                } catch (Exception e) {
+                    setLastError(ApiCommon.ApiError.OTHER_ERROR);
+                    setLastErrorMessage(e.getMessage());
+
+                    e.printStackTrace();
+                    m_isLoading.postValue(false);
+                    return;
                 }
             }
 
@@ -116,57 +114,55 @@ public class RootCategoriesModel extends FeedsModel {
 
             boolean unreadOnly = m_prefs.getBoolean("show_unread_only", true);
 
-            if (result != null) {
-                try {
-                    JsonArray content = result.getAsJsonArray();
-                    if (content != null) {
+            try {
+                JsonArray content = result.getAsJsonArray();
+                if (content != null) {
 
-                        List<Feed> feedsJson = GSON.fromJson(content, FEED_LIST_TYPE);
+                    List<Feed> feedsJson = GSON.fromJson(content, FEED_LIST_TYPE);
 
-                        // seems to be necessary evil because of deserialization
-                        feedsJson = feedsJson.stream().peek(Feed::fixNullFields).collect(Collectors.toList());
+                    // seems to be necessary evil because of deserialization
+                    feedsJson = feedsJson.stream().peek(Feed::fixNullFields).collect(Collectors.toList());
 
-                        sortFeeds(feedsJson, m_feed, new CatOrderComparator());
+                    sortFeeds(feedsJson, m_feed, new CatOrderComparator());
 
-                        // virtual cats implemented in getCategories since api level 1
-                        if (org.fox.ttrss.Application.getInstance().getApiLevel() == 0) {
-                            feedsCombined.add(0, new Feed(-2, getApplication().getString(R.string.cat_labels), true));
+                    // virtual cats implemented in getCategories since api level 1
+                    if (org.fox.ttrss.Application.getInstance().getApiLevel() == 0) {
+                        feedsCombined.add(0, new Feed(-2, getApplication().getString(R.string.cat_labels), true));
 
-                            if (!expandSpecial)
-                                feedsCombined.add(1, new Feed(-1, getApplication().getString(R.string.cat_special), true));
+                        if (!expandSpecial)
+                            feedsCombined.add(1, new Feed(-1, getApplication().getString(R.string.cat_special), true));
 
-                            feedsCombined.add(new Feed(0, getApplication().getString(R.string.cat_uncategorized), true));
-                        }
+                        feedsCombined.add(new Feed(0, getApplication().getString(R.string.cat_uncategorized), true));
+                    }
 
-                        if (unreadOnly)
-                            feedsJson = feedsJson.stream()
-                                    .filter(f -> f.id == Feed.CAT_SPECIAL || f.unread > 0)
-                                    .collect(Collectors.toList());
-
-                        // force returned objects to become categories
+                    if (unreadOnly)
                         feedsJson = feedsJson.stream()
-                                .peek(f -> f.is_cat = true)
+                                .filter(f -> f.id == Feed.CAT_SPECIAL || f.unread > 0)
                                 .collect(Collectors.toList());
 
-                        if (expandSpecial) {
-                            feedsJson = feedsJson.stream()
-                                    .filter(f -> f.id != Feed.CAT_SPECIAL)
-                                    .collect(Collectors.toList());
+                    // force returned objects to become categories
+                    feedsJson = feedsJson.stream()
+                            .peek(f -> f.is_cat = true)
+                            .collect(Collectors.toList());
 
-                            if (!feedsJson.isEmpty())
-                                feedsCombined.add(new Feed(Feed.TYPE_DIVIDER));
-                        }
+                    if (expandSpecial) {
+                        feedsJson = feedsJson.stream()
+                                .filter(f -> f.id != Feed.CAT_SPECIAL)
+                                .collect(Collectors.toList());
 
-                        feedsCombined.addAll(feedsJson);
-
-                        m_feeds.postValue(feedsCombined);
+                        if (!feedsJson.isEmpty())
+                            feedsCombined.add(new Feed(Feed.TYPE_DIVIDER));
                     }
-                } catch (Exception e) {
-                    setLastError(ApiCommon.ApiError.OTHER_ERROR);
-                    setLastErrorMessage(e.getMessage());
 
-                    e.printStackTrace();
+                    feedsCombined.addAll(feedsJson);
+
+                    m_feeds.postValue(feedsCombined);
                 }
+            } catch (Exception e) {
+                setLastError(ApiCommon.ApiError.OTHER_ERROR);
+                setLastErrorMessage(e.getMessage());
+
+                e.printStackTrace();
             }
 
             m_isLoading.postValue(false);

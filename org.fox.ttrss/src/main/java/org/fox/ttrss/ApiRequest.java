@@ -36,6 +36,10 @@ public class ApiRequest implements ApiCommon.ApiCaller {
         });
     }
 
+    public JsonElement executeSync(HashMap<String, String> map) {
+        return ApiCommon.performRequest(m_context, map, this);
+    }
+
     protected void onPostExecute(JsonElement result) {
     }
 

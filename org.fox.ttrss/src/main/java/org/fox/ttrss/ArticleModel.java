@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCaller {
@@ -45,14 +46,14 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
     private boolean m_firstIdChanged;
     private int m_offset;
     private String m_paginationViewMode = "adaptive";
-    private volatile int m_loadGeneration;
+    private final AtomicInteger m_loadGeneration = new AtomicInteger();
     private int m_resizeWidth;
     private boolean m_append;
     private boolean m_lazyLoadEnabled = true;
     private MutableLiveData<Boolean> m_isLoading = new MutableLiveData<>(false);
     private ExecutorService m_executor;
     private Handler m_mainHandler = new Handler(Looper.getMainLooper());
-    private final Runnable m_notifyArticles = () -> m_articles.setValue(m_articles.getValue());
+    private final Runnable m_notifyArticles = this::notifyArticles;
     private MutableLiveData<Long> m_lastUpdate = new MutableLiveData<>(0L);
     private MutableLiveData<Integer> m_loadingProgress = new MutableLiveData<>(0);
     private MutableLiveData<Article> m_activeArticle = new MutableLiveData<>(null);
@@ -88,6 +89,10 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
 
     public void update(@NonNull List<Article> articles) {
         m_articles.setValue(articles);
+    }
+
+    private void notifyArticles() {
+        m_articles.setValue(m_articles.getValue());
     }
 
     private void notifyArticlesChanged() {
@@ -196,7 +201,7 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
 
         final List<Article> articlesWork = new ArrayList<>(m_articles.getValue());
         final boolean append = m_append;
-        final int generation = ++m_loadGeneration;
+        final int generation = m_loadGeneration.incrementAndGet();
         final Feed feed = new Feed(m_feed);
         final String viewMode = m_paginationViewMode;
         final boolean search = m_searchQuery != null && !m_searchQuery.isEmpty();
@@ -262,7 +267,7 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
                         append ? articlesWork.stream().map(a -> a.id).collect(Collectors.toSet())
                                 : java.util.Collections.emptySet(),
                         requestParams -> {
-                            if (generation != m_loadGeneration)
+                            if (generation != m_loadGeneration.get())
                                 return null;
                             Log.d(TAG, "loading headlines feed=" + feed.id +
                                     " skip=" + requestParams.get("skip") +
@@ -286,7 +291,7 @@ public class ArticleModel extends AndroidViewModel implements ApiCommon.ApiCalle
             final HeadlinesPageLoader.Result completedPage = page;
             final List<Article> completedArticles = loaded;
             m_mainHandler.post(() -> {
-                if (generation != m_loadGeneration)
+                if (generation != m_loadGeneration.get())
                     return;
 
                 m_lastError = status.error;

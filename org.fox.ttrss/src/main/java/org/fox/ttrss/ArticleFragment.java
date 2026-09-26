@@ -1,7 +1,7 @@
 package org.fox.ttrss;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebSettings;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
@@ -223,9 +224,13 @@ public class ArticleFragment extends androidx.fragment.app.Fragment {
 
         m_web.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                if (!request.isForMainFrame()) {
+                    return false;
+                }
+
                 try {
-                    m_activity.openUri(Uri.parse(url));
+                    m_activity.openUri(request.getUrl());
 
                     return true;
 
@@ -391,11 +396,11 @@ public class ArticleFragment extends androidx.fragment.app.Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
 
         m_prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        m_activity = (DetailActivity) activity;
+        m_activity = (DetailActivity) context;
 
     }
 

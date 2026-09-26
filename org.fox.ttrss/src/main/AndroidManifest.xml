@@ -34,13 +34,13 @@
         android:icon="${appIcon}"
         android:label="@string/app_name"
         android:localeConfig="@xml/locales_config"
-        android:networkSecurityConfig="@xml/network_security_config" >
+        android:networkSecurityConfig="@xml/network_security_config"
+        tools:targetApi="33" >
 
         <meta-data android:name="android.max_aspect" android:value="2.1" />
 
         <activity
             android:name=".LaunchActivity"
-            android:label="@string/app_name"
             android:exported="true"
             android:theme="@android:style/Theme.NoDisplay" >
             <intent-filter>
@@ -53,8 +53,7 @@
                 android:resource="@xml/shortcuts" />
         </activity>
         <activity
-            android:name=".OnlineActivity"
-            android:label="@string/app_name" >
+            android:name=".OnlineActivity" >
         </activity>
         <activity
             android:name=".PreferencesActivity"
@@ -62,23 +61,20 @@
         </activity>
         <activity
             android:name=".MasterActivity"
-            android:exported="true"
-            android:label="@string/app_name" >
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
             android:name=".DetailActivity"
-            android:exported="true"
-            android:label="@string/app_name" >
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".CommonActivity"
-            android:label="@string/app_name" >
+            android:name=".CommonActivity" >
         </activity>
         <activity
             android:name=".LogcatActivity"
@@ -87,7 +83,6 @@
         <activity
             android:name=".share.ShareActivity"
             android:excludeFromRecents="true"
-            android:label="@string/app_name"
             android:exported="true"
             android:theme="@style/MaterialAlertDialog.Material3" >
             <intent-filter>
@@ -122,27 +117,23 @@
                 <data android:scheme="feed" />
                 <data android:scheme="rss" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:host="*" android:pathPattern=".*xml" android:scheme="http" />
-                <data android:host="*" android:pathPattern=".*rss" android:scheme="http" />
-                <data android:host="*" android:pathPattern=".*feed.*" android:scheme="http" />
-                <data android:host="*" android:pathPattern=".*podcast.*" android:scheme="http" />
-                <data android:host="*" android:pathPattern=".*Podcast.*" android:scheme="http" />
-                <data android:host="*" android:pathPattern=".*rss.*" android:scheme="http" />
-                <data android:host="*" android:pathPattern=".*RSS.*" android:scheme="http" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="*" />
 
-                <data android:host="*" android:pathPattern=".*xml" android:scheme="https" />
-                <data android:host="*" android:pathPattern=".*rss" android:scheme="https" />
-                <data android:host="*" android:pathPattern=".*feed.*" android:scheme="https" />
-                <data android:host="*" android:pathPattern=".*podcast.*" android:scheme="https" />
-                <data android:host="*" android:pathPattern=".*Podcast.*" android:scheme="https" />
-                <data android:host="*" android:pathPattern=".*rss.*" android:scheme="https" />
-                <data android:host="*" android:pathPattern=".*RSS.*" android:scheme="https" />
+                <data android:pathPattern=".*xml" />
+                <data android:pathPattern=".*rss" />
+                <data android:pathPattern=".*feed.*" />
+                <data android:pathPattern=".*podcast.*" />
+                <data android:pathPattern=".*Podcast.*" />
+                <data android:pathPattern=".*rss.*" />
+                <data android:pathPattern=".*RSS.*" />
 
             </intent-filter>
             <intent-filter>
@@ -160,7 +151,7 @@
                 <data android:mimeType="application/atom+xml" android:scheme="https" />
 
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -172,7 +163,7 @@
                 <data android:pathPattern=".*\\.xml" />
                 <data android:pathPattern=".*\\.rss" />
             </intent-filter>
-            <intent-filter>
+            <intent-filter android:autoVerify="false">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -216,10 +207,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_small" />
         </receiver>
-
-        <service
-            android:name=".widget.WidgetUpdateService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity
             android:name=".GalleryActivity"

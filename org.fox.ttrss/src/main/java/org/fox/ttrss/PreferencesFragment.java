@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.pm.PackageInfoCompat;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class PreferencesFragment extends PreferenceFragmentCompat {
@@ -59,18 +61,18 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
 
         try {
             String version;
-            int versionCode;
+            long versionCode;
             String buildTimestamp;
 
             PackageInfo packageInfo = activity.getPackageManager().
                     getPackageInfo(activity.getPackageName(), 0);
 
             version = packageInfo.versionName;
-            versionCode = packageInfo.versionCode;
+            versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
 
             findPreference("version").setSummary(getString(R.string.prefs_version, version, versionCode));
 
-            buildTimestamp = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date(BuildConfig.TIMESTAMP));
+            buildTimestamp = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault(Locale.Category.FORMAT)).format(new Date(BuildConfig.TIMESTAMP));
 
             findPreference("build_timestamp").setSummary(getString(R.string.prefs_build_timestamp, buildTimestamp));
 
