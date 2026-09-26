@@ -208,10 +208,6 @@
                 android:resource="@xml/widget_small" />
         </receiver>
 
-        <service
-            android:name=".widget.WidgetUpdateService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
         <activity
             android:name=".GalleryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

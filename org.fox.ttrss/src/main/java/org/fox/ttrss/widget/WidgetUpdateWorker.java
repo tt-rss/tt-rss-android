@@ -8,15 +8,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.JobIntentService;
 import androidx.preference.PreferenceManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -27,9 +28,10 @@ import org.fox.ttrss.R;
 import org.fox.ttrss.util.SimpleLoginManager;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
-public class WidgetUpdateService extends JobIntentService {
-    private static final String TAG = WidgetUpdateService.class.getSimpleName();
+public class WidgetUpdateWorker extends Worker {
+    private static final String TAG = WidgetUpdateWorker.class.getSimpleName();
     private SharedPreferences m_prefs;
 
     public static final int UPDATE_RESULT_OK = 0;
@@ -38,44 +40,57 @@ public class WidgetUpdateService extends JobIntentService {
     public static final int UPDATE_RESULT_ERROR_NEED_CONF = 3;
     public static final int UPDATE_IN_PROGRESS = 4;
 
-    @Override
-    protected void onHandleWork(@NonNull Intent intent) {
+    private static final String KEY_RETRY_COUNT = "retryCount";
+    private static final int MAX_RETRY_COUNT = 10;
+    private static final long RETRY_DELAY_SECONDS = 3;
 
-        Log.d(TAG, "onHandleWork: " + intent);
+    public WidgetUpdateWorker(@NonNull Context context, @NonNull WorkerParameters params) {
+        super(context, params);
+    }
+
+    public static void enqueue(Context context) {
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(WidgetUpdateWorker.class)
+                .build();
+
+        WorkManager.getInstance(context.getApplicationContext()).enqueue(request);
+    }
+
+    @NonNull
+    @Override
+    public Result doWork() {
+
+        Log.d(TAG, "doWork");
 
         if (getWidgetCount(getApplicationContext()) == 0) {
             Log.d(TAG, "no widgets to work on, bailing out");
 
-            stopSelf();
-            return;
+            return Result.success();
         }
 
         try {
             updateWidgets(-1, UPDATE_IN_PROGRESS);
 
             if (!isNetworkAvailable()) {
-                final int retryCount = intent.getIntExtra("retryCount", 0);
+                final int retryCount = getInputData().getInt(KEY_RETRY_COUNT, 0);
 
-                Log.d(TAG, "service update requested but network is not available, try: " + retryCount);
+                Log.d(TAG, "worker update requested but network is not available, try: " + retryCount);
 
-                if (retryCount < 10) {
-                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                        Intent serviceIntent = new Intent(getApplicationContext(), WidgetUpdateService.class);
-                        serviceIntent.putExtra("retryCount", retryCount + 1);
+                if (retryCount < MAX_RETRY_COUNT) {
+                    Data data = new Data.Builder()
+                            .putInt(KEY_RETRY_COUNT, retryCount + 1)
+                            .build();
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            startForegroundService(serviceIntent);
-                        } else {
-                            startService(serviceIntent);
-                        }
+                    OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(WidgetUpdateWorker.class)
+                            .setInitialDelay(RETRY_DELAY_SECONDS, TimeUnit.SECONDS)
+                            .setInputData(data)
+                            .build();
 
-                    }, 3 * 1000);
+                    WorkManager.getInstance(getApplicationContext()).enqueue(request);
                 } else {
                     updateWidgets(-1, UPDATE_RESULT_ERROR_OTHER);
                 }
 
-                stopSelf();
-                return;
+                return Result.success();
             }
 
             m_prefs = PreferenceManager
@@ -132,7 +147,7 @@ public class WidgetUpdateService extends JobIntentService {
 
                     @Override
                     protected void onLoginFailed(int requestId, ApiRequest ar) {
-                        Log.d(TAG, "login failed: " + getString(ar.getErrorMessage()));
+                        Log.d(TAG, "login failed: " + getApplicationContext().getString(ar.getErrorMessage()));
 
                         updateWidgets(-1, UPDATE_RESULT_ERROR_LOGIN);
                     }
@@ -156,8 +171,7 @@ public class WidgetUpdateService extends JobIntentService {
             updateWidgets(-1, UPDATE_RESULT_ERROR_OTHER);
         }
 
-        stopSelf();
-
+        return Result.success();
     }
 
     private int getWidgetCount(Context context) {
@@ -169,7 +183,7 @@ public class WidgetUpdateService extends JobIntentService {
 
     protected boolean isNetworkAvailable() {
         ConnectivityManager cm = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
+                getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
 
         // if no network is available capabilities will be null
@@ -188,8 +202,6 @@ public class WidgetUpdateService extends JobIntentService {
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
 
         updateWidgetsText(context, appWidgetManager, appWidgetIds, unread, resultCode);
-
-        if (resultCode != UPDATE_IN_PROGRESS) stopSelf();
     }
 
     private void updateWidgetsText(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, int unread, int resultCode) {
@@ -203,10 +215,10 @@ public class WidgetUpdateService extends JobIntentService {
         String viewText;
 
         switch (resultCode) {
-            case WidgetUpdateService.UPDATE_RESULT_OK:
+            case UPDATE_RESULT_OK:
                 viewText = String.valueOf(unread);
                 break;
-            case WidgetUpdateService.UPDATE_IN_PROGRESS:
+            case UPDATE_IN_PROGRESS:
                 viewText = "...";
                 break;
             default:

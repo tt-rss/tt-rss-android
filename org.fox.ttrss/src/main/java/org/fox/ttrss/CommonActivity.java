@@ -40,7 +40,6 @@ import androidx.browser.customtabs.CustomTabsClient;
 import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.browser.customtabs.CustomTabsServiceConnection;
 import androidx.browser.customtabs.CustomTabsSession;
-import androidx.core.app.JobIntentService;
 import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 
@@ -52,7 +51,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.fox.ttrss.widget.SmallWidgetProvider;
-import org.fox.ttrss.widget.WidgetUpdateService;
+import org.fox.ttrss.widget.WidgetUpdateWorker;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -611,7 +610,7 @@ public class CommonActivity extends AppCompatActivity implements SharedPreferenc
     }
 
     public static void requestWidgetUpdate(Context context) {
-        JobIntentService.enqueueWork(context.getApplicationContext(), WidgetUpdateService.class, 0, new Intent());
+        WidgetUpdateWorker.enqueue(context);
     }
 
     static public int dpToPx(Context context, int dp) {
