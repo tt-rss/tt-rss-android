@@ -1535,6 +1535,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
             String tmp = !article.title.isEmpty() ? article.title.substring(0, 1).toUpperCase() : "?";
 
             if (article.selected) {
+                Glide.with(HeadlinesFragment.this).clear(holder.textImage);
                 holder.textImage.setImageDrawable(m_drawableBuilder.build(" ", 0xff616161));
                 holder.textChecked.setVisibility(View.VISIBLE);
             } else {
@@ -1561,6 +1562,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                             .skipMemoryCache(false)
                             .into(holder.textImage);
                 } else if (!canShowFlavorImage() || article.flavorImage == null) {
+                    Glide.with(HeadlinesFragment.this).clear(holder.textImage);
                     holder.textImage.setImageDrawable(textDrawable);
                 } else {
                     holder.textImage.setImageDrawable(textDrawable);
