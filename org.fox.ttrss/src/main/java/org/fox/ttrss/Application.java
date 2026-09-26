@@ -3,7 +3,7 @@ package org.fox.ttrss;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
 
 import androidx.core.os.BundleCompat;
@@ -142,12 +142,9 @@ public class Application extends android.app.Application {
     }
 
     public boolean isWifiConnected() {
-        NetworkInfo wifi = m_cmgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkCapabilities capabilities = m_cmgr.getNetworkCapabilities(m_cmgr.getActiveNetwork());
 
-        if (wifi != null)
-            return wifi.isConnected();
-
-        return false;
+        return capabilities != null && capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
     }
 
     @Override
