@@ -25,7 +25,6 @@ import com.google.gson.JsonObject;
 import org.fox.ttrss.ApiRequest;
 import org.fox.ttrss.OnlineActivity;
 import org.fox.ttrss.R;
-import org.fox.ttrss.util.SimpleLoginManager;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -104,65 +103,60 @@ public class WidgetUpdateWorker extends Worker {
 
                 final int feedId = m_prefs.getBoolean("widget_show_fresh", true) ? -3 : 0;
 
-                final SimpleLoginManager loginManager = new SimpleLoginManager() {
+                ApiRequest loginRequest = new ApiRequest(getApplicationContext());
 
-                    @Override
-                    protected void onLoginSuccess(int requestId, String sessionId, int apiLevel) {
+                HashMap<String, String> lmap = new HashMap<>();
+                lmap.put("op", "login");
+                lmap.put("user", m_prefs.getString("login", "").trim());
+                lmap.put("password", m_prefs.getString("password", "").trim());
 
-                        ApiRequest aru = new ApiRequest(getApplicationContext()) {
-                            @Override
-                            protected void onPostExecute(JsonElement result) {
+                JsonElement loginResult = loginRequest.executeSync(lmap);
 
-                                if (result != null) {
-                                    try {
-                                        JsonObject content = result.getAsJsonObject();
+                String sessionId = null;
 
-                                        if (content != null) {
+                if (loginResult != null) {
+                    try {
+                        JsonObject content = loginResult.getAsJsonObject();
 
-                                            int unread = content.get("unread").getAsInt();
-                                            updateWidgets(unread, UPDATE_RESULT_OK);
-
-                                            return;
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                } else {
-                                    Log.d(TAG, "request failed: " + getErrorMessage());
-                                }
-
-                                updateWidgets(-1, UPDATE_RESULT_ERROR_OTHER);
-                            }
-                        };
-
-                        final String fSessionId = sessionId;
-
-                        HashMap<String, String> umap = new HashMap<>();
-                        umap.put("op", "getUnread");
-                        umap.put("feed_id", String.valueOf(feedId));
-                        umap.put("sid", fSessionId);
-
-                        aru.execute(umap);
+                        if (content != null && content.has("session_id")) {
+                            sessionId = content.get("session_id").getAsString();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+                }
 
-                    @Override
-                    protected void onLoginFailed(int requestId, ApiRequest ar) {
-                        Log.d(TAG, "login failed: " + getApplicationContext().getString(ar.getErrorMessage()));
+                if (sessionId == null) {
+                    Log.d(TAG, "login failed: " + getApplicationContext().getString(loginRequest.getErrorMessage()));
 
-                        updateWidgets(-1, UPDATE_RESULT_ERROR_LOGIN);
+                    updateWidgets(-1, UPDATE_RESULT_ERROR_LOGIN);
+
+                    return Result.success();
+                }
+
+                ApiRequest unreadRequest = new ApiRequest(getApplicationContext());
+
+                HashMap<String, String> umap = new HashMap<>();
+                umap.put("op", "getUnread");
+                umap.put("feed_id", String.valueOf(feedId));
+                umap.put("sid", sessionId);
+
+                JsonElement result = unreadRequest.executeSync(umap);
+
+                if (result != null) {
+                    try {
+                        int unread = result.getAsJsonObject().get("unread").getAsInt();
+                        updateWidgets(unread, UPDATE_RESULT_OK);
+
+                        return Result.success();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+                } else {
+                    Log.d(TAG, "request failed: " + getApplicationContext().getString(unreadRequest.getErrorMessage()));
+                }
 
-                    @Override
-                    protected void onLoggingIn(int requestId) {
-
-
-                    }
-                };
-
-                String login = m_prefs.getString("login", "").trim();
-                String password = m_prefs.getString("password", "").trim();
-
-                loginManager.logIn(getApplicationContext(), 1, login, password);
+                updateWidgets(-1, UPDATE_RESULT_ERROR_OTHER);
 
             }
         } catch (Exception e) {
