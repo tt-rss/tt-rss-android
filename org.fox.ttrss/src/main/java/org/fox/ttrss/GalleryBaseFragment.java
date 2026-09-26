@@ -1,20 +1,12 @@
 package org.fox.ttrss;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.View;
 
 public class GalleryBaseFragment extends androidx.fragment.app.Fragment {
     private static final String TAG = GalleryBaseFragment.class.getSimpleName();
     protected GalleryActivity m_activity;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setRetainInstance(true);
-    }
 
     @Override
     public void onAttach(Context context) {

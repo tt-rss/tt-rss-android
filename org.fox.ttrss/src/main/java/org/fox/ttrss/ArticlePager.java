@@ -71,8 +71,6 @@ public class ArticlePager extends androidx.fragment.app.Fragment {
         if (savedInstanceState != null) {
             m_feed = BundleCompat.getParcelable(savedInstanceState, "m_feed", Feed.class);
         }
-
-        setRetainInstance(true);
     }
 
     @Override

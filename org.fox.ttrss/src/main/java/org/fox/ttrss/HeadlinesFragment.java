@@ -234,8 +234,6 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
             m_splitLayoutMode = savedInstanceState.getBoolean("m_splitLayoutMode");
         }
 
-        setRetainInstance(true);
-
         Glide.get(getContext()).clearMemory();
     }
 
