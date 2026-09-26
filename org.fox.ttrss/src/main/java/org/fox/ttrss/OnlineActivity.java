@@ -238,7 +238,7 @@ public class OnlineActivity extends CommonActivity {
 
                         Intent intent = new Intent(OnlineActivity.this,
                                 PreferencesActivity.class);
-                        startActivityForResult(intent, 0);
+                        startActivity(intent);
                     })
                     .setNegativeButton(R.string.cancel, (dialog, id) -> dialog.cancel());
 
@@ -269,7 +269,7 @@ public class OnlineActivity extends CommonActivity {
         Intent intent = new Intent(OnlineActivity.this, MasterActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
-        startActivityForResult(intent, 0);
+        startActivity(intent);
         overridePendingTransition(0, 0);
 
         finish();
@@ -373,7 +373,7 @@ public class OnlineActivity extends CommonActivity {
         int itemId = item.getItemId();
         if (itemId == R.id.subscribe_to_feed) {
             Intent subscribe = new Intent(OnlineActivity.this, SubscribeActivity.class);
-            startActivityForResult(subscribe, 0);
+            startActivity(subscribe);
             return true;
         } else if (itemId == R.id.toggle_attachments) {
             if (activeArticle != null)
@@ -389,7 +389,7 @@ public class OnlineActivity extends CommonActivity {
         } else if (itemId == R.id.preferences) {
             Intent intent = new Intent(OnlineActivity.this,
                     PreferencesActivity.class);
-            startActivityForResult(intent, 0);
+            startActivity(intent);
             return true;
         } else if (itemId == R.id.search) {
             final EditText edit = new EditText(this);

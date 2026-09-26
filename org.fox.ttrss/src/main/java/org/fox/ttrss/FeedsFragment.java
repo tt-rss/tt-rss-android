@@ -427,7 +427,7 @@ public class FeedsFragment extends Fragment implements OnSharedPreferenceChangeL
                     m_activity.getSupportFragmentManager().popBackStack();
                 } else if (feed.id == Feed.TYPE_SETTINGS) {
                     Intent intent = new Intent(getActivity(), PreferencesActivity.class);
-                    startActivityForResult(intent, 0);
+                    startActivity(intent);
                 } else if (feed.id == Feed.TYPE_TOGGLE_UNREAD || feed.id == Feed.TYPE_DIVIDER) {
                     //
                 } else {
