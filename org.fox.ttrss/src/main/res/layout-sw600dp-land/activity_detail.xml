@@ -65,6 +65,18 @@
                 android:layout_gravity="bottom"
                 app:menu="@menu/bottombar_detail" />
 
+            <TextView
+                android:id="@+id/detail_article_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="?actionBarSize"
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="@dimen/article_counter_margin_end"
+                android:elevation="8dp"
+                android:gravity="center_vertical"
+                android:textAppearance="?attr/textAppearanceLabelLarge"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:visibility="gone" />
+
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/detail_fab"
                 android:layout_gravity="end|bottom"
