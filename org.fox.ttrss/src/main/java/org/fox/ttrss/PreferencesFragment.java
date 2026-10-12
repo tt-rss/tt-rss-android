@@ -8,6 +8,8 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.preference.ListPreference;
@@ -16,15 +18,33 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.color.DynamicColors;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class PreferencesFragment extends PreferenceFragmentCompat {
+    private static final int SETTINGS_EXPORT_VERSION = 1;
+
+    private final ActivityResultLauncher<String> m_exportLauncher = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument("application/json"), this::exportSettings);
+
+    private final ActivityResultLauncher<String[]> m_importLauncher = registerForActivityResult(
+            new ActivityResultContracts.OpenDocument(), this::importSettings);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +70,17 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
                     .addToBackStack(NetworkPreferencesFragment.class.getSimpleName())
                     .commit();
 
+            return false;
+        });
+
+        findPreference("export_settings").setOnPreferenceClickListener(preference -> {
+            String timestamp = new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(new Date());
+            m_exportLauncher.launch("tt-rss-settings-" + timestamp + ".json");
+            return false;
+        });
+
+        findPreference("import_settings").setOnPreferenceClickListener(preference -> {
+            m_importLauncher.launch(new String[] { "application/json", "text/plain", "application/octet-stream" });
             return false;
         });
 
@@ -157,5 +188,131 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
         }
 
         return true;
+    }
+
+    private void exportSettings(@Nullable Uri uri) {
+        if (uri == null) return;
+
+        CommonActivity activity = (CommonActivity) requireActivity();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+
+        try {
+            JSONObject values = new JSONObject();
+
+            for (Map.Entry<String, ?> entry : prefs.getAll().entrySet()) {
+                Object value = entry.getValue();
+                JSONObject item = new JSONObject();
+
+                if (value instanceof Boolean) {
+                    item.put("type", "boolean");
+                } else if (value instanceof Integer) {
+                    item.put("type", "int");
+                } else if (value instanceof Long) {
+                    item.put("type", "long");
+                } else if (value instanceof Float) {
+                    item.put("type", "float");
+                    value = value.toString();
+                } else if (value instanceof String) {
+                    item.put("type", "string");
+                } else if (value instanceof Set) {
+                    item.put("type", "string_set");
+                    value = new JSONArray((Set<?>) value);
+                } else {
+                    continue;
+                }
+
+                item.put("value", value);
+                values.put(entry.getKey(), item);
+            }
+
+            JSONObject root = new JSONObject();
+            root.put("version", SETTINGS_EXPORT_VERSION);
+            root.put("package", activity.getPackageName());
+            root.put("prefs", values);
+
+            try (OutputStream out = activity.getContentResolver().openOutputStream(uri, "wt")) {
+                if (out == null) throw new IllegalStateException("unable to open output stream");
+
+                out.write(root.toString(2).getBytes(StandardCharsets.UTF_8));
+            }
+
+            activity.toast(R.string.settings_exported);
+        } catch (Exception e) {
+            e.printStackTrace();
+            activity.toast(getString(R.string.settings_export_failed, e.getMessage()));
+        }
+    }
+
+    private void importSettings(@Nullable Uri uri) {
+        if (uri == null) return;
+
+        CommonActivity activity = (CommonActivity) requireActivity();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+
+        try {
+            StringBuilder json = new StringBuilder();
+
+            try (InputStream in = activity.getContentResolver().openInputStream(uri)) {
+                if (in == null) throw new IllegalStateException("unable to open input stream");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+                String line;
+
+                while ((line = reader.readLine()) != null)
+                    json.append(line).append('\n');
+            }
+
+            JSONObject root = new JSONObject(json.toString());
+
+            if (root.optInt("version", 0) != SETTINGS_EXPORT_VERSION)
+                throw new IllegalArgumentException("unsupported file format");
+
+            JSONObject values = root.getJSONObject("prefs");
+            // replace current settings completely so the result matches the exported state
+            SharedPreferences.Editor editor = prefs.edit().clear();
+
+            for (Iterator<String> keys = values.keys(); keys.hasNext(); ) {
+                String key = keys.next();
+
+                JSONObject item = values.getJSONObject(key);
+
+                switch (item.getString("type")) {
+                    case "boolean":
+                        editor.putBoolean(key, item.getBoolean("value"));
+                        break;
+                    case "int":
+                        editor.putInt(key, item.getInt("value"));
+                        break;
+                    case "long":
+                        editor.putLong(key, item.getLong("value"));
+                        break;
+                    case "float":
+                        editor.putFloat(key, Float.parseFloat(item.getString("value")));
+                        break;
+                    case "string":
+                        editor.putString(key, item.getString("value"));
+                        break;
+                    case "string_set":
+                        JSONArray array = item.getJSONArray("value");
+                        Set<String> set = new HashSet<>();
+
+                        for (int i = 0; i < array.length(); i++)
+                            set.add(array.getString(i));
+
+                        editor.putStringSet(key, set);
+                        break;
+                }
+            }
+
+            editor.commit();
+
+            activity.toast(R.string.settings_imported);
+
+            // theme, layout and other settings are applied on activity creation
+            activity.recreate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            activity.toast(getString(R.string.settings_import_failed, e.getMessage()));
+        }
     }
 }

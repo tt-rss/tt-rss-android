@@ -256,6 +256,18 @@
             android:title="@string/transport_debugging" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/prefs_backup" >
+        <Preference
+            android:key="export_settings"
+            android:summary="@string/prefs_export_settings_summary"
+            android:title="@string/prefs_export_settings" />
+
+        <Preference
+            android:key="import_settings"
+            android:summary="@string/prefs_import_settings_summary"
+            android:title="@string/prefs_import_settings" />
+    </PreferenceCategory>
+
     <Preference
         android:key="version"
         android:enabled="false"

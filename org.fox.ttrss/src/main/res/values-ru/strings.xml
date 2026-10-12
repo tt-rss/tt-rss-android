@@ -298,4 +298,13 @@
     <string name="move_between_articles">Перемещение между статьями</string>
     <string name="move_between_articles_long">Навигация по статьям свайпами влево/вправо</string>
     <string name="headline_display_mode_compact_feed_images">Компактный (изображения в ленте)</string>
+    <string name="prefs_backup">Резервная копия</string>
+    <string name="prefs_export_settings">Экспорт настроек</string>
+    <string name="prefs_export_settings_summary">Сохранить все настройки, включая пароли, в файл</string>
+    <string name="prefs_import_settings">Импорт настроек</string>
+    <string name="prefs_import_settings_summary">Заменить текущие настройки настройками из файла</string>
+    <string name="settings_exported">Настройки экспортированы</string>
+    <string name="settings_imported">Настройки импортированы</string>
+    <string name="settings_export_failed">Не удалось экспортировать настройки: %1$s</string>
+    <string name="settings_import_failed">Не удалось импортировать настройки: %1$s</string>
 </resources>
