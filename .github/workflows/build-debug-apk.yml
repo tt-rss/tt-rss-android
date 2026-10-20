@@ -90,6 +90,7 @@ jobs:
 
     - name: Upload reports
       if: always()
+      continue-on-error: true
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: tt-rss-reports-${{ github.run_number }}-${{ steps.meta.outputs.short_sha }}
@@ -231,6 +232,7 @@ jobs:
 
     - name: Upload reports
       if: always()
+      continue-on-error: true
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: tt-rss-reports-${{ github.run_number }}-${{ steps.meta.outputs.short_sha }}

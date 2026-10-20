@@ -174,7 +174,7 @@ Acceptance:
 - `actions/upload-artifact` stores each artifact as a zip archive. Do not use `archive: false`. Use the artifact `name:` for downloads.
 - Set `overwrite: true` on every `upload-artifact` step, including report uploads. A re-run keeps the same artifact name. `overwrite: true` replaces the earlier artifact.
 - Upload each APK with `if: success()` and `if-no-files-found: error`.
-- Upload the reports with `if: always()`, the lint XML and HTML globs, the problems report glob, and `if-no-files-found: warn`.
+- Upload the reports with `if: always()`, the lint XML and HTML globs, the problems report glob, and `if-no-files-found: warn`. Set `continue-on-error: true` on report uploads so a report upload failure cannot block a release.
 - Set `retention-days: 14` on every upload.
 - The PR workflow does not upload an APK. The report uploads apply to the build workflow jobs. The PR workflow keeps the lint summary step.
 - Do not rename the build output. The debug APK path stays `org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug.apk`. Remove the existing APK rename step and `archive: false` from `build-debug-apk.yml`. Do not use `mv` on the build output.
@@ -187,7 +187,7 @@ Acceptance:
 Acceptance:
 
 - The debug artifact downloads and installs. It is a zip archive downloaded by its `name:`.
-- The artifact name includes the run number, the run attempt, and the 7-character short SHA.
+- The artifact name includes the run number and the 7-character short SHA.
 - Reports upload even when checks fail.
 - The release contains the debug APK with the asset name `tt-rss-debug.apk`.
 - The documented debug APK path is unchanged.
