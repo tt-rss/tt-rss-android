@@ -105,9 +105,8 @@ Use these pins:
 - Run these commands in each build job in both workflows:
 
 ```
-test -n "${ANDROID_SDK_ROOT:-}"
-yes | sdkmanager --licenses > /dev/null
-sdkmanager "platforms;android-37" "build-tools;37.0.0"
+         test -n "${ANDROID_SDK_ROOT:-}"
+         sdkmanager "platforms;android-37" "build-tools;37.0.0"
 test -d "$ANDROID_SDK_ROOT/platforms/android-37"
 java -version
 sdkmanager --list_installed
