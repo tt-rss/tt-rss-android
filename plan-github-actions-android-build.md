@@ -106,8 +106,8 @@ Use these pins:
 
 ```
          test -n "${ANDROID_SDK_ROOT:-}"
-         sdkmanager "platforms;android-37" "build-tools;37.0.0"
-test -d "$ANDROID_SDK_ROOT/platforms/android-37"
+         sdkmanager "platforms;android-37.0" "build-tools;37.0.0"
+         test -d "$ANDROID_SDK_ROOT/platforms/android-37.0"
 java -version
 sdkmanager --list_installed
 ```
