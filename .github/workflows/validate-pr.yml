@@ -4,7 +4,6 @@ on:
   pull_request:
     branches: [master]
     paths-ignore:
-    - '.github/**'
     - 'utils/**'
     - '.*'
     - '*.md'
@@ -32,6 +31,19 @@ jobs:
       with:
         java-version: 21
         distribution: temurin
+
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+
+    - name: Install Android 37 platform
+      shell: bash
+      run: |
+        test -n "${ANDROID_SDK_ROOT:-}"
+        yes | sdkmanager --licenses > /dev/null
+        sdkmanager "platforms;android-37" "build-tools;37.0.0"
+        test -d "$ANDROID_SDK_ROOT/platforms/android-37"
+        java -version
+        sdkmanager --list_installed
 
     - name: Set up Gradle
       uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0

@@ -1,10 +1,10 @@
-name: Build Debug APK
+name: Build APKs
 
 on:
   push:
     branches: [master]
+    tags: ['v*']
     paths-ignore:
-    - '.github/**'
     - 'utils/**'
     - '.*'
     - '*.md'
@@ -21,18 +21,39 @@ concurrency:
 
 
 jobs:
-  build:
+  build-debug:
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
 
     steps:
     - name: Check out code
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
+    - name: Create build metadata
+      id: meta
+      shell: bash
+      run: |
+        echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+        echo "tag=$(git log -1 --date=format:'%y.%m' --format:'%cd')-$(git rev-parse --short=7 HEAD)" >> "$GITHUB_OUTPUT"
+
     - name: Set up Java
       uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
       with:
         java-version: 21
         distribution: temurin
+
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+
+    - name: Install Android 37 platform
+      shell: bash
+      run: |
+        test -n "${ANDROID_SDK_ROOT:-}"
+        yes | sdkmanager --licenses > /dev/null
+        sdkmanager "platforms;android-37" "build-tools;37.0.0"
+        test -d "$ANDROID_SDK_ROOT/platforms/android-37"
+        java -version
+        sdkmanager --list_installed
 
     - name: Set up Gradle
       uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
@@ -45,7 +66,7 @@ jobs:
         fi
         mkdir -p "${HOME}/.android"
         echo "${DEBUG_KEYSTORE_BASE64}" | base64 --decode > "${HOME}/.android/debug.keystore"
-        keytool -list -keystore "${HOME}/.android/debug.keystore" -storepass android
+        keytool -list -keystore "${HOME}/.android/debug.keystore" -storepass android -alias androiddebugkey
         echo "DEBUG_KEYSTORE_PATH=${HOME}/.android/debug.keystore" >> "$GITHUB_ENV"
       env:
         DEBUG_KEYSTORE_BASE64: ${{ secrets.DEBUG_KEYSTORE_BASE64 }}
@@ -57,23 +78,185 @@ jobs:
       if: always()
       run: bash .github/scripts/generate-lint-summary.sh
 
-    - name: Rename debug APK
-      run: |
-        mv org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug.apk \
-          "org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug-${{ github.run_number }}-${{ github.sha }}.apk"
-
     - name: Upload debug APK
+      if: success()
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
-        path: org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug-${{ github.run_number }}-${{ github.sha }}.apk
-        archive: false
+        name: tt-rss-debug-${{ github.run_number }}-${{ steps.meta.outputs.short_sha }}
+        path: org.fox.ttrss/build/outputs/apk/debug/org.fox.ttrss-debug.apk
+        if-no-files-found: error
+        retention-days: 14
+        overwrite: true
 
-    - name: Upload full reports
+    - name: Upload reports
       if: always()
       uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
-        name: build-reports-${{ github.run_number }}
+        name: tt-rss-reports-${{ github.run_number }}-${{ steps.meta.outputs.short_sha }}
         path: |
-          org.fox.ttrss/build/reports/lint-results-debug.html
-          org.fox.ttrss/build/reports/problems/problems-report.html
-        if-no-files-found: ignore
+          org.fox.ttrss/build/reports/lint-results-*.xml
+          org.fox.ttrss/build/reports/lint-results-*.html
+          **/build/reports/problems/problems-report.html
+        if-no-files-found: warn
+        retention-days: 14
+        overwrite: true
+
+  release:
+    needs: build-debug
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        fetch-tags: true
+
+    - name: Create build metadata
+      id: meta
+      shell: bash
+      run: |
+        echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+        echo "tag=$(git log -1 --date=format:'%y.%m' --format:'%cd')-$(git rev-parse --short=7 HEAD)" >> "$GITHUB_OUTPUT"
+
+    - name: Download debug APK
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh run download "$GITHUB_RUN_ID" --name "tt-rss-debug-${{ github.run_number }}-${{ steps.meta.outputs.short_sha }}" --dir dist
+        APK="$(find dist -name '*.apk' -print -quit)"
+        if [ -z "$APK" ]; then
+          echo "ERROR: no APK found in the downloaded artifact."
+          exit 1
+        fi
+        cp "$APK" dist/tt-rss-debug.apk
+
+    - name: Publish GitHub Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        TAG="${{ steps.meta.outputs.tag }}"
+        BODY="Debug build for commit $GITHUB_SHA. Workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID."
+        if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+          test "$(git rev-parse "$TAG^{commit}")" = "$GITHUB_SHA" || { echo "ERROR: tag $TAG points to another commit."; exit 1; }
+        fi
+        if gh release view "$TAG" >/dev/null 2>&1; then
+          gh release edit "$TAG" --notes "$BODY"
+          gh release upload "$TAG" dist/tt-rss-debug.apk --clobber
+        else
+          gh release create "$TAG" --target "$GITHUB_SHA" --title "$TAG" --notes "$BODY" dist/tt-rss-debug.apk
+        fi
+
+  build-signed:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Create build metadata
+      id: meta
+      shell: bash
+      run: |
+        echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+        echo "tag=$(git log -1 --date=format:'%y.%m' --format:'%cd')-$(git rev-parse --short=7 HEAD)" >> "$GITHUB_OUTPUT"
+
+    - name: Check signing secrets
+      shell: bash
+      env:
+        SIGNING_STORE_BASE64: ${{ secrets.SIGNING_STORE_BASE64 }}
+        SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+        SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      run: |
+        for name in SIGNING_STORE_BASE64 SIGNING_STORE_PASSWORD SIGNING_KEY_ALIAS SIGNING_KEY_PASSWORD; do
+          test -n "${!name}" || { echo "ERROR: missing secret $name"; exit 1; }
+        done
+
+    - name: Decode signing keystore
+      shell: bash
+      env:
+        SIGNING_STORE_BASE64: ${{ secrets.SIGNING_STORE_BASE64 }}
+        SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+        SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      run: |
+        echo "$SIGNING_STORE_BASE64" | base64 --decode > "${{ runner.temp }}/release.keystore"
+
+    - name: Set up Java
+      uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+      with:
+        java-version: 21
+        distribution: temurin
+
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
+
+    - name: Install Android 37 platform
+      shell: bash
+      run: |
+        test -n "${ANDROID_SDK_ROOT:-}"
+        yes | sdkmanager --licenses > /dev/null
+        sdkmanager "platforms;android-37" "build-tools;37.0.0"
+        test -d "$ANDROID_SDK_ROOT/platforms/android-37"
+        java -version
+        sdkmanager --list_installed
+
+    - name: Set up Gradle
+      uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+
+    - name: Run checks and build signed APK
+      env:
+        ORG_GRADLE_PROJECT_SIGNING_STORE_FILE: ${{ runner.temp }}/release.keystore
+        ORG_GRADLE_PROJECT_SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+        ORG_GRADLE_PROJECT_SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+        ORG_GRADLE_PROJECT_SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      run: ./gradlew --no-daemon check assembleSigned
+
+    - name: Upload signed APK
+      if: success()
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: tt-rss-signed-${{ github.run_number }}-${{ steps.meta.outputs.short_sha }}
+        path: org.fox.ttrss/build/outputs/apk/signed/*.apk
+        if-no-files-found: error
+        retention-days: 14
+        overwrite: true
+
+    - name: Upload reports
+      if: always()
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+      with:
+        name: tt-rss-reports-${{ github.run_number }}-${{ steps.meta.outputs.short_sha }}
+        path: |
+          org.fox.ttrss/build/reports/lint-results-*.xml
+          org.fox.ttrss/build/reports/lint-results-*.html
+          **/build/reports/problems/problems-report.html
+        if-no-files-found: warn
+        retention-days: 14
+        overwrite: true
+
+    - name: Publish signed GitHub Release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        TAG="$GITHUB_REF_NAME"
+        BODY="Signed build for tag $TAG. Workflow run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID."
+        APK="$(find org.fox.ttrss/build/outputs/apk/signed -name '*.apk' -print -quit)"
+        if [ -z "$APK" ]; then
+          echo "ERROR: signed APK not found."
+          exit 1
+        fi
+        cp "$APK" tt-rss-signed.apk
+        if gh release view "$TAG" >/dev/null 2>&1; then
+          gh release edit "$TAG" --notes "$BODY"
+          gh release upload "$TAG" tt-rss-signed.apk --clobber
+        else
+          gh release create "$TAG" --title "$TAG" --notes "$BODY" tt-rss-signed.apk
+        fi
