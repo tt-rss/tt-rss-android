@@ -167,7 +167,6 @@ jobs:
       shell: bash
       run: |
         echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
-        echo "tag=$(git log -1 --date=format:'%y.%m' --format:'%cd')-$(git rev-parse --short=7 HEAD)" >> "$GITHUB_OUTPUT"
 
     - name: Check signing secrets
       shell: bash
