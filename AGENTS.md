@@ -22,7 +22,7 @@
 ## CI
 
 - `.github/workflows/validate-pr.yml` runs on pull requests to `master`. It runs the checks and uploads no APK.
-- `.github/workflows/build-debug-apk.yml` runs on `master` pushes, `v*` tags, and manual dispatch. A `master` push creates release `YY.MM-<shortsha>` with the debug APK. A `v*` tag creates a release with the signed APK. The release tag is a label only and can differ from in-app versionName at year boundaries.
+- `.github/workflows/build-debug-apk.yml` runs on `master` pushes, `v*` tags, and manual dispatch. A `master` push creates release `YY.MM-<shortsha>` with the debug APK. A `v*` tag creates a release with the signed APK. The release tag is a label only and can differ from in-app versionName at year boundaries. Manual dispatch runs the signed job only when the dispatch ref is the v* tag (github.ref == refs/tags/v...); dispatch from master runs build-debug only.
 - In `android-actions/setup-android`, set `packages: 'platform-tools'`. The default `tools` package no longer exists.
 - Install `platforms;android-37.0` and `build-tools;37.0.0`. `platforms;android-37` does not exist.
 - Do not use `yes | sdkmanager --licenses` in workflows. GitHub runs bash with `pipefail`, and `yes` fails on SIGPIPE. The setup action accepts licenses.
@@ -55,4 +55,4 @@
 - ErrorProne runs on main and test compilation. Build errors block the build. See the disabled check list in `org.fox.ttrss/build.gradle`.
 - Edit `res/values/strings.xml` for new strings. Do not edit `res/values-*/strings.xml`; Weblate manages translations.
 - Add all user-visible text as string resources. Lint checks translations but disables missing/extra translation errors.
-- PRs target `master`. CI ignores changes under `utils/`, dotfiles, and `*.md`. Changes under `.github/` trigger CI.
+- PRs target `master`. CI ignores changes under `utils/`, dotfiles, and `*.md`. Non-markdown changes under .github/ trigger CI; *.md files stay ignored.
