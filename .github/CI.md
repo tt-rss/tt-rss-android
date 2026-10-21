@@ -4,7 +4,7 @@
 
 - `Validate PR` runs on pull requests to `master`. It runs ErrorProne, lint, and the JVM tests. It uploads no APK.
 - `Build APKs` runs on pushes to `master`, on `v*` tags, and on manual dispatch.
-  - A `master` push builds the debug APK and creates release `YY.MM-<shortsha>`.
+  - A `master` push builds the debug APK and creates release `YY.MM-<shortsha>`. The tag is a label only; it can differ from in-app versionName where Java week-year differs from calendar year or where abbrev length differs.
   - A `v*` tag builds the signed APK and creates a release with the tag name.
   - A manual dispatch on `master` builds the debug APK only. It creates no release.
 

@@ -22,7 +22,7 @@
 ## CI
 
 - `.github/workflows/validate-pr.yml` runs on pull requests to `master`. It runs the checks and uploads no APK.
-- `.github/workflows/build-debug-apk.yml` runs on `master` pushes, `v*` tags, and manual dispatch. A `master` push creates release `YY.MM-<shortsha>` with the debug APK. A `v*` tag creates a release with the signed APK.
+- `.github/workflows/build-debug-apk.yml` runs on `master` pushes, `v*` tags, and manual dispatch. A `master` push creates release `YY.MM-<shortsha>` with the debug APK. A `v*` tag creates a release with the signed APK. The release tag is a label only and can differ from in-app versionName at year boundaries.
 - In `android-actions/setup-android`, set `packages: 'platform-tools'`. The default `tools` package no longer exists.
 - Install `platforms;android-37.0` and `build-tools;37.0.0`. `platforms;android-37` does not exist.
 - Do not use `yes | sdkmanager --licenses` in workflows. GitHub runs bash with `pipefail`, and `yes` fails on SIGPIPE. The setup action accepts licenses.
