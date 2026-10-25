@@ -314,4 +314,11 @@
     <string name="offline_image_cache_enabled">快取影像</string>
     <string name="offline_image_cache_enabled_summary">將影像下載至 SD 卡。這可能大幅增加進入離線模式所需的時間</string>
     <string name="offline_switch_error">無法準備離線模式（請參閱紀錄檔）</string>
+    <string name="settings_exported">已匯出設定</string>
+    <string name="settings_imported">已匯入設定</string>
+    <string name="prefs_import_settings_summary">以匯出檔案中的設定取代目前的設定</string>
+    <string name="prefs_export_settings_summary">將所有設定（包括密碼）儲存至檔案</string>
+    <string name="open_with_app">以應用程式開啟</string>
+    <string name="prefs_preferred_browser_summary">選擇用來開啟外部連結的瀏覽器。選擇特定瀏覽器會停用快速預覽（自訂分頁）。</string>
+    <string name="no_feeds">沒有摘要可顯示</string>
 </resources>
