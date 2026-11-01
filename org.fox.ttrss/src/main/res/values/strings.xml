@@ -329,4 +329,5 @@
     <string name="settings_imported">Settings imported</string>
     <string name="settings_export_failed">Failed to export settings: %1$s</string>
     <string name="settings_import_failed">Failed to import settings: %1$s</string>
+    <string name="local_network_denied">Nearby devices permission is needed to reach a server on your local network</string>
 </resources>
