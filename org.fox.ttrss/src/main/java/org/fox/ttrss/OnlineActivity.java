@@ -1,10 +1,12 @@
 package org.fox.ttrss;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Build;
@@ -21,6 +23,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
@@ -57,6 +61,20 @@ public class OnlineActivity extends CommonActivity {
     private static final Gson GSON = new Gson();
     private static final Type LABEL_LIST_TYPE = new TypeToken<List<Label>>() {}.getType();
     private static final Type STRING_MAP_TYPE = new TypeToken<Map<String, String>>() {}.getType();
+
+    // URL already checked against ACCESS_LOCAL_NETWORK during this process
+    private static String s_localNetworkCheckedUrl;
+
+    private boolean m_pendingLoginRefresh;
+    private OnLoginFinishedListener m_pendingLoginListener;
+
+    private final ActivityResultLauncher<String> m_localNetworkPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(), granted -> {
+                if (!granted)
+                    toast(R.string.local_network_denied);
+
+                login(m_pendingLoginRefresh, m_pendingLoginListener);
+            });
 
     protected SharedPreferences m_prefs;
     protected Menu m_menu;
@@ -245,6 +263,8 @@ public class OnlineActivity extends CommonActivity {
             Dialog alert = builder.create();
             alert.show();
 
+        } else if (needsLocalNetworkCheck()) {
+            checkLocalNetworkAccess(refresh, listener);
         } else {
             setLoadingStatus(R.string.login_in_progress);
 
@@ -259,6 +279,40 @@ public class OnlineActivity extends CommonActivity {
 
             setLoadingStatus(R.string.login_in_progress);
         }
+    }
+
+    private boolean needsLocalNetworkCheck() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.CINNAMON_BUN
+                && !m_prefs.getString("ttrss_url", "").trim().equals(s_localNetworkCheckedUrl)
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_LOCAL_NETWORK)
+                != PackageManager.PERMISSION_GRANTED;
+    }
+
+    @SuppressLint("InlinedApi")
+    private void checkLocalNetworkAccess(boolean refresh, OnLoginFinishedListener listener) {
+        setLoadingStatus(R.string.login_in_progress);
+
+        String url = m_prefs.getString("ttrss_url", "").trim();
+
+        new Thread(() -> {
+            boolean isLocal = LocalNetworkHosts.isLocalUrl(url);
+
+            runOnUiThread(() -> {
+                if (isDestroyed())
+                    return;
+
+                boolean firstCheck = !url.equals(s_localNetworkCheckedUrl);
+                s_localNetworkCheckedUrl = url;
+
+                if (isLocal && firstCheck) {
+                    m_pendingLoginRefresh = refresh;
+                    m_pendingLoginListener = listener;
+                    m_localNetworkPermissionLauncher.launch(Manifest.permission.ACCESS_LOCAL_NETWORK);
+                } else {
+                    login(refresh, listener);
+                }
+            });
+        }).start();
     }
 
     protected void loginSuccess(boolean refresh) {
