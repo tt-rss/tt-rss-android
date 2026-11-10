@@ -13,6 +13,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.preference.ListPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
@@ -101,11 +102,15 @@ public class PreferencesFragment extends PreferenceFragmentCompat {
             version = packageInfo.versionName;
             versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
 
-            findPreference("version").setSummary(getString(R.string.prefs_version, version, versionCode));
+            Preference versionPref = findPreference("version");
+            if (versionPref != null)
+                versionPref.setSummary(getString(R.string.prefs_version, version, versionCode));
 
             buildTimestamp = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.getDefault(Locale.Category.FORMAT)).format(new Date(BuildConfig.TIMESTAMP));
 
-            findPreference("build_timestamp").setSummary(getString(R.string.prefs_build_timestamp, buildTimestamp));
+            Preference buildTimestampPref = findPreference("build_timestamp");
+            if (buildTimestampPref != null)
+                buildTimestampPref.setSummary(getString(R.string.prefs_build_timestamp, buildTimestamp));
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
