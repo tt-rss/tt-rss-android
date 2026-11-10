@@ -321,4 +321,5 @@
     <string name="open_with_app">以應用程式開啟</string>
     <string name="prefs_preferred_browser_summary">選擇用來開啟外部連結的瀏覽器。選擇特定瀏覽器會停用快速預覽（自訂分頁）。</string>
     <string name="no_feeds">沒有摘要可顯示</string>
+    <string name="local_network_denied">需要鄰近裝置權限才能存取區域網路上的伺服器</string>
 </resources>
