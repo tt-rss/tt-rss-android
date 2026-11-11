@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.widget.Toolbar;
@@ -21,9 +23,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.fox.ttrss.types.Article;
 import org.fox.ttrss.types.Feed;
 
+import java.util.List;
+
 public class DetailActivity extends OnlineActivity implements HeadlinesEventListener {
     private static final String TAG = DetailActivity.class.getSimpleName();
     protected BottomAppBar m_bottomAppBar;
+    private TextView m_articleCounter;
 
     @SuppressLint("NewApi")
     @Override
@@ -125,6 +130,27 @@ public class DetailActivity extends OnlineActivity implements HeadlinesEventList
             }
         }
 
+        m_articleCounter = findViewById(R.id.detail_article_counter);
+
+        if (m_bottomAppBar != null && m_articleCounter != null) {
+            if (!m_prefs.getBoolean("enable_article_fab", true)) {
+                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) m_articleCounter.getLayoutParams();
+                lp.setMarginEnd(getResources().getDimensionPixelSize(R.dimen.article_counter_margin_end_no_fab));
+                m_articleCounter.setLayoutParams(lp);
+            }
+
+            // counter lives outside of the bar (menu is start-aligned there), so follow it when it hides on scroll
+            m_bottomAppBar.getViewTreeObserver().addOnPreDrawListener(() -> {
+                m_articleCounter.setTranslationY(m_bottomAppBar.getTranslationY());
+                return true;
+            });
+
+            ArticleModel model = Application.getArticlesModel();
+
+            model.getArticles().observe(this, articles -> updateArticleCounter());
+            model.getActive().observe(this, article -> updateArticleCounter());
+        }
+
         if (savedInstanceState == null) {
             Intent i = getIntent();
 
@@ -197,6 +223,32 @@ public class DetailActivity extends OnlineActivity implements HeadlinesEventList
 
                 menu.findItem(R.id.toggle_attachments).setVisible(activeArticle.attachments != null && !activeArticle.attachments.isEmpty());
             }
+        }
+    }
+
+    private void updateArticleCounter() {
+        ArticleModel model = Application.getArticlesModel();
+        List<Article> articles = model.getArticles().getValue();
+        Article active = model.getActive().getValue();
+
+        int position = 0;
+        int total = 0;
+
+        for (Article article : articles) {
+            // skip special entries like the headlines footer
+            if (article.id < 0) continue;
+
+            total++;
+
+            if (article.equals(active))
+                position = total;
+        }
+
+        if (position > 0) {
+            m_articleCounter.setText(getString(R.string.article_counter, position, total));
+            m_articleCounter.setVisibility(View.VISIBLE);
+        } else {
+            m_articleCounter.setVisibility(View.GONE);
         }
     }
 

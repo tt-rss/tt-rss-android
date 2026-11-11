@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="widget_margin">0dp</dimen> <!-- we're v14+ anyway -->
+    <dimen name="article_counter_margin_end">88dp</dimen> <!-- clears the FAB -->
+    <dimen name="article_counter_margin_end_no_fab">16dp</dimen>
 </resources>
