@@ -153,7 +153,7 @@
     <string name="error_feed_already_exists_">Erreur : le flux existe déjà.</string>
     <string name="error_invalid_url">Erreur : URL incorrecte.</string>
     <string name="error_url_is_an_html_page_no_feeds_found">Erreur : l\'URL est une page HTML, aucun flux trouvé.</string>
-    <string name="error_url_contains_multiple_feeds">Erreur : l\'URL contient plusieurs flux.</string>
+    <string name="error_url_contains_multiple_feeds">Erreur : l\'URL contient plusieurs flux</string>
     <string name="error_could_not_download_url">Erreur : Impossible de télécharger l\'URL</string>
     <string name="headlines_view_mode">Changer la vue</string>
     <string name="headlines_set_view_mode">Définir la vue</string>
@@ -331,4 +331,5 @@
     <string name="settings_imported">Configuration importée</string>
     <string name="settings_export_failed">Échec de l\'export de la configuration : %1$s</string>
     <string name="settings_import_failed">Échec de l\'import de la configuration : %1$s</string>
+    <string name="local_network_denied">L\'autorisation « Appareils à proximité » est nécessaire pour accéder à un serveur de votre réseau local</string>
 </resources>
