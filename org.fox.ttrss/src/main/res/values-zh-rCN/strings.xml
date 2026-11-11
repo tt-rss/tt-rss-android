@@ -323,4 +323,5 @@
     <string name="settings_imported">已导入设置</string>
     <string name="settings_export_failed">导出设置失败：%1$s</string>
     <string name="settings_import_failed">导入设置失败：%1$s</string>
+    <string name="local_network_denied">需要附近设备权限来连接本地网络上的服务器</string>
 </resources>
