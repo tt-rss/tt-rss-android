@@ -322,4 +322,5 @@
     <string name="settings_imported">Pengaturan diimpor</string>
     <string name="settings_export_failed">Gagal mengekspor pengaturan: %1$s</string>
     <string name="settings_import_failed">Gagal mengimpor pengaturan: %1$s</string>
+    <string name="local_network_denied">Izin perangkat terdekat diperlukan untuk mengakses server di jaringan lokal Anda</string>
 </resources>
