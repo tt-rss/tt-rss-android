@@ -158,7 +158,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.24.1'
     implementation 'com.bogdwellers:pinchtozoom:0.1'
     implementation 'com.github.bumptech.glide:glide:5.0.10'
-    implementation 'com.github.bumptech.glide:okhttp3-integration:5.0.9'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:5.0.10'
     annotationProcessor 'com.github.bumptech.glide:compiler:5.0.10'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.activity:activity:1.13.0'
