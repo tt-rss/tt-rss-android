@@ -39,7 +39,7 @@
     <string name="article_mark_read_above">Markera ovanstånde artiklar som lästa</string>
     <string name="http_login_summary">Valfri. Fyll i detta om din tt-rss-installation är skyddad av HTTP Basic-autentisering</string>
     <string name="login_summary">Behövs inte för single user mode</string>
-    <string name="ttrss_url_summary">https://example.com/tt-rss</string>
+    <string name="ttrss_url_summary">https://exempel.se/tt-rss</string>
     <string name="enable_cats">Aktivera kategorier för flöden</string>
     <string name="no_caption_to_display">Ingen rubrik finns att visa</string>
     <string name="browse_cats_like_feeds">Bläddra bland kategorier som bland flöden</string>
