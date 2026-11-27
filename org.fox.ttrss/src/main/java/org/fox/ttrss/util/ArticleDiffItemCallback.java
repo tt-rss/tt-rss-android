@@ -5,10 +5,12 @@ import androidx.recyclerview.widget.DiffUtil;
 
 import org.fox.ttrss.types.Article;
 
+import java.util.Objects;
+
 public class ArticleDiffItemCallback extends DiffUtil.ItemCallback<Article> {
     private static final String TAG = ArticleDiffItemCallback.class.getSimpleName();
 
-    public enum ChangePayload {UNREAD, MARKED, SELECTED, PUBLISHED, NOTE, ACTIVE, SCORE}
+    public enum ChangePayload {UNREAD, MARKED, SELECTED, PUBLISHED, NOTE, ACTIVE, SCORE, FEED_TITLE}
 
     ;
 
@@ -19,6 +21,9 @@ public class ArticleDiffItemCallback extends DiffUtil.ItemCallback<Article> {
 
     @Override
     public Object getChangePayload(@NonNull Article oldItem, @NonNull Article newItem) {
+
+        if (!Objects.equals(oldItem.feed_title, newItem.feed_title))
+            return null;
 
         if (oldItem.unread != newItem.unread)
             return ChangePayload.UNREAD;
@@ -42,6 +47,7 @@ public class ArticleDiffItemCallback extends DiffUtil.ItemCallback<Article> {
     public boolean areContentsTheSame(@NonNull Article oldItem, @NonNull Article newItem) {
         return oldItem.id == newItem.id && oldItem.unread == newItem.unread && oldItem.marked == newItem.marked
                 && oldItem.selected == newItem.selected && oldItem.published == newItem.published
-                && oldItem.score == newItem.score && oldItem.note.equals(newItem.note) && oldItem.active == newItem.active;
+                && oldItem.score == newItem.score && oldItem.note.equals(newItem.note) && oldItem.active == newItem.active
+                && Objects.equals(oldItem.feed_title, newItem.feed_title);
     }
 }

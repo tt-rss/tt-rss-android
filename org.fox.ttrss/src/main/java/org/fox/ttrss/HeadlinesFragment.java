@@ -56,8 +56,6 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -78,6 +76,7 @@ import org.fox.ttrss.types.Article;
 import org.fox.ttrss.types.Attachment;
 import org.fox.ttrss.types.Feed;
 import org.fox.ttrss.util.ArticleDiffItemCallback;
+import org.fox.ttrss.util.ArticleInitialDrawable;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -122,11 +121,18 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
     private TextureView m_activeTexture;
 
     public void initialize(Feed feed) {
+        boolean previouslyShowedFeedTitle = m_feed != null && (m_feed.is_cat || m_feed.id < 0);
         m_feed = feed;
+        boolean showFeedTitle = m_feed != null && (m_feed.is_cat || m_feed.id < 0);
+
+        if (m_adapter != null && previouslyShowedFeedTitle != showFeedTitle) {
+            m_adapter.notifyItemRangeChanged(0, m_adapter.getItemCount(),
+                    ArticleDiffItemCallback.ChangePayload.FEED_TITLE);
+        }
     }
 
     public void initialize(Feed feed, boolean compactMode) {
-        m_feed = feed;
+        initialize(feed);
         m_compactLayoutMode = compactMode;
     }
 
@@ -684,8 +690,6 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         public static final int VIEW_NORMAL = 0;
         public static final int VIEW_AMR_FOOTER = 1;
 
-        private final ColorGenerator m_colorGenerator = ColorGenerator.DEFAULT;
-        private final TextDrawable.IBuilder m_drawableBuilder = TextDrawable.builder().round();
         private final ColorStateList m_cslTertiary;
         private final ColorStateList m_cslPrimary;
         private final int m_colorSurfaceContainerLowest;
@@ -1025,6 +1029,9 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                     ArticleDiffItemCallback.ChangePayload payload = (ArticleDiffItemCallback.ChangePayload) pobject;
 
                     switch (payload) {
+                        case FEED_TITLE:
+                            updateTitleView(article, holder);
+                            break;
                         case UNREAD:
                         case ACTIVE:
                             updateUnreadView(article, holder);
@@ -1260,6 +1267,7 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
                 if (article.feed_title != null && m_feed != null && (m_feed.is_cat || m_feed.id < 0)) {
                     holder.feedTitleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, m_headlineSmallFontSize);
                     holder.feedTitleView.setText(article.feed_title);
+                    holder.feedTitleView.setVisibility(View.VISIBLE);
                 } else {
                     holder.feedTitleView.setVisibility(View.GONE);
                 }
@@ -1491,13 +1499,11 @@ public class HeadlinesFragment extends androidx.fragment.app.Fragment {
         }
 
         private void updateTextCheckedState(final Article article, final ArticleViewHolder holder) {
-            String tmp = !article.title.isEmpty() ? article.title.substring(0, 1).toUpperCase() : "?";
-
             if (article.selected) {
-                holder.textImage.setImageDrawable(m_drawableBuilder.build(" ", 0xff616161));
+                holder.textImage.setImageDrawable(new ArticleInitialDrawable("", 0xff616161));
                 holder.textChecked.setVisibility(View.VISIBLE);
             } else {
-                final Drawable textDrawable = m_drawableBuilder.build(tmp, m_colorGenerator.getColor(article.title));
+                final Drawable textDrawable = ArticleInitialDrawable.forTitle(article.title);
 
                 holder.textImage.setImageDrawable(textDrawable);
 

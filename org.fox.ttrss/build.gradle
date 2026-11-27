@@ -157,11 +157,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.13.0'
     implementation 'com.google.code.gson:gson:2.13.2'
     implementation 'me.relex:circleindicator:2.1.6'
-    implementation 'com.github.amulyakhare:TextDrawable:558677ea31'
     implementation 'com.telefonica:nestedscrollwebview:0.2.0'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'ch.acra:acra-mail:5.13.1'
     implementation 'ch.acra:acra-dialog:5.13.1'
+    testImplementation 'junit:junit:4.13.2'
 }
 java {
     toolchain {
